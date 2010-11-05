@@ -1,8 +1,14 @@
 require File.dirname(__FILE__) + '/test_helper'
-require 'action_controller'
-require 'action_controller/test_process'
-ActionController::Routing::Routes.draw do |map|
-  map.resource :session
+require 'rails'
+
+module MinimalistAuthentication
+  class Application < Rails::Application
+  end
+end
+MinimalistAuthentication::Application.initialize!
+
+MinimalistAuthentication::Application.routes.draw do
+  resource :session#, :only => [:new, :create, :destroy]
 end
 
 class ApplicationController < ActionController::Base
@@ -11,10 +17,6 @@ end
 
 class SessionsController < ApplicationController
   include Minimalist::Sessions
-end
-
-ActionController::Routing::Routes.draw do |map|
-  map.resource :session, :only => [:new, :create, :destroy]
 end
 
 class SessionsControllerTest < ActionController::TestCase

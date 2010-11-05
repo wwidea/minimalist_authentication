@@ -66,12 +66,12 @@ class AuthenticationTest < ActiveSupport::TestCase
   test "should fail validation for active user without email" do
     user = User.new(:active => true)
     assert_equal(false, user.valid?)
-    assert(user.errors.on(:email))
+    assert(user.errors[:email])
   end
   
   test "should fail validation for active user without password" do
     user = User.new(:active => true)
     assert_equal(false, user.valid?)
-    assert(user.errors.on(:password))
+    assert(user.errors[:password])
   end
 end
