@@ -3,7 +3,6 @@ require 'test_helper'
 class AuthorizationTest < ActiveSupport::TestCase
   def AuthorizationTest.helper_method(*args); end
   include Minimalist::Authorization
-  load_schema
   
   def setup
     @session = nil

@@ -14,7 +14,6 @@ class SessionsController < ApplicationController
 end
 
 class SessionsControllerTest < ActionController::TestCase
-  load_schema
   
   test "should get new" do
     get :new

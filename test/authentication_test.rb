@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class AuthenticationTest < ActiveSupport::TestCase
-  load_schema
   
   test "should not be able to set crypted_password through mass assignment" do
     user = Factory(:user)
