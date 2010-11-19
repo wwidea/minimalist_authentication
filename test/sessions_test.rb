@@ -1,17 +1,4 @@
 require 'test_helper'
-require 'rails'
-
-MinimalistAuthentication::Application.routes.draw do
-  resource :session#, :only => [:new, :create, :destroy]
-end
-
-class ApplicationController < ActionController::Base
-  include Minimalist::Authorization
-end
-
-class SessionsController < ApplicationController
-  include Minimalist::Sessions
-end
 
 class SessionsControllerTest < ActionController::TestCase
   
