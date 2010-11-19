@@ -1,14 +1,8 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
 class AuthorizationTest < ActiveSupport::TestCase
   def AuthorizationTest.helper_method(*args); end
   include Minimalist::Authorization
-  load_schema
-  
-  def setup
-    @session = nil
-    @redirect_to = nil
-  end
   
   test "should return guest for current_user" do
     assert_equal('guest', current_user.email)
@@ -54,7 +48,9 @@ class AuthorizationTest < ActiveSupport::TestCase
     assert_equal('/', redirect_to)
   end
   
+  #######
   private
+  #######
   
   def redirect_to(path = nil)
     @redirect_to = path if path

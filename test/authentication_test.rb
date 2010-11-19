@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
 class AuthenticationTest < ActiveSupport::TestCase
-  load_schema
   
   test "should not be able to set crypted_password through mass assignment" do
     user = Factory(:user)
@@ -66,12 +65,12 @@ class AuthenticationTest < ActiveSupport::TestCase
   test "should fail validation for active user without email" do
     user = User.new(:active => true)
     assert_equal(false, user.valid?)
-    assert(user.errors.on(:email))
+    assert(user.errors[:email])
   end
   
   test "should fail validation for active user without password" do
     user = User.new(:active => true)
     assert_equal(false, user.valid?)
-    assert(user.errors.on(:password))
+    assert(user.errors[:password])
   end
 end
