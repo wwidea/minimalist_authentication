@@ -1,4 +1,3 @@
-require 'factory_girl'
 module Factories
   Factory.define :user do |u|
     u.active true

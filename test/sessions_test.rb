@@ -1,11 +1,5 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 require 'rails'
-
-module MinimalistAuthentication
-  class Application < Rails::Application
-  end
-end
-MinimalistAuthentication::Application.initialize!
 
 MinimalistAuthentication::Application.routes.draw do
   resource :session#, :only => [:new, :create, :destroy]
