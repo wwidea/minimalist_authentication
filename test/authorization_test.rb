@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
 class AuthorizationTest < ActiveSupport::TestCase
   def AuthorizationTest.helper_method(*args); end
