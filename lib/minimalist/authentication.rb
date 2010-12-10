@@ -13,9 +13,9 @@ module Minimalist
         attr_protected :crypted_password, :salt
         before_save :encrypt_password
         
-        validates_presence_of     :email, :if => :active?
-        validates_uniqueness_of   :email, :if => :active?
-        validates_format_of       :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => :active?
+        validates_presence_of     :email, :if => :validate_email_presence?
+        validates_uniqueness_of   :email, :if => :validate_email_uniqueness?
+        validates_format_of       :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => :validate_email_format?
         validates_presence_of     :password,                   :if => :password_required?
         validates_presence_of     :password_confirmation,      :if => :password_required?
         validates_confirmation_of :password,                   :if => :password_required?
@@ -81,6 +81,25 @@ module Minimalist
         self.salt = self.class.make_token if new_record?
         self.crypted_password = encrypt(password)
       end
+      
+      
+      # email validation
+      def validate_email?
+        # allows applications to turn off email validation
+        true
+      end
+      
+      def validate_email_presence?
+        validate_email? && active?
+      end
+
+      def validate_email_format?
+        validate_email? && active?
+      end
+      
+      def validate_email_uniqueness?
+        validate_email? && active?
+      end   
     end
   end
 end
