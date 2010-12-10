@@ -19,6 +19,7 @@ module Minimalist
         if user = User.authenticate(params[:email], params[:password])
           user.logged_in
           session[:user_id] = user.id
+          after_authentication(user)
           redirect_back_or_default(login_redirect_to(user))
           return
         else
@@ -43,6 +44,10 @@ module Minimalist
       
       def logout_redirect_to
         '/'
+      end
+      
+      def after_authentication(user)
+        # overide in application
       end
     end
   end
