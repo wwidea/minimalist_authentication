@@ -10,7 +10,6 @@ module Minimalist
         include InstanceMethods
         
         attr_accessor :password
-        attr_protected :crypted_password, :salt
         before_save :encrypt_password
         
         validates_presence_of     :email, :if => :validate_email_presence?
@@ -42,7 +41,9 @@ module Minimalist
       end
       
       def guest
-        User.new(:email => GUEST_USER_EMAIL)
+        User.new.tap do |user|
+          user.email = GUEST_USER_EMAIL
+        end
       end
     end
     
