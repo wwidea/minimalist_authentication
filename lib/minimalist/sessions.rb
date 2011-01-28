@@ -51,7 +51,7 @@ module Minimalist
         # overide in application
       end
       
-      def after_authentication_failure
+      def after_authentication_failure(user)
         # overide in application
       end
     end
