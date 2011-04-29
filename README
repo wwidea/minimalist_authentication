@@ -10,7 +10,7 @@ Installation
 ============
 script/plugin install git://github.com/aaron/minimalist_authentication.git
 
-ruby script/generate scaffold user active:boolean email:string crypted_password:string salt:string last_logged_in_at:datetime
+ruby script/generate scaffold user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
 
 
 Example

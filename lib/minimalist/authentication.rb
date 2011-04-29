@@ -3,6 +3,7 @@ require 'digest/sha1'
 module Minimalist
   module Authentication
     GUEST_USER_EMAIL = 'guest'
+    PREFERRED_DIGEST_VERSION = 2
     
     def self.included( base )
       base.extend(ClassMethods)
@@ -10,7 +11,7 @@ module Minimalist
         include InstanceMethods
         
         attr_accessor :password
-        attr_protected :crypted_password, :salt
+        attr_protected :crypted_password, :salt, :using_digest_version
         before_save :encrypt_password
         
         validates_presence_of     :email, :if => :validate_email_presence?
@@ -33,12 +34,15 @@ module Minimalist
         return user
       end
       
-      def secure_digest(*args)
-        Digest::SHA1.hexdigest(args.flatten.join('--'))
+      def secure_digest(string,salt,version = 1)
+        case version
+          when 1 then Digest::SHA1.hexdigest("#{string}--#{salt}")
+          when 2 then Digest::SHA2.hexdigest("#{string}#{salt}", 512)
+        end
       end
 
       def make_token
-        secure_digest(Time.now, (1..10).map{ rand.to_s })
+        secure_digest(Time.now, (1..10).map{ rand.to_s.gsub(/0\./,'') }.join, PREFERRED_DIGEST_VERSION)
       end
       
       def guest
@@ -53,7 +57,17 @@ module Minimalist
       end
       
       def authenticated?(password)
-        crypted_password == encrypt(password)
+        if crypted_password == encrypt(password)
+          if self.respond_to?(:using_digest_version) and using_digest_version != PREFERRED_DIGEST_VERSION
+            new_salt = self.class.make_token
+            self.update_attribute(:crypted_password,self.class.secure_digest(password, new_salt, PREFERRED_DIGEST_VERSION))
+            self.update_attribute(:salt,new_salt)
+            self.update_attribute(:using_digest_version,PREFERRED_DIGEST_VERSION)
+          end
+          return true
+        else
+          return false
+        end
       end
       
       def logged_in
@@ -73,15 +87,19 @@ module Minimalist
       end
       
       def encrypt(password)
-        self.class.secure_digest(password, salt)
+        self.class.secure_digest(password, salt,digest_version)
       end
       
       def encrypt_password
         return if password.blank?
         self.salt = self.class.make_token if new_record?
-        self.crypted_password = encrypt(password)
+        self.crypted_password = self.class.secure_digest(password, salt,PREFERRED_DIGEST_VERSION)
+        self.using_digest_version = PREFERRED_DIGEST_VERSION
       end
       
+      def digest_version
+        self.respond_to?(:using_digest_version) ? (using_digest_version || 1) : 1
+      end
       
       # email validation
       def validate_email?
