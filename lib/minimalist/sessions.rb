@@ -23,7 +23,7 @@ module Minimalist
           redirect_back_or_default(login_redirect_to(user))
           return
         else
-          after_authentication_failure
+          after_authentication_failure(user)
           flash.now[:error] = "Couldn't log you in as '#{params[:email]}'"
           render :action => 'new'
         end
@@ -51,7 +51,7 @@ module Minimalist
         # overide in application
       end
       
-      def after_authentication_failure
+      def after_authentication_failure(user)
         # overide in application
       end
     end
