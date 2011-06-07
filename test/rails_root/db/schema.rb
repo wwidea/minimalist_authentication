@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table :users do |t|
     t.boolean :active
     t.string :email, :crypted_password, :salt
+    t.integer :using_digest_version
     t.datetime :last_logged_in_at
     t.timestamps
   end
