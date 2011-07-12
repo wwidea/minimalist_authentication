@@ -94,8 +94,8 @@ module Minimalist
       def encrypt_password
         return if password.blank?
         self.salt = self.class.make_token if new_record?
-        self.crypted_password = self.class.secure_digest(password, salt,PREFERRED_DIGEST_VERSION)
-        self.using_digest_version = PREFERRED_DIGEST_VERSION
+        self.crypted_password = self.class.secure_digest(password, salt, (self.respond_to?(:using_digest_version) ? PREFERRED_DIGEST_VERSION : 1))
+        self.using_digest_version = PREFERRED_DIGEST_VERSION if self.respond_to?(:using_digest_version)
       end
       
       def digest_version
