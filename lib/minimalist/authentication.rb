@@ -35,7 +35,7 @@ module Minimalist
       
       def secure_digest(string, salt, version = 1)
         case version
-          when 0 then Digest::MD5.hexdigest(string)
+          when 0 then Digest::MD5.hexdigest(string.to_s)
           when 1 then Digest::SHA1.hexdigest("#{string}--#{salt}")
           when 2 then Digest::SHA2.hexdigest("#{string}#{salt}", 512)
         end
