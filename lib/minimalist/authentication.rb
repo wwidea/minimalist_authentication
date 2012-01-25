@@ -46,7 +46,7 @@ module Minimalist
       end
       
       def guest
-        User.new.tap do |user|
+        new.tap do |user|
           user.email = GUEST_USER_EMAIL
         end
       end
