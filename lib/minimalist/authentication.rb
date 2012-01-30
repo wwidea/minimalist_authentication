@@ -18,7 +18,7 @@ module Minimalist
         validates_format_of       :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => :validate_email_format?
         validates_presence_of     :password,                   :if => :password_required?
         validates_presence_of     :password_confirmation,      :if => :password_required?
-        validates_confirmation_of :password,                   :if => :password_required?
+        validates_confirmation_of :password,                   :if => :validate_password_confirmation_presence?
         validates_length_of       :password, :within => 6..40, :if => :password_required?
         
         scope :active, :conditions => {:active => true}
@@ -119,7 +119,12 @@ module Minimalist
       
       def validate_email_uniqueness?
         validate_email? && active?
-      end   
+      end
+      
+      def validate_password_confirmation_presence?
+        # allows applications to turn off password_confirmation validation
+        password_required?
+      end
     end
   end
 end
