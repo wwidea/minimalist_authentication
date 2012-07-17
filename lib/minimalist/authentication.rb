@@ -1,10 +1,16 @@
 require 'digest/sha1'
+require 'bcrypt'
 
 module Minimalist
   module Authentication
     GUEST_USER_EMAIL = 'guest'
-    PREFERRED_DIGEST_VERSION = 2
-    
+    PREFERRED_DIGEST_VERSION = 3
+
+    # Recalibrates cost when class is loaded so that new user passwords
+    # can automatically take advantage of faster server hardware in the
+    # future for better encryption.
+    CALIBRATED_BCRYPT_COST = BCrypt::Engine.calibrate(750)
+
     def self.included( base )
       base.extend(ClassMethods)
       base.class_eval do
@@ -37,11 +43,13 @@ module Minimalist
           when 0 then Digest::MD5.hexdigest(string.to_s)
           when 1 then Digest::SHA1.hexdigest("#{string}--#{salt}")
           when 2 then Digest::SHA2.hexdigest("#{string}#{salt}", 512)
+          when 3 then BCrypt::Password.new(BCrypt::Engine.hash_secret(string, salt)).checksum
         end
       end
 
       def make_token
-        secure_digest(Time.now, (1..10).map{ rand.to_s.gsub(/0\./,'') }.join, PREFERRED_DIGEST_VERSION)
+        #secure_digest(Time.now, (1..10).map{ rand.to_s.gsub(/0\./,'') }.join, PREFERRED_DIGEST_VERSION)
+        BCrypt::Engine.generate_salt(CALIBRATED_BCRYPT_COST)
       end
       
       def guest
@@ -59,7 +67,7 @@ module Minimalist
       
       def authenticated?(password)
         if crypted_password == encrypt(password)
-          if self.respond_to?(:using_digest_version) and using_digest_version != PREFERRED_DIGEST_VERSION
+          if self.respond_to?(:using_digest_version) and (using_digest_version != PREFERRED_DIGEST_VERSION or salt_cost < CALIBRATED_BCRYPT_COST)
             new_salt = self.class.make_token
             self.update_attribute(:crypted_password,self.class.secure_digest(password, new_salt, PREFERRED_DIGEST_VERSION))
             self.update_attribute(:salt, new_salt)
@@ -102,6 +110,10 @@ module Minimalist
         self.respond_to?(:using_digest_version) ? (using_digest_version || 1) : 1
       end
       
+      def salt_cost
+        BCrypt::Engine.valid_salt?(salt) ? salt.match(/\$[^\$]+\$([0-9]+)\$/)[1].to_i : 0
+      end
+
       # email validation
       def validate_email?
         # allows applications to turn off email validation
