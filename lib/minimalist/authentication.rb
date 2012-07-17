@@ -48,7 +48,6 @@ module Minimalist
       end
 
       def make_token
-        #secure_digest(Time.now, (1..10).map{ rand.to_s.gsub(/0\./,'') }.join, PREFERRED_DIGEST_VERSION)
         BCrypt::Engine.generate_salt(CALIBRATED_BCRYPT_COST)
       end
       
