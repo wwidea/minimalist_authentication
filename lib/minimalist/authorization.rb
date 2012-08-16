@@ -38,11 +38,11 @@ module Minimalist
       end
 
       def store_location
-        session[:return_to] = request.request_uri
+        session['return_to'] = request.fullpath
       end
 
       def redirect_back_or_default(default)
-        redirect_to(session.delete(:return_to) || default)
+        redirect_to(session.delete('return_to') || default)
       end
     end
   end
