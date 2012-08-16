@@ -6,7 +6,7 @@ module Minimalist
         helper_method :current_user, :logged_in?, :authorized?
       end
     end
-    
+
     module InstanceMethods
       #######
       private
@@ -33,7 +33,7 @@ module Minimalist
       end
 
       def access_denied
-        store_location if request.method == :get && !logged_in?
+        store_location if request.method.to_s.downcase == 'get' && !logged_in?
         redirect_to new_session_path
       end
 
