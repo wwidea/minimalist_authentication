@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    minimalist_authentication (0.6.4)
+      bcrypt-ruby (~> 3.0.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -29,6 +35,7 @@ GEM
       activesupport (= 3.0.5)
     activesupport (3.0.5)
     arel (2.0.10)
+    bcrypt-ruby (3.0.1)
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -66,12 +73,13 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
+    tzinfo (0.3.32)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   factory_girl
+  minimalist_authentication!
   rails (= 3.0.5)
   sqlite3

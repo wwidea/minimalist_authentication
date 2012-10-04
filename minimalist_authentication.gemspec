@@ -9,8 +9,12 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/wwidea/minimalist_authentication"
   s.summary = %q{A Rails authentication plugin that takes a minimalist approach.}
   s.description = %q{A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.}
-  
+
   s.add_dependency('bcrypt-ruby', '~> 3.0.1')
+
+  s.add_development_dependency('rails','3.0.5')
+  s.add_development_dependency('sqlite3')
+  s.add_development_dependency('factory_girl')
 
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- test/*`.split("\n")
