@@ -1,6 +1,6 @@
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -28,7 +28,7 @@ task :rcov do
   rcov = "rcov --rails --text-summary -Ilib --exclude /gems/,/app/,/Library/"
   system("#{rcov} --html #{Dir.glob('test/**/*_test.rb').join(' ')}")
   if PLATFORM['darwin'] #Mac
-    system("open coverage/index.html") 
+    system("open coverage/index.html")
   elsif PLATFORM[/linux/] #Ubuntu, etc.
     system("/etc/alternatives/x-www-browser coverage/index.html")
   end
