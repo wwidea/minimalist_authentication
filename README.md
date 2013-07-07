@@ -3,16 +3,18 @@
 MinimalistAuthentication
 ========================
 
-A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.
+A Rails authentication gem that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.
 
 This plugin was largely inspired by the restful-authentication plugin (http://github.com/technoweenie/restful-authentication/tree/master). I selected the essential methods for password based authentication, reorganized them, trimmed them down when possible, added a couple of features, and resisted the urge to start adding more.
 
 
 Installation
 ============
-script/plugin install git://github.com/aaron/minimalist_authentication.git
+Add to your Gemfile:
+gem 'minimalist_authentication'
 
-ruby script/generate scaffold user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
+Create a user model:
+ruby script/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
 
 
 Example
