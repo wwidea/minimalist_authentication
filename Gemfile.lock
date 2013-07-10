@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     minimalist_authentication (0.6.4)
-      bcrypt-ruby (~> 3.0.1)
+      bcrypt-ruby (~> 3.1.1)
 
 GEM
   remote: http://rubygems.org/
@@ -35,7 +35,7 @@ GEM
       activesupport (= 3.0.5)
     activesupport (3.0.5)
     arel (2.0.10)
-    bcrypt-ruby (3.0.1)
+    bcrypt-ruby (3.1.1)
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)

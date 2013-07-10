@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary = %q{A Rails authentication plugin that takes a minimalist approach.}
   s.description = %q{A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.}
 
-  s.add_dependency('bcrypt-ruby', '~> 3.0.1')
+  s.add_dependency('bcrypt-ruby', '~> 3.1.1')
 
   s.add_development_dependency('rails','3.0.5')
   s.add_development_dependency('sqlite3')
