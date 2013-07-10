@@ -3,3 +3,4 @@ coverage
 .loadpath
 .project
 .redcar
+*.gem
