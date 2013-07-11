@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    minimalist_authentication (0.6.4)
+    minimalist_authentication (0.6.6)
       bcrypt-ruby (~> 3.1.1)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     abstract (1.0.0)
     actionmailer (3.0.5)
