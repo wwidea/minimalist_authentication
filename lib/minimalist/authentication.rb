@@ -26,7 +26,7 @@ module Minimalist
         validates_confirmation_of :password,                   :if => :password_required?
         validates_length_of       :password, :within => 6..40, :if => :password_required?
 
-        scope :active, :conditions => {:active => true}
+        scope :active, -> { where active: true }
 
 
       end
