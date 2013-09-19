@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'bcrypt-ruby', '~> 3.1.1'
   
-  s.add_development_dependency  'rails','3.0.5'
+  s.add_development_dependency  'rails','3.2.14'
   s.add_development_dependency  'sqlite3'
   s.add_development_dependency  'factory_girl'
 end

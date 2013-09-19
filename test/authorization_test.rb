@@ -9,13 +9,13 @@ class AuthorizationTest < ActiveSupport::TestCase
   end
 
   test "should return logged_in user for current_user" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     session[:user_id] = user.id
     assert_equal(user, current_user)
   end
 
   test "should pass authorization" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     session[:user_id] = user.id
     assert(authorization_required)
   end

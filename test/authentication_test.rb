@@ -3,7 +3,7 @@ require 'test_helper'
 class AuthenticationTest < ActiveSupport::TestCase
 
   test "should not be able to set crypted_password through mass assignment" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     old_crypted_password = user.crypted_password
     old_digest_version = user.using_digest_version
     old_salt = user.salt
@@ -14,32 +14,32 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should return active user" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     assert_equal([user], User.active)
   end
 
   test "should authenticate user" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     assert_equal(user, User.authenticate(user.email, 'password'))
   end
 
   test "should fail to authenticate when email is blank" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     assert_nil(User.authenticate('', 'password'))
   end
 
   test "should fail to authenticate when password is blank" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     assert_nil(User.authenticate(user.email, ''))
   end
 
   test "should fail to authenticate when user is not active" do
-    user = Factory(:user, :active => false)
+    user = FactoryGirl.create(:user, :active => false)
     assert_nil(User.authenticate(user.email, 'password'))
   end
 
   test "should fail to authenticate for incorrect password" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     assert_nil(User.authenticate(user.email, 'incorrect_password'))
   end
 
@@ -52,7 +52,7 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should update last_logged_in_at without updating updated_at timestamp" do
-    user = Factory(:user, :updated_at => 1.day.ago)
+    user = FactoryGirl.create(:user, :updated_at => 1.day.ago)
     updated_at = user.updated_at
     user.logged_in
     assert(user.updated_at == updated_at)
@@ -79,7 +79,7 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should use latest digest version for new users" do
-    assert_equal(User::PREFERRED_DIGEST_VERSION,Factory(:user).using_digest_version)
+    assert_equal(User::PREFERRED_DIGEST_VERSION,FactoryGirl.create(:user).using_digest_version)
   end
 
   test "should migrate legacy users to new digest version" do

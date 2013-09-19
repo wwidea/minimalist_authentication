@@ -8,14 +8,14 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "should create session" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     post :create, :email => 'test@testing.com', :password => 'password'
     assert_equal(user.id, session[:user_id])
     assert_redirected_to '/'
   end
   
   test "should fail to create session" do
-    user = Factory(:user)
+    user = FactoryGirl.create(:user)
     post :create, :email => 'test@testing.com', :password => 'wrong_password'
     assert_nil(session[:user_id])
     assert_response :success
