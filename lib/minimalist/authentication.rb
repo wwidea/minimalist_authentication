@@ -35,7 +35,7 @@ module Minimalist
     module ClassMethods
       def authenticate(email, password)
         return if email.blank? || password.blank?
-        user = active.first(:conditions => {:email => email})
+        user = active.where(email: email).first
         return unless user && user.authenticated?(password)
         return user
       end
