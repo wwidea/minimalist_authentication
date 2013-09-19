@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    minimalist_authentication (0.6.7)
+    minimalist_authentication (0.6.8)
       bcrypt-ruby (~> 3.1.1)
 
 GEM
