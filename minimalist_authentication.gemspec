@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name          = "minimalist_authentication"
   s.version       = MinimalistAuthentication::VERSION
   s.platform      = Gem::Platform::RUBY
-  s.authors       = ['Aaron Baldwin', 'Jonathan S. Garvin', 'WWIDEA, Inc']
+  s.authors       = ['Aaron Baldwin', 'WWIDEA, Inc']
   s.email         = ["developers@wwidea.org"]
   s.homepage      = "https://github.com/wwidea/minimalist_authentication"
   s.summary       = %q{A Rails authentication plugin that takes a minimalist approach.}
@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ["lib"]
   
-  s.add_dependency 'bcrypt-ruby', '~> 3.1.1'
+  s.add_dependency 'bcrypt', '~> 3.1.7'
   
   s.add_development_dependency  'rails','3.2.14'
   s.add_development_dependency  'sqlite3'
