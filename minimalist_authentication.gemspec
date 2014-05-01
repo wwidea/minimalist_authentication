@@ -15,9 +15,9 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ["lib"]
   
-  s.add_dependency 'bcrypt', '~> 3.1.7'
+  s.add_dependency 'bcrypt', '~> 3.1', '>= 3.1.3'
   
   s.add_development_dependency  'rails','3.2.14'
-  s.add_development_dependency  'sqlite3'
-  s.add_development_dependency  'factory_girl'
+  s.add_development_dependency  'sqlite3', '~> 1.3 ', '>= 1.3.9'
+  s.add_development_dependency  'factory_girl', '~> 4.4', '>= 4.4.0'
 end
