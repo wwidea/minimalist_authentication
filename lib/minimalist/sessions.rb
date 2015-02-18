@@ -24,7 +24,7 @@ module Minimalist
           return
         else
           after_authentication_failure(user)
-          flash.now[:error] = "Couldn't log you in as '#{params[:email]}'"
+          flash.now[:alert] = "Couldn't log you in as '#{params[:email]}'"
           render :action => 'new'
         end
       end
