@@ -16,7 +16,7 @@ Installation
 
 2) Create a user model:
 
-    ruby script/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
+    ruby bin/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
 
 
 Example
