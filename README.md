@@ -47,7 +47,7 @@ Example
 
 4) test/test_helper.rb
 
-    class Test::Unit::TestCase
+    class ActiveSupport::TestCase
       include Minimalist::TestHelper
     end
 
