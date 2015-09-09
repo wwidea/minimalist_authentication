@@ -42,7 +42,7 @@ Example
 
     class SessionsController < ApplicationController
       include Minimalist::Sessions
-      skip_before_filter :authorization_required, :only => [:new, :create]
+      skip_before_filter :authorization_required, only: [:new, :create]
     end
 
 4) test/test_helper.rb
