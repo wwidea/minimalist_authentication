@@ -81,7 +81,7 @@ module Minimalist
       end
 
       def logged_in
-        update_column(:last_logged_in_at, Time.now.to_s(:db)) # use update_column to avoid updated_on trigger
+        update_column(:last_logged_in_at, Time.current) # use update_column to avoid updated_on trigger
       end
 
       def is_guest?
