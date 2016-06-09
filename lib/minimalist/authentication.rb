@@ -19,12 +19,12 @@ module Minimalist
         attr_accessor :password
         before_save :encrypt_password
 
-        validates_presence_of     :email, :if => :validate_email_presence?
-        validates_uniqueness_of   :email, :if => :validate_email_uniqueness?
-        validates_format_of       :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :if => :validate_email_format?
-        validates_presence_of     :password,                   :if => :password_required?
-        validates_confirmation_of :password,                   :if => :password_required?
-        validates_length_of       :password, :within => 6..40, :if => :password_required?
+        validates_presence_of     :email, if: :validate_email_presence?
+        validates_uniqueness_of   :email, allow_blank: true, if: :validate_email_uniqueness?
+        validates_format_of       :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, if: :validate_email_format?
+        validates_presence_of     :password,                 if: :password_required?
+        validates_confirmation_of :password,                 if: :password_required?
+        validates_length_of       :password, within: 6..40,  if: :password_required?
 
         scope :active, ->(active = true) { where active: active }
 
