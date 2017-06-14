@@ -6,16 +6,9 @@ require "rails/test_help"
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
-Rails::TestUnitReporter.executable = 'bin/test'
-
-# require 'minimalist_authentication'
-# require 'factory_girl'
-#
-# ENV["RAILS_ENV"] = "test"
-# require File.expand_path('../rails_root/config/environment', __FILE__)
-# require 'rails/test_help'
-
-require File.dirname(__FILE__) + '/factories'
+# factory_girl
+require 'factory_girl'
+require File.expand_path("../../test/factories.rb", __FILE__)
 
 class ActiveSupport::TestCase
   include Factories
