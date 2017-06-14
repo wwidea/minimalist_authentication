@@ -1,55 +1,59 @@
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/wwidea/minimalist_authentication)
-
-MinimalistAuthentication
-========================
-
+# MinimalistAuthentication
 A Rails authentication gem that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.
 
-This gem was largely inspired by the restful-authentication plugin (http://github.com/technoweenie/restful-authentication/tree/master). I selected the essential methods for password based authentication, reorganized them, trimmed them down when possible, added a couple of features, and resisted the urge to start adding more.
+
+## Installation
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'minimalist_authentication'
+```
+
+And then execute:
+```bash
+$ bundle
+```
+
+Create a user model:
+```bash
+bin/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
+```
 
 
-Installation
-============
-1) Add to your Gemfile:
+## Example
+Include Minimalist::Authentication in your user model (app/models/user.rb)
+```ruby
+class User < ActiveRecord::Base
+  include Minimalist::Authentication
+end
+```
 
-    gem 'minimalist_authentication'
+Include Minimalist::Authorization in your ApplicationController (app/controllers/application.rb)
+```ruby
+class ApplicationController < ActionController::Base
+  include Minimalist::Authorization
+  
+  # Lock down everything by default
+  # use skip_before_filter to open up sepecific actions
+  prepend_before_filter :authorization_required
+end
+```
 
-2) Create a user model:
+Include Minimalist::Sessions in your SessionsController (app/controllers/sessions_controller.rb)
+```ruby
+class SessionsController < ApplicationController
+  include Minimalist::Sessions
+  skip_before_filter :authorization_required, only: [:new, :create]
+end
+```
 
-    bin/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
-
-
-Example
-=======
-
-1) app/models/user.rb
-
-    class User < ActiveRecord::Base
-      include Minimalist::Authentication
-    end
-
-2) app/controllers/application.rb
-
-    class ApplicationController < ActionController::Base
-      include Minimalist::Authorization
-      
-      # Lock down everything by default
-      # use skip_before_filter to open up sepecific actions
-      prepend_before_filter :authorization_required
-    end
-
-3) app/controllers/sessions_controller.rb
-
-    class SessionsController < ApplicationController
-      include Minimalist::Sessions
-      skip_before_filter :authorization_required, only: [:new, :create]
-    end
-
-4) test/test_helper.rb
-
-    class ActiveSupport::TestCase
-      include Minimalist::TestHelper
-    end
+Include Minimalist::TestHelper in your test helper (test/test_helper.rb)
+```ruby
+class ActiveSupport::TestCase
+  include Minimalist::TestHelper
+end
+```
 
 
-Copyright (c) 2009 Aaron Baldwin, released under the MIT license
+## License
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
