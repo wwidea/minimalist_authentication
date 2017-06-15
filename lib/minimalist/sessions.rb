@@ -10,15 +10,15 @@ module Minimalist
     end
 
     def create
-      if user = User.authenticate(params[:email], params[:password])
+      if user = User.authenticate(user_params[:email], user_params[:password])
         user.logged_in
         session[:user_id] = user.id
         after_authentication(user)
         redirect_back_or_default(login_redirect_to(user))
         return
       else
-        after_authentication_failure(user)
-        flash.now[:alert] = "Couldn't log you in as '#{params[:email]}'"
+        after_authentication_failure
+        flash.now[:alert] = "Couldn't log you in as '#{user_params[:email]}'"
         render action: 'new'
       end
     end
@@ -31,6 +31,10 @@ module Minimalist
 
 
     private
+    
+    def user_params
+      @user_params ||= params.require(:user).permit(:email, :password)
+    end
 
     def login_redirect_to(user)
       '/'
@@ -44,7 +48,7 @@ module Minimalist
       # overide in application
     end
 
-    def after_authentication_failure(user)
+    def after_authentication_failure
       # overide in application
     end
   end
