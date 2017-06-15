@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
+  include Minimalist::TestHelper
   
   test "should get new" do
     get :new
@@ -21,9 +22,16 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "should destroy session" do
-    @request.session[:user_id] = 1
+    login_as FactoryGirl.create(:user)
     delete :destroy
     assert_nil session[:user_id]
     assert_redirected_to '/'
+  end
+  
+  private
+  
+  # make factory user availalbe like a fixure user
+  def users(user)
+    user
   end
 end
