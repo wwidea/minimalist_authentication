@@ -1,6 +1,5 @@
 module Minimalist
   module Sessions
-    ActiveSupport::Concern
 
     def show
       redirect_to new_session_path
