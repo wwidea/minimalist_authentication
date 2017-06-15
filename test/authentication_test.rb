@@ -4,12 +4,12 @@ class AuthenticationTest < ActiveSupport::TestCase
 
   test "should return active user" do
     user = FactoryGirl.create(:user)
-    assert_equal([user], User.active)
+    assert_equal [user], User.active
   end
 
   test "should authenticate user" do
     user = FactoryGirl.create(:user)
-    assert_equal(user, User.authenticate(user.email, 'password'))
+    assert_equal user, User.authenticate(user.email, 'password')
   end
 
   test "should fail to authenticate when email is blank" do
@@ -72,21 +72,21 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should migrate legacy users to new digest version" do
-    #Setup a user using the old digest version.
-    #This wouldn't be necessary with fixtures.
-    legacy_user = User.create(active: true, email: 'legacy@user.com', password: '123456', password_confirmation: '123456')
+    # Setup a user using the old digest version.
+    # This wouldn't be necessary with fixtures.
+    legacy_user = User.create(active: true, email: 'legacy@user.com', password: '123456', password_confirmation:'123456')
     legacy_user.password = nil
     legacy_user.salt = 'my_salt'
     legacy_user.crypted_password = User.secure_digest('my_password', 'my_salt', 1)
     legacy_user.using_digest_version = nil
-    assert(legacy_user.save)
-    assert_equal(nil, legacy_user.reload.using_digest_version)
-    assert_equal('86f156baf9e4868e6dcf910b65775efdeaa347d8',legacy_user.crypted_password)
+    assert legacy_user.save
+    assert_nil legacy_user.reload.using_digest_version
+    assert_equal '86f156baf9e4868e6dcf910b65775efdeaa347d8', legacy_user.crypted_password
 
     # Ok, now we can finally do the test.
     legacy_crypted_password = legacy_user.crypted_password
-    assert(legacy_user.authenticated?('my_password'))
-    assert_equal(Minimalist::Authentication::PREFERRED_DIGEST_VERSION,legacy_user.reload.using_digest_version)
-    assert_not_equal(legacy_crypted_password,legacy_user.crypted_password)
+    assert legacy_user.authenticated?('my_password')
+    assert_equal Minimalist::Authentication::PREFERRED_DIGEST_VERSION, legacy_user.reload.using_digest_version
+    assert_not_equal legacy_crypted_password, legacy_user.crypted_password
   end
 end
