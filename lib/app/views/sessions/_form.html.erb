@@ -1,12 +1,5 @@
-<%= form_tag session_path do %>
-  <div>
-    <%= label_tag 'email' %>
-    <%= text_field_tag 'email', @email %>
-  </div>
-  <div>
-    <%= label_tag 'password' %>
-    <%= password_field_tag 'password', nil %>
-  </div>
-
-  <p><%= submit_tag 'Log in', class: 'submit' %></p>
+<%= form_for :user, url: session_path do |form| %>
+  <%= form.text_field     :email %>
+  <%= form.password_field :password %>
+  <%= form.submit         'Log in' %>
 <% end %>
