@@ -2,17 +2,6 @@ require 'test_helper'
 
 class AuthenticationTest < ActiveSupport::TestCase
 
-  test "should not be able to set crypted_password through mass assignment" do
-    user = FactoryGirl.create(:user)
-    old_crypted_password = user.crypted_password
-    old_digest_version = user.using_digest_version
-    old_salt = user.salt
-    user.update_attributes(:crypted_password => 'should not work')
-    assert_equal(old_digest_version, user.using_digest_version)
-    assert_equal(old_salt, user.salt)
-    assert_equal(old_crypted_password, user.crypted_password)
-  end
-
   test "should return active user" do
     user = FactoryGirl.create(:user)
     assert_equal([user], User.active)
