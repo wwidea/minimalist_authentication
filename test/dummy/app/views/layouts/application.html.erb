@@ -9,6 +9,15 @@
   </head>
 
   <body>
+    <h3>Session:</h3>
+    <%= render 'layouts/hash', hash: session %>
+    
+    <h3>Flash:</h3>
+    <%= render 'layouts/hash', hash: flash %>
+    
     <%= yield %>
+    
+    <%= link_to 'Login', new_session_path %>
+    <%= link_to 'Logout', session_path, method: :delete %>
   </body>
 </html>
