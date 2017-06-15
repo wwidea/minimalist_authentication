@@ -9,9 +9,8 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "should create session" do
-    user = FactoryGirl.create(:user)
     post :create, params: { user: { email: 'test@testing.com', password: 'password' } }
-    assert_equal user.id, session[:user_id]
+    assert_equal users(:active_user).id, session[:user_id]
     assert_redirected_to '/'
   end
   
@@ -22,16 +21,9 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   test "should destroy session" do
-    login_as FactoryGirl.create(:user)
+    login_as :active_user
     delete :destroy
     assert_nil session[:user_id]
     assert_redirected_to '/'
-  end
-  
-  private
-  
-  # make factory user availalbe like a fixure user
-  def users(user)
-    user
   end
 end

@@ -1,0 +1,15 @@
+<% shared_salt = User.make_token %>
+
+active_user:
+  email:                  test@testing.com
+  active:                 true
+  crypted_password:       <%= User.secure_digest('password', shared_salt) %>
+  salt:                   <%= shared_salt %>
+  using_digest_version:   <%= Minimalist::Authentication::PREFERRED_DIGEST_VERSION %>
+
+legacy_user:
+  email:                  legacy@user.com
+  active:                 true
+  crypted_password:       <%= User.secure_digest('my_password', 'my_salt', 1) %>
+  salt:                   'my_salt'
+  using_digest_version:   1
