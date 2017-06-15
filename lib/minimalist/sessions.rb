@@ -3,7 +3,6 @@ module Minimalist
     def self.included( base )
       base.class_eval do
         include InstanceMethods
-        append_view_path File.join(File.dirname(__FILE__), '..', '/app/views')
       end
     end
     
