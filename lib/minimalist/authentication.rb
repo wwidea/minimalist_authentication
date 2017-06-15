@@ -11,7 +11,8 @@ module Minimalist
     # Recalibrates cost when class is loaded so that new user passwords
     # can automatically take advantage of faster server hardware in the
     # future for better encryption.
-    CALIBRATED_BCRYPT_COST = BCrypt::Engine.calibrate(750)
+    # sets cost to BCrypt::Engine::MIN_COST in the test environment
+    CALIBRATED_BCRYPT_COST = (::Rails.env.test? ? BCrypt::Engine::MIN_COST : BCrypt::Engine.calibrate(750))
 
     included do
       attr_accessor :password
