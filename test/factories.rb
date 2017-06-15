@@ -4,9 +4,9 @@ module Factories
   FactoryGirl.define do
     factory :user do
       active                true
-      email                 'test@testing.com'
+      email                 'test-old@testing.com'
       salt                  salt
-      crypted_password      User.secure_digest('password', salt, Minimalist::Authentication::PREFERRED_DIGEST_VERSION)
+      crypted_password      User.secure_digest('password', salt)
       using_digest_version  Minimalist::Authentication::PREFERRED_DIGEST_VERSION
     end
   end

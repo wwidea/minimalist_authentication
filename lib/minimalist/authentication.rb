@@ -36,7 +36,7 @@ module Minimalist
         return user
       end
 
-      def secure_digest(string, salt, version = 1)
+      def secure_digest(string, salt, version = PREFERRED_DIGEST_VERSION)
         case version
           when 0 then Digest::MD5.hexdigest(string.to_s)
           when 1 then Digest::SHA1.hexdigest("#{string}--#{salt}")
@@ -62,7 +62,7 @@ module Minimalist
       if crypted_password == encrypt(password)
         if self.respond_to?(:using_digest_version) && (using_digest_version != PREFERRED_DIGEST_VERSION || salt_cost < CALIBRATED_BCRYPT_COST)
           new_salt = self.class.make_token
-          self.update_attribute(:crypted_password, self.class.secure_digest(password, new_salt, PREFERRED_DIGEST_VERSION))
+          self.update_attribute(:crypted_password, self.class.secure_digest(password, new_salt))
           self.update_attribute(:salt, new_salt)
           self.update_attribute(:using_digest_version, PREFERRED_DIGEST_VERSION)
         end
@@ -94,7 +94,7 @@ module Minimalist
     def encrypt_password
       return if password.blank?
       self.salt = self.class.make_token
-      self.crypted_password = self.class.secure_digest(password, salt, (self.respond_to?(:using_digest_version) ? PREFERRED_DIGEST_VERSION : 1))
+      self.crypted_password = self.class.secure_digest(password, salt)
       self.using_digest_version = PREFERRED_DIGEST_VERSION if self.respond_to?(:using_digest_version)
     end
 
