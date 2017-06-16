@@ -13,11 +13,3 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.file_fixture_path = ActiveSupport::TestCase.fixture_path + "/files"
   ActiveSupport::TestCase.fixtures :all
 end
-
-# factory_girl
-require 'factory_girl'
-require File.expand_path("../../test/factories.rb", __FILE__)
-
-class ActiveSupport::TestCase
-  include Factories
-end
