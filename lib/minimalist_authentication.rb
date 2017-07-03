@@ -1,3 +1,5 @@
+require "minimalist_authentication/engine"
+
 # MinimalistAuthentication
 require 'minimalist/authentication'
 require 'minimalist/authorization'
