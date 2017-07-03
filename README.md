@@ -54,6 +54,9 @@ class ActiveSupport::TestCase
 end
 ```
 
+## Build
+[![Build Status](https://travis-ci.org/wwidea/minimalist_authentication.svg?branch=master)](https://travis-ci.org/wwidea/minimalist_authentication)
+
 
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
