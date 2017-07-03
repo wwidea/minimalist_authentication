@@ -39,7 +39,7 @@ class AuthenticationTest < ActiveSupport::TestCase
     updated_at = 1.day.ago
     users(:active_user).update_column(:updated_at, updated_at)
     users(:active_user).logged_in
-    assert_equal updated_at, users(:active_user).reload.updated_at
+    assert_equal updated_at.to_s, users(:active_user).reload.updated_at.to_s
   end
 
   test "guest should be guest" do
