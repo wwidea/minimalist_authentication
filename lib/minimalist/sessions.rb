@@ -1,10 +1,6 @@
 module Minimalist
   module Sessions
 
-    def show
-      redirect_to new_session_path
-    end
-    
     def new
       @user = User.new
     end
