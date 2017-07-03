@@ -1,3 +1,3 @@
 module MinimalistAuthentication
-  VERSION = '0.6.14'
+  VERSION = '1.0.0'
 end
