@@ -20,16 +20,22 @@ module Minimalist
     end
 
     def destroy
-      session[:user_id] = nil
+      scrub_session!
       flash[:notice] = "You have been logged out."
       redirect_to logout_redirect_to
     end
 
 
     private
-    
+
     def user_params
       @user_params ||= params.require(:user).permit(:email, :password)
+    end
+
+    def scrub_session!
+      (session.keys - %w(session_id _csrf_token return_to)).each do |key|
+        session.delete(key)
+      end
     end
 
     def login_redirect_to(user)
@@ -37,7 +43,7 @@ module Minimalist
     end
 
     def logout_redirect_to
-      '/'
+      new_session_path
     end
 
     def after_authentication(user)
