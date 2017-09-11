@@ -4,7 +4,7 @@ require 'bcrypt'
 module Minimalist
   module Authentication
     extend ActiveSupport::Concern
-    
+
     GUEST_USER_EMAIL = 'guest'
     PREFERRED_DIGEST_VERSION = 3
 
@@ -29,10 +29,11 @@ module Minimalist
     end
 
     module ClassMethods
-      def authenticate(email, password)
-        return if email.blank? || password.blank?
-        user = active.where(email: email).first
-        return unless user && user.authenticated?(password)
+      def authenticate(params)
+        field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
+        return if field.blank? || value.blank? || params[:password].blank?
+        user = active.where(field => value).first
+        return unless user && user.authenticated?(params[:password])
         return user
       end
 

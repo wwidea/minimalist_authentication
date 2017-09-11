@@ -6,7 +6,7 @@ module Minimalist
     end
 
     def create
-      if user = User.authenticate(user_params[:email], user_params[:password])
+      if user = User.authenticate(user_params)
         user.logged_in
         session[:user_id] = user.id
         after_authentication(user)
@@ -14,7 +14,7 @@ module Minimalist
         return
       else
         after_authentication_failure
-        flash.now[:alert] = "Couldn't log you in as '#{user_params[:email]}'"
+        flash.now[:alert] = "Couldn't log you in as '#{user_params[:email] || user_params[:username]}'"
         render action: 'new'
       end
     end
@@ -29,7 +29,7 @@ module Minimalist
     private
 
     def user_params
-      @user_params ||= params.require(:user).permit(:email, :password)
+      @user_params ||= params.require(:user).permit(:email, :username, :password)
     end
 
     def scrub_session!
