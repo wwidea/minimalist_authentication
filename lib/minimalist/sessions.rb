@@ -1,5 +1,11 @@
 module Minimalist
   module Sessions
+    extend ActiveSupport::Concern
+
+    included do
+      skip_before_action :authorization_required,     only: %i(new create)
+      skip_before_action :verify_authenticity_token,  only: %i(create destroy)
+    end
 
     def new
       @user = User.new
