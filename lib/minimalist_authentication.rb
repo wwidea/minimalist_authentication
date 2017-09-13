@@ -1,5 +1,5 @@
 require 'minimalist_authentication/engine'
-require 'minimalist_authentication/null_bcrypt_password'
+require 'minimalist_authentication/null_password'
 
 # MinimalistAuthentication
 require 'minimalist/authentication'

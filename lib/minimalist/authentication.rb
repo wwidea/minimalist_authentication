@@ -109,7 +109,7 @@ module Minimalist
     end
 
     def null_password
-      MinimalistAuthentication::NullBCryptPassword.new
+      MinimalistAuthentication::NullPassword.new
     end
 
     # email validation
