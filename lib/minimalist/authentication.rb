@@ -6,6 +6,7 @@ module Minimalist
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL = 'guest'
+    EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
     # Recalibrates cost when class is loaded so that new user passwords
     # can automatically take advantage of faster server hardware in the
@@ -17,12 +18,15 @@ module Minimalist
       attr_accessor :password
       before_save :encrypt_password
 
-      validates_presence_of     :email, if: :validate_email_presence?
-      validates_uniqueness_of   :email, allow_blank: true, if: :validate_email_uniqueness?
-      validates_format_of       :email, allow_blank: true, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, if: :validate_email_format?
-      validates_presence_of     :password,                 if: :password_required?
-      validates_confirmation_of :password,                 if: :password_required?
-      validates_length_of       :password, within: 6..40,  if: :password_required?
+      # email validations
+      validates_presence_of     :email,                                       if: :validate_email_presence?
+      validates_uniqueness_of   :email, allow_blank: true,                    if: :validate_email?
+      validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX, if: :validate_email?
+
+      # password validations
+      validates_presence_of     :password,                  if: :password_required?
+      validates_confirmation_of :password,                  if: :password_required?
+      validates_length_of       :password, within: 6..40,   if: :password_required?
 
       scope :active, ->(active = true) { where active: active }
     end
@@ -90,7 +94,7 @@ module Minimalist
     def encrypt_password
       return if password.blank?
       self.salt = self.class.make_token
-      self.crypted_password = self.class.secure_digest(password, salt)
+      self.crypted_password = encrypt(password)
     end
 
     def salt_cost
@@ -99,20 +103,13 @@ module Minimalist
 
     # email validation
     def validate_email?
-      # allows applications to turn off email validation
-      true
+      # allows applications to turn off all email validation
+      active?
     end
 
     def validate_email_presence?
-      validate_email? && active?
-    end
-
-    def validate_email_format?
-      validate_email? && active?
-    end
-
-    def validate_email_uniqueness?
-      validate_email? && active?
+      # allows applications to turn off email presence validation
+      validate_email?
     end
   end
 end
