@@ -1,4 +1,3 @@
-require 'digest/sha1'
 require 'bcrypt'
 
 module Minimalist
@@ -12,7 +11,7 @@ module Minimalist
     # can automatically take advantage of faster server hardware in the
     # future for better encryption.
     # sets cost to BCrypt::Engine::MIN_COST in the test environment
-    CALIBRATED_BCRYPT_COST = (::Rails.env.test? ? BCrypt::Engine::MIN_COST : BCrypt::Engine.calibrate(750))
+    CALIBRATED_BCRYPT_COST = (::Rails.env.test? ? ::BCrypt::Engine::MIN_COST : ::BCrypt::Engine.calibrate(750))
 
     included do
       attr_accessor :password
@@ -41,11 +40,11 @@ module Minimalist
       end
 
       def secure_digest(string, salt)
-        BCrypt::Password.new(BCrypt::Engine.hash_secret(string, salt)).checksum
+        ::BCrypt::Password.new(::BCrypt::Engine.hash_secret(string, salt)).checksum
       end
 
       def make_token
-        BCrypt::Engine.generate_salt(CALIBRATED_BCRYPT_COST)
+        ::BCrypt::Engine.generate_salt(CALIBRATED_BCRYPT_COST)
       end
 
       def guest
@@ -58,7 +57,7 @@ module Minimalist
     end
 
     def authenticated?(password)
-      if crypted_password == encrypt(password)
+      if ::BCrypt::Password.new("#{salt}#{crypted_password}") == password
         update_encryption(password) if salt_cost < CALIBRATED_BCRYPT_COST
         return true
       end
@@ -81,10 +80,6 @@ module Minimalist
       active? && (crypted_password.blank? || !password.blank?)
     end
 
-    def encrypt(password)
-      self.class.secure_digest(password, salt)
-    end
-
     def update_encryption(password)
       self.password = password
       encrypt_password
@@ -97,8 +92,12 @@ module Minimalist
       self.crypted_password = encrypt(password)
     end
 
+    def encrypt(password)
+      self.class.secure_digest(password, salt)
+    end
+
     def salt_cost
-      BCrypt::Engine.valid_salt?(salt) ? salt.match(/\$[^\$]+\$([0-9]+)\$/)[1].to_i : 0
+      ::BCrypt::Engine.valid_salt?(salt) ? salt.match(/\$[^\$]+\$([0-9]+)\$/)[1].to_i : 0
     end
 
     # email validation
