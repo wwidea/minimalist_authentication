@@ -6,8 +6,12 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert_equal users(:legacy_user, :active_user), User.active.order(:email)
   end
 
-  test "should authenticate user" do
+  test "should authenticate user with email" do
     assert_equal users(:active_user), User.authenticate(email: users(:active_user).email, password: 'password')
+  end
+
+  test "should authenticate user with username" do
+    assert_equal users(:active_user), User.authenticate(username: users(:active_user).username, password: 'password')
   end
 
   test "should fail to authenticate when email is blank" do
