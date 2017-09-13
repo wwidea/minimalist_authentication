@@ -55,15 +55,11 @@ module Minimalist
 
     def authenticated?(password)
       if crypted_password == encrypt(password)
-        if salt_cost < CALIBRATED_BCRYPT_COST
-          new_salt = self.class.make_token
-          self.update_attribute(:crypted_password, self.class.secure_digest(password, new_salt))
-          self.update_attribute(:salt, new_salt)
-        end
+        update_encryption(password) if salt_cost < CALIBRATED_BCRYPT_COST
         return true
-      else
-        return false
       end
+
+      return false
     end
 
     def logged_in
@@ -83,6 +79,12 @@ module Minimalist
 
     def encrypt(password)
       self.class.secure_digest(password, salt)
+    end
+
+    def update_encryption(password)
+      self.password = password
+      encrypt_password
+      save
     end
 
     def encrypt_password

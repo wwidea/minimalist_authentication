@@ -68,6 +68,7 @@ class AuthenticationTest < ActiveSupport::TestCase
     users(:legacy_user).expects(:salt_cost).returns(0)
 
     assert            users(:legacy_user).authenticated?('my_password')
+    users(:legacy_user).reload
     assert_not_equal  crypted_password, users(:legacy_user).crypted_password
     assert_not_equal  salt,             users(:legacy_user).salt
   end
