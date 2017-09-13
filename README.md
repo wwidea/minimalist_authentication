@@ -37,10 +37,6 @@ Include Minimalist::Authorization in your ApplicationController (app/controllers
 ```ruby
 class ApplicationController < ActionController::Base
   include Minimalist::Authorization
-
-  # Lock down everything by default
-  # use skip_before_action to open up specific actions
-  before_action :authorization_required
 end
 ```
 
