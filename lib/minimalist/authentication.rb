@@ -39,12 +39,12 @@ module Minimalist
         return user
       end
 
-      def secure_digest(string, salt)
-        ::BCrypt::Password.new(::BCrypt::Engine.hash_secret(string, salt)).checksum
+      def password_hash(password)
+        ::BCrypt::Password.create(password, cost: calibrated_bcrypt_cost)
       end
 
-      def make_token
-        ::BCrypt::Engine.generate_salt(CALIBRATED_BCRYPT_COST)
+      def calibrated_bcrypt_cost
+        CALIBRATED_BCRYPT_COST
       end
 
       def guest
@@ -58,7 +58,7 @@ module Minimalist
 
     def authenticated?(password)
       if bcrypt_password == password
-        update_encryption(password) if bcrypt_password.cost < CALIBRATED_BCRYPT_COST
+        update_encryption(password) if bcrypt_password.cost < self.class.calibrated_bcrypt_cost
         return true
       end
 
@@ -88,12 +88,11 @@ module Minimalist
 
     def encrypt_password
       return if password.blank?
-      self.salt = self.class.make_token
-      self.crypted_password = encrypt(password)
-    end
-
-    def encrypt(password)
-      self.class.secure_digest(password, salt)
+      # self.salt = self.class.make_token
+      # self.crypted_password = encrypt(password)
+      password_hash         = self.class.password_hash(password)
+      self.salt             = password_hash.salt
+      self.crypted_password = password_hash.checksum
     end
 
     def bcrypt_password
