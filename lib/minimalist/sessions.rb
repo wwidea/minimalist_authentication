@@ -13,6 +13,7 @@ module Minimalist
 
     def create
       if authenticated_user
+        scrub_session!
         authenticated_user.logged_in
         session[:user_id] = authenticated_user.id
         after_authentication_success
