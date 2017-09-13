@@ -73,7 +73,6 @@ module Minimalist
       email == GUEST_USER_EMAIL
     end
 
-
     private
 
     def password_required?
