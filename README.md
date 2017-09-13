@@ -14,12 +14,12 @@ And then execute:
 $ bundle
 ```
 
-Create a user model for with email for an identifier:
+Create a user model for with **email** for an identifier:
 ```bash
 bin/rails generate model user active:boolean email:string crypted_password:string salt:string last_logged_in_at:datetime
 ```
 
-OR create a user model with username for an identifier:
+OR create a user model with **username** for an identifier:
 ```bash
 bin/rails generate model user active:boolean username:string crypted_password:string salt:string last_logged_in_at:datetime
 ```
