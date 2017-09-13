@@ -7,24 +7,24 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should authenticate user" do
-    assert_equal users(:active_user), User.authenticate(users(:active_user).email, 'password')
+    assert_equal users(:active_user), User.authenticate(email: users(:active_user).email, password: 'password')
   end
 
   test "should fail to authenticate when email is blank" do
-    assert_nil User.authenticate('', 'password')
+    assert_nil User.authenticate(email: '', password: 'password')
   end
 
   test "should fail to authenticate when password is blank" do
-    assert_nil User.authenticate(users(:active_user).email, '')
+    assert_nil User.authenticate(email: users(:active_user).email, password: '')
   end
 
   test "should fail to authenticate when user is not active" do
     users(:active_user).update_column(:active, false)
-    assert_nil User.authenticate(users(:active_user).email, 'password')
+    assert_nil User.authenticate(email: users(:active_user).email, password: 'password')
   end
 
   test "should fail to authenticate for incorrect password" do
-    assert_nil User.authenticate(users(:active_user).email, 'incorrect_password')
+    assert_nil User.authenticate(email: users(:active_user).email, password: 'incorrect_password')
   end
 
   test "should create salt and encrypted_password for new user" do
@@ -68,7 +68,7 @@ class AuthenticationTest < ActiveSupport::TestCase
 
   test "should migrate legacy users to new digest version" do
     crypted_password = users(:legacy_user).crypted_password
-    
+
     assert            users(:legacy_user).authenticated?('my_password')
     assert_equal      Minimalist::Authentication::PREFERRED_DIGEST_VERSION, users(:legacy_user).reload.using_digest_version
     assert_not_equal  crypted_password, users(:legacy_user).crypted_password

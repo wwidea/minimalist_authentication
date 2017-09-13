@@ -1,51 +1,64 @@
 module Minimalist
   module Sessions
+    extend ActiveSupport::Concern
+
+    included do
+      skip_before_action :authorization_required,     only: %i(new create)
+      skip_before_action :verify_authenticity_token,  only: %i(create destroy)
+    end
 
     def new
       @user = User.new
     end
 
     def create
-      if user = User.authenticate(user_params[:email], user_params[:password])
-        user.logged_in
-        session[:user_id] = user.id
-        after_authentication(user)
-        redirect_back_or_default(login_redirect_to(user))
+      if authenticated_user
+        authenticated_user.logged_in
+        session[:user_id] = authenticated_user.id
+        after_authentication_success
         return
       else
         after_authentication_failure
-        flash.now[:alert] = "Couldn't log you in as '#{user_params[:email]}'"
-        render action: 'new'
       end
     end
 
     def destroy
-      session[:user_id] = nil
+      scrub_session!
       flash[:notice] = "You have been logged out."
       redirect_to logout_redirect_to
     end
 
-
     private
-    
+
+    def authenticated_user
+      @authenticated_user ||= User.authenticate(user_params)
+    end
+
     def user_params
-      @user_params ||= params.require(:user).permit(:email, :password)
+      @user_params ||= params.require(:user).permit(:email, :username, :password)
     end
 
-    def login_redirect_to(user)
-      '/'
-    end
-
-    def logout_redirect_to
-      '/'
-    end
-
-    def after_authentication(user)
-      # overide in application
+    def after_authentication_success
+      redirect_back_or_default(login_redirect_to)
     end
 
     def after_authentication_failure
-      # overide in application
+      flash.now[:alert] = "Couldn't log you in as '#{user_params[:email] || user_params[:username]}'"
+      render :new
+    end
+
+    def scrub_session!
+      (session.keys - %w(session_id _csrf_token return_to)).each do |key|
+        session.delete(key)
+      end
+    end
+
+    def login_redirect_to
+      root_path
+    end
+
+    def logout_redirect_to
+      new_session_path
     end
   end
 end

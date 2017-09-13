@@ -32,7 +32,7 @@ Include Minimalist::Authorization in your ApplicationController (app/controllers
 ```ruby
 class ApplicationController < ActionController::Base
   include Minimalist::Authorization
-  
+
   # Lock down everything by default
   # use skip_before_action to open up specific actions
   before_action :authorization_required
@@ -43,7 +43,6 @@ Include Minimalist::Sessions in your SessionsController (app/controllers/session
 ```ruby
 class SessionsController < ApplicationController
   include Minimalist::Sessions
-  skip_before_action :authorization_required, only: %i(new create)
 end
 ```
 
