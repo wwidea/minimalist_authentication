@@ -6,7 +6,6 @@ module Minimalist
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL = 'guest'
-    PREFERRED_DIGEST_VERSION = 3
 
     # Recalibrates cost when class is loaded so that new user passwords
     # can automatically take advantage of faster server hardware in the
@@ -37,13 +36,8 @@ module Minimalist
         return user
       end
 
-      def secure_digest(string, salt, version = PREFERRED_DIGEST_VERSION)
-        case version
-          when 0 then Digest::MD5.hexdigest(string.to_s)
-          when 1 then Digest::SHA1.hexdigest("#{string}--#{salt}")
-          when 2 then Digest::SHA2.hexdigest("#{string}#{salt}", 512)
-          when 3 then BCrypt::Password.new(BCrypt::Engine.hash_secret(string, salt)).checksum
-        end
+      def secure_digest(string, salt)
+        BCrypt::Password.new(BCrypt::Engine.hash_secret(string, salt)).checksum
       end
 
       def make_token
@@ -61,11 +55,10 @@ module Minimalist
 
     def authenticated?(password)
       if crypted_password == encrypt(password)
-        if self.respond_to?(:using_digest_version) && (using_digest_version != PREFERRED_DIGEST_VERSION || salt_cost < CALIBRATED_BCRYPT_COST)
+        if salt_cost < CALIBRATED_BCRYPT_COST
           new_salt = self.class.make_token
           self.update_attribute(:crypted_password, self.class.secure_digest(password, new_salt))
           self.update_attribute(:salt, new_salt)
-          self.update_attribute(:using_digest_version, PREFERRED_DIGEST_VERSION)
         end
         return true
       else
@@ -89,18 +82,13 @@ module Minimalist
     end
 
     def encrypt(password)
-      self.class.secure_digest(password, salt, digest_version)
+      self.class.secure_digest(password, salt)
     end
 
     def encrypt_password
       return if password.blank?
       self.salt = self.class.make_token
       self.crypted_password = self.class.secure_digest(password, salt)
-      self.using_digest_version = PREFERRED_DIGEST_VERSION if self.respond_to?(:using_digest_version)
-    end
-
-    def digest_version
-      self.respond_to?(:using_digest_version) ? (using_digest_version || 1) : 1
     end
 
     def salt_cost

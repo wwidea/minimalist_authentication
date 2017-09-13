@@ -62,15 +62,13 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert user.errors[:password]
   end
 
-  test "should use latest digest version for new users" do
-    assert_equal User::PREFERRED_DIGEST_VERSION, User.create(email: 'digest_version@testing.com', password: 'password').using_digest_version
-  end
-
-  test "should migrate legacy users to new digest version" do
-    crypted_password = users(:legacy_user).crypted_password
+  test "should migrate legacy user to new salt" do
+    crypted_password  = users(:legacy_user).crypted_password
+    salt              = users(:legacy_user).salt
+    users(:legacy_user).expects(:salt_cost).returns(0)
 
     assert            users(:legacy_user).authenticated?('my_password')
-    assert_equal      Minimalist::Authentication::PREFERRED_DIGEST_VERSION, users(:legacy_user).reload.using_digest_version
     assert_not_equal  crypted_password, users(:legacy_user).crypted_password
+    assert_not_equal  salt,             users(:legacy_user).salt
   end
 end

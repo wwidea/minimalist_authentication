@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170615142747) do
+ActiveRecord::Schema.define(version: 20170913043452) do
 
   create_table "users", force: :cascade do |t|
     t.boolean "active"
     t.string "email"
     t.string "crypted_password"
     t.string "salt"
-    t.integer "using_digest_version"
     t.datetime "last_logged_in_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
