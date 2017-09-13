@@ -31,6 +31,10 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert_nil User.authenticate(email: users(:active_user).email, password: 'incorrect_password')
   end
 
+  test "should gracefully fail to authenticate to an invalid password hash" do
+    refute User.new(crypted_password: 'password', salt: 'salt').authenticated?('password')
+  end
+
   test "should create salt and encrypted_password for new user" do
     user = User.new(email: 'test-new@testing.com', password: 'testing')
     assert          user.save
@@ -67,7 +71,7 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should migrate legacy user to new salt" do
-    users(:legacy_user).expects(:salt_cost).returns(0) do
+    ::BCrypt::Password.any_instance.expects(:cost).returns(0) do
       assert users(:legacy_user).authenticated?('my_password')
       assert users(:legacy_user).saved_changes.has_key?(:crypted_password)
       assert users(:legacy_user).saved_changes.has_key?(:salt)

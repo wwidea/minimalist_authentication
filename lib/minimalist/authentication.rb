@@ -57,8 +57,8 @@ module Minimalist
     end
 
     def authenticated?(password)
-      if ::BCrypt::Password.new("#{salt}#{crypted_password}") == password
-        update_encryption(password) if salt_cost < CALIBRATED_BCRYPT_COST
+      if bcrypt_password == password
+        update_encryption(password) if bcrypt_password.cost < CALIBRATED_BCRYPT_COST
         return true
       end
 
@@ -96,8 +96,20 @@ module Minimalist
       self.class.secure_digest(password, salt)
     end
 
-    def salt_cost
-      ::BCrypt::Engine.valid_salt?(salt) ? salt.match(/\$[^\$]+\$([0-9]+)\$/)[1].to_i : 0
+    def bcrypt_password
+      valid_hash? ? ::BCrypt::Password.new(password_hash) : null_password
+    end
+
+    def valid_hash?
+      ::BCrypt::Password.valid_hash?(password_hash)
+    end
+
+    def password_hash
+      "#{salt}#{crypted_password}"
+    end
+
+    def null_password
+      MinimalistAuthentication::NullBCryptPassword.new
     end
 
     # email validation
