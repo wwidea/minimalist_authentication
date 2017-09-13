@@ -63,10 +63,12 @@ class AuthenticationTest < ActiveSupport::TestCase
   end
 
   test "should migrate legacy user to new salt" do
-    users(:legacy_user).expects(:salt_cost).returns(0)
+    users(:legacy_user).expects(:salt_cost).returns(0) do
+      assert users(:legacy_user).authenticated?('my_password')
+      assert users(:legacy_user).saved_changes.has_key?(:crypted_password)
+      assert users(:legacy_user).saved_changes.has_key?(:salt)
+    end
 
-    assert users(:legacy_user).authenticated?('my_password')
-    assert users(:legacy_user).saved_changes.has_key?(:crypted_password)
-    assert users(:legacy_user).saved_changes.has_key?(:salt)
+    assert users(:legacy_user).authenticated?('my_password'), 'authenticated? failed after encryption update'
   end
 end
