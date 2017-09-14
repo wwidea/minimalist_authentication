@@ -88,8 +88,6 @@ module Minimalist
 
     def encrypt_password
       return if password.blank?
-      # self.salt = self.class.make_token
-      # self.crypted_password = encrypt(password)
       password_hash         = self.class.password_hash(password)
       self.salt             = password_hash.salt
       self.crypted_password = password_hash.checksum
