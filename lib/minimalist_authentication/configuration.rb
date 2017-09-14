@@ -19,16 +19,20 @@ module MinimalistAuthentication
     # Defaults to :user_id
     attr_accessor :session_key
 
-    # The application user class
-    # Defaults to ::User
-    attr_writer   :user_model
+    # The application user class name
+    # Defaults to '::User'
+    attr_accessor :user_model_name
 
     def initialize
       self.session_key = :user_id
+      self.user_model_name = '::User'
     end
 
+    # Returns the user_model class
+    # Calling constantize on a string makes this work correctly with
+    # the spring application preloader gem.
     def user_model
-      @user_model ||= ::User
+      @user_model ||= user_model_name.constantize
     end
   end
 end
