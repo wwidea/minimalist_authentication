@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  include Minimalist::TestHelper
+  include MinimalistAuthentication::TestHelper
 
   test "should get new" do
     get new_session_path

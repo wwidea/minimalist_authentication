@@ -50,7 +50,7 @@ end
 Include Minimalist::TestHelper in your test helper (test/test_helper.rb)
 ```ruby
 class ActiveSupport::TestCase
-  include Minimalist::TestHelper
+  include MinimalistAuthentication::TestHelper
 end
 ```
 
