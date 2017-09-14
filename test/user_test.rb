@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AuthenticationTest < ActiveSupport::TestCase
+class UserTest < ActiveSupport::TestCase
 
   test "should return active user" do
     assert_equal users(:legacy_user, :active_user), User.active.order(:email)
