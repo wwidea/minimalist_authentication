@@ -1,7 +1,7 @@
 require 'bcrypt'
 
-module Minimalist
-  module Authentication
+module MinimalistAuthentication
+  module User
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL = 'guest'

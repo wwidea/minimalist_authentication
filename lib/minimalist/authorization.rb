@@ -13,11 +13,11 @@ module Minimalist
     private
 
     def current_user
-      @current_user ||= (get_user_from_session || User.guest)
+      @current_user ||= (get_user_from_session || ::User.guest)
     end
 
     def get_user_from_session
-      User.find_by_id(session[:user_id]) if session[:user_id]
+      ::User.find_by_id(session[:user_id]) if session[:user_id]
     end
 
     def authorization_required

@@ -1,3 +1,3 @@
 class User < ApplicationRecord
-  include Minimalist::Authentication
+  include MinimalistAuthentication::User
 end
