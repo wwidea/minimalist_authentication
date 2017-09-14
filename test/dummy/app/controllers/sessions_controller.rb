@@ -1,3 +1,3 @@
 class SessionsController < ApplicationController
-  include Minimalist::Sessions
+  include MinimalistAuthentication::Sessions
 end

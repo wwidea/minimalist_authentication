@@ -40,10 +40,10 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-Include Minimalist::Sessions in your SessionsController (app/controllers/sessions_controller.rb)
+Include MinimalistAuthentication::Sessions in your SessionsController (app/controllers/sessions_controller.rb)
 ```ruby
 class SessionsController < ApplicationController
-  include Minimalist::Sessions
+  include MinimalistAuthentication::Sessions
 end
 ```
 

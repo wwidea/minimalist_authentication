@@ -1,4 +1,4 @@
-module Minimalist
+module MinimalistAuthentication
   module Sessions
     extend ActiveSupport::Concern
 
