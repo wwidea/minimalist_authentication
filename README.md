@@ -47,10 +47,26 @@ class SessionsController < ApplicationController
 end
 ```
 
+Add session to your routes file (config/routes.rb)
+```ruby
+Rails.application.routes.draw do
+  resource :session, only: %i(new create destroy)
+end
+```
+
 Include Minimalist::TestHelper in your test helper (test/test_helper.rb)
 ```ruby
 class ActiveSupport::TestCase
   include MinimalistAuthentication::TestHelper
+end
+```
+
+## Example
+Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in /Users/baldwina/git/brightways/config/initializers.
+```ruby
+MinimalistAuthentication.configure do |configuration|
+  configuration.user_model_name   = 'CustomModelName'     # default is '::User'
+  configuration.session_key       = :custom_session_key   # default is ':user_id'
 end
 ```
 

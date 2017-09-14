@@ -24,8 +24,8 @@ module MinimalistAuthentication
     attr_accessor :user_model_name
 
     def initialize
-      self.session_key = :user_id
-      self.user_model_name = '::User'
+      self.user_model_name  = '::User'
+      self.session_key      = :user_id
     end
 
     # Returns the user_model class
