@@ -1,11 +1,11 @@
 require 'test_helper'
 
-class AuthorizationTest < ActiveSupport::TestCase
-  def AuthorizationTest.helper_method(*args)
+class ControllerTest < ActiveSupport::TestCase
+  def self.helper_method(*args)
     # stub so MinimalistAuthentication::Controller include will work
   end
 
-  def AuthorizationTest.before_action(*args)
+  def self.before_action(*args)
     # stub so MinimalistAuthentication::Controller include will work
   end
 
