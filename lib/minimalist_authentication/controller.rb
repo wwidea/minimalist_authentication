@@ -1,5 +1,5 @@
-module Minimalist
-  module Authorization
+module MinimalistAuthentication
+  module Controller
     extend ActiveSupport::Concern
 
     included do

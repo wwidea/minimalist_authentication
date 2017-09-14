@@ -2,14 +2,14 @@ require 'test_helper'
 
 class AuthorizationTest < ActiveSupport::TestCase
   def AuthorizationTest.helper_method(*args)
-    # stub so Minimalist::Authorization include will work
+    # stub so MinimalistAuthentication::Controller include will work
   end
 
   def AuthorizationTest.before_action(*args)
-    # stub so Minimalist::Authorization include will work
+    # stub so MinimalistAuthentication::Controller include will work
   end
 
-  include Minimalist::Authorization
+  include MinimalistAuthentication::Controller
 
   test "should return guest for current_user" do
     assert_equal 'guest', current_user.email

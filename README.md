@@ -26,17 +26,17 @@ bin/rails generate model user active:boolean username:string crypted_password:st
 
 
 ## Example
-Include Minimalist::Authentication in your user model (app/models/user.rb)
+Include MinimalistAuthentication::User in your user model (app/models/user.rb)
 ```ruby
 class User < ApplicationRecord
   include MinimalistAuthentication::User
 end
 ```
 
-Include Minimalist::Authorization in your ApplicationController (app/controllers/application.rb)
+Include MinimalistAuthentication::Controller in your ApplicationController (app/controllers/application.rb)
 ```ruby
 class ApplicationController < ActionController::Base
-  include Minimalist::Authorization
+  include MinimalistAuthentication::Controller
 end
 ```
 
