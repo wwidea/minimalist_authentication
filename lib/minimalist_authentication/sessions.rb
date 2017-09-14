@@ -1,4 +1,4 @@
-module Minimalist
+module MinimalistAuthentication
   module Sessions
     extend ActiveSupport::Concern
 
@@ -8,7 +8,7 @@ module Minimalist
     end
 
     def new
-      @user = User.new
+      @user = ::User.new
     end
 
     def create
@@ -32,7 +32,7 @@ module Minimalist
     private
 
     def authenticated_user
-      @authenticated_user ||= User.authenticate(user_params)
+      @authenticated_user ||= ::User.authenticate(user_params)
     end
 
     def user_params
