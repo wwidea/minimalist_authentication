@@ -13,11 +13,15 @@ module MinimalistAuthentication
     private
 
     def current_user
-      @current_user ||= (get_user_from_session || ::User.guest)
+      @current_user ||= (get_user_from_session || MinimalistAuthentication.configuration.user_model.guest)
     end
 
     def get_user_from_session
-      ::User.find_by_id(session[:user_id]) if session[:user_id]
+      MinimalistAuthentication.configuration.user_model.find_by_id(session_user_id) if session_user_id
+    end
+
+    def session_user_id
+      session[MinimalistAuthentication.configuration.session_key]
     end
 
     def authorization_required

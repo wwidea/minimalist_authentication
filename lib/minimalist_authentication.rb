@@ -1,4 +1,5 @@
 require 'minimalist_authentication/engine'
+require 'minimalist_authentication/configuration'
 require 'minimalist_authentication/user'
 require 'minimalist_authentication/null_password'
 require 'minimalist_authentication/controller'
