@@ -8,14 +8,14 @@ module MinimalistAuthentication
     end
 
     def new
-      @user = ::User.new
+      @user = MinimalistAuthentication.configuration.user_model.new
     end
 
     def create
       if authenticated_user
         scrub_session!
         authenticated_user.logged_in
-        session[:user_id] = authenticated_user.id
+        session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
         after_authentication_success
         return
       else
@@ -32,7 +32,7 @@ module MinimalistAuthentication
     private
 
     def authenticated_user
-      @authenticated_user ||= ::User.authenticate(user_params)
+      @authenticated_user ||= MinimalistAuthentication.configuration.user_model.authenticate(user_params)
     end
 
     def user_params
