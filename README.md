@@ -14,9 +14,14 @@ And then execute:
 $ bundle
 ```
 
-Create a user model:
+Create a user model for with **email** for an identifier:
 ```bash
-bin/rails generate model user active:boolean email:string crypted_password:string salt:string using_digest_version:integer last_logged_in_at:datetime
+bin/rails generate model user active:boolean email:string crypted_password:string salt:string last_logged_in_at:datetime
+```
+
+OR create a user model with **username** for an identifier:
+```bash
+bin/rails generate model user active:boolean username:string crypted_password:string salt:string last_logged_in_at:datetime
 ```
 
 
@@ -32,10 +37,6 @@ Include Minimalist::Authorization in your ApplicationController (app/controllers
 ```ruby
 class ApplicationController < ActionController::Base
   include Minimalist::Authorization
-
-  # Lock down everything by default
-  # use skip_before_action to open up specific actions
-  before_action :authorization_required
 end
 ```
 

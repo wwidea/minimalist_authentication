@@ -4,7 +4,11 @@ class AuthorizationTest < ActiveSupport::TestCase
   def AuthorizationTest.helper_method(*args)
     # stub so Minimalist::Authorization include will work
   end
-  
+
+  def AuthorizationTest.before_action(*args)
+    # stub so Minimalist::Authorization include will work
+  end
+
   include Minimalist::Authorization
 
   test "should return guest for current_user" do
@@ -64,11 +68,11 @@ class AuthorizationTest < ActiveSupport::TestCase
   def action_name
     nil
   end
-  
+
   def controller_name
     nil
   end
-  
+
   def new_session_path
     '/session/new'
   end

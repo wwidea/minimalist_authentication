@@ -1,4 +1,5 @@
-require "minimalist_authentication/engine"
+require 'minimalist_authentication/engine'
+require 'minimalist_authentication/null_password'
 
 # MinimalistAuthentication
 require 'minimalist/authentication'

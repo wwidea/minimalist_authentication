@@ -1,8 +1,12 @@
 module Minimalist
   module Authorization
     extend ActiveSupport::Concern
-    
+
     included do
+      # Lock down everything by default
+      # use skip_before_action to open up specific actions
+      before_action :authorization_required
+
       helper_method :current_user, :logged_in?, :authorized?
     end
 

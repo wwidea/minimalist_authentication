@@ -6,8 +6,12 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert_equal users(:legacy_user, :active_user), User.active.order(:email)
   end
 
-  test "should authenticate user" do
+  test "should authenticate user with email" do
     assert_equal users(:active_user), User.authenticate(email: users(:active_user).email, password: 'password')
+  end
+
+  test "should authenticate user with username" do
+    assert_equal users(:active_user), User.authenticate(username: users(:active_user).username, password: 'password')
   end
 
   test "should fail to authenticate when email is blank" do
@@ -25,6 +29,10 @@ class AuthenticationTest < ActiveSupport::TestCase
 
   test "should fail to authenticate for incorrect password" do
     assert_nil User.authenticate(email: users(:active_user).email, password: 'incorrect_password')
+  end
+
+  test "should gracefully fail to authenticate to an invalid password hash" do
+    refute User.new(crypted_password: 'password', salt: 'salt').authenticated?('password')
   end
 
   test "should create salt and encrypted_password for new user" do
@@ -62,15 +70,16 @@ class AuthenticationTest < ActiveSupport::TestCase
     assert user.errors[:password]
   end
 
-  test "should use latest digest version for new users" do
-    assert_equal User::PREFERRED_DIGEST_VERSION, User.create(email: 'digest_version@testing.com', password: 'password').using_digest_version
-  end
+  test "should migrate legacy user to new salt" do
+    new_cost = ::BCrypt::Engine::MIN_COST + 1
+    User.expects(:calibrated_bcrypt_cost).returns(new_cost).times(4)
 
-  test "should migrate legacy users to new digest version" do
-    crypted_password = users(:legacy_user).crypted_password
+    assert_equal ::BCrypt::Engine::MIN_COST, users(:legacy_user).send(:bcrypt_password).cost
+    assert users(:legacy_user).authenticated?('password'), 'authenticated? failed during encryption update'
+    assert users(:legacy_user).saved_changes.has_key?(:crypted_password)
+    assert users(:legacy_user).saved_changes.has_key?(:salt)
 
-    assert            users(:legacy_user).authenticated?('my_password')
-    assert_equal      Minimalist::Authentication::PREFERRED_DIGEST_VERSION, users(:legacy_user).reload.using_digest_version
-    assert_not_equal  crypted_password, users(:legacy_user).crypted_password
+    assert users(:legacy_user).authenticated?('password'), 'authenticated? failed after encryption update'
+    assert_equal new_cost, users(:legacy_user).send(:bcrypt_password).cost
   end
 end
