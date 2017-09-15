@@ -7,12 +7,6 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = 'guest'
     EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
-    # Recalibrates cost when class is loaded so that new user passwords
-    # can automatically take advantage of faster server hardware in the
-    # future for better encryption.
-    # sets cost to BCrypt::Engine::MIN_COST in the test environment
-    CALIBRATED_BCRYPT_COST = (::Rails.env.test? ? ::BCrypt::Engine::MIN_COST : ::BCrypt::Engine.calibrate(750))
-
     included do
       attr_accessor :password
       before_save :encrypt_password
@@ -39,14 +33,6 @@ module MinimalistAuthentication
         return user
       end
 
-      def hash_password(password)
-        ::BCrypt::Password.create(password, cost: calibrated_bcrypt_cost)
-      end
-
-      def calibrated_bcrypt_cost
-        CALIBRATED_BCRYPT_COST
-      end
-
       def guest
         new(email: GUEST_USER_EMAIL)
       end
@@ -58,7 +44,8 @@ module MinimalistAuthentication
 
     def authenticated?(password)
       if bcrypt_password == password
-        update_encryption(password) if bcrypt_password.cost < self.class.calibrated_bcrypt_cost
+        # update_encryption(password) if bcrypt_password.cost < Password.cost
+        update_encryption(password) if Password.stale?(bcrypt_password)
         return true
       end
 
@@ -88,7 +75,7 @@ module MinimalistAuthentication
 
     def encrypt_password
       return if password.blank?
-      self.password_hash = self.class.hash_password(password)
+      self.password_hash = Password.create(password)
     end
 
     def bcrypt_password

@@ -70,10 +70,10 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should migrate legacy user to new salt" do
-    new_cost = ::BCrypt::Engine::MIN_COST + 1
-    User.expects(:calibrated_bcrypt_cost).returns(new_cost).times(4)
+    new_cost = MinimalistAuthentication::Password.cost + 1
+    MinimalistAuthentication::Password.expects(:cost).returns(new_cost).times(4)
 
-    assert_equal ::BCrypt::Engine::MIN_COST, users(:legacy_user).send(:bcrypt_password).cost
+    assert_equal (new_cost - 1), users(:legacy_user).send(:bcrypt_password).cost
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed during encryption update'
     assert users(:legacy_user).saved_changes.has_key?(:password_hash)
 

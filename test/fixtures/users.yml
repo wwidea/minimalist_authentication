@@ -1,4 +1,4 @@
-<% password_hash = User.hash_password('password') %>
+<% password_hash = MinimalistAuthentication::Password.create('password') %>
 
 DEFAULTS: &user_defaults
   active:                 true
