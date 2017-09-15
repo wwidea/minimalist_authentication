@@ -39,7 +39,7 @@ module MinimalistAuthentication
         return user
       end
 
-      def password_hash(password)
+      def hash_password(password)
         ::BCrypt::Password.create(password, cost: calibrated_bcrypt_cost)
       end
 
@@ -88,7 +88,7 @@ module MinimalistAuthentication
 
     def encrypt_password
       return if password.blank?
-      self.password_hash = self.class.password_hash(password)
+      self.password_hash = self.class.hash_password(password)
     end
 
     def bcrypt_password

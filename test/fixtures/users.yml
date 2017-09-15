@@ -1,4 +1,4 @@
-<% password_hash = User.password_hash('password') %>
+<% password_hash = User.hash_password('password') %>
 
 DEFAULTS: &user_defaults
   active:                 true
