@@ -13,7 +13,13 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem 'pry', group: %i(development test)
+group :development, :test do
+  gem 'pry'
+
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'terminal-notifier-guard'
+end
 
 group :test do
   gem 'simplecov'
