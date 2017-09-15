@@ -32,14 +32,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
-    refute User.new(crypted_password: 'password', salt: 'salt').authenticated?('password')
+    refute User.new(password_hash: 'password').authenticated?('password')
   end
 
-  test "should create salt and encrypted_password for new user" do
+  test "should create password_hash for new user" do
     user = User.new(email: 'test-new@testing.com', password: 'testing')
     assert          user.save
-    assert_not_nil  user.salt
-    assert_not_nil  user.crypted_password
+    assert_not_nil  user.password_hash
     assert          user.authenticated?('testing')
   end
 
@@ -76,8 +75,7 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal ::BCrypt::Engine::MIN_COST, users(:legacy_user).send(:bcrypt_password).cost
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed during encryption update'
-    assert users(:legacy_user).saved_changes.has_key?(:crypted_password)
-    assert users(:legacy_user).saved_changes.has_key?(:salt)
+    assert users(:legacy_user).saved_changes.has_key?(:password_hash)
 
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed after encryption update'
     assert_equal new_cost, users(:legacy_user).send(:bcrypt_password).cost
