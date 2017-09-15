@@ -77,7 +77,7 @@ module MinimalistAuthentication
     private
 
     def password_required?
-      active? && (crypted_password.blank? || !password.blank?)
+      active? && (password_hash.blank? || !password.blank?)
     end
 
     def update_encryption(password)
@@ -88,9 +88,7 @@ module MinimalistAuthentication
 
     def encrypt_password
       return if password.blank?
-      password_hash         = self.class.password_hash(password)
-      self.salt             = password_hash.salt
-      self.crypted_password = password_hash.checksum
+      self.password_hash = self.class.password_hash(password)
     end
 
     def bcrypt_password
@@ -99,10 +97,6 @@ module MinimalistAuthentication
 
     def valid_hash?
       ::BCrypt::Password.valid_hash?(password_hash)
-    end
-
-    def password_hash
-      "#{salt}#{crypted_password}"
     end
 
     def null_password
