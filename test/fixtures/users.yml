@@ -2,6 +2,7 @@
 
 DEFAULTS: &user_defaults
   active:                 true
+  password_hash:          password_hash
   crypted_password:       <%= password_hash.checksum %>
   salt:                   <%= password_hash.salt %>
 
