@@ -9,7 +9,7 @@ module MinimalistAuthentication
 
     included do
       attr_accessor :password
-      before_save :encrypt_password
+      before_save :hash_password
 
       # email validations
       validates_presence_of     :email,                                       if: :validate_email_presence?
@@ -43,9 +43,8 @@ module MinimalistAuthentication
     end
 
     def authenticated?(password)
-      if bcrypt_password == password
-        # update_encryption(password) if bcrypt_password.cost < Password.cost
-        update_encryption(password) if Password.stale?(bcrypt_password)
+      if password_object == password
+        update_hash(password) if password_object.stale?
         return true
       end
 
@@ -67,27 +66,19 @@ module MinimalistAuthentication
       active? && (password_hash.blank? || !password.blank?)
     end
 
-    def update_encryption(password)
+    def update_hash(password)
       self.password = password
-      encrypt_password
+      hash_password
       save
     end
 
-    def encrypt_password
+    def hash_password
       return if password.blank?
       self.password_hash = Password.create(password)
     end
 
-    def bcrypt_password
-      valid_hash? ? ::BCrypt::Password.new(password_hash) : null_password
-    end
-
-    def valid_hash?
-      ::BCrypt::Password.valid_hash?(password_hash)
-    end
-
-    def null_password
-      MinimalistAuthentication::NullPassword.new
+    def password_object
+      Password.new(password_hash)
     end
 
     # email validation

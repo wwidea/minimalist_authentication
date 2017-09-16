@@ -73,11 +73,11 @@ class UserTest < ActiveSupport::TestCase
     new_cost = MinimalistAuthentication::Password.cost + 1
     MinimalistAuthentication::Password.expects(:cost).returns(new_cost).times(4)
 
-    assert_equal (new_cost - 1), users(:legacy_user).send(:bcrypt_password).cost
+    assert_equal (new_cost - 1), users(:legacy_user).send(:password_object).cost
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed during encryption update'
     assert users(:legacy_user).saved_changes.has_key?(:password_hash)
 
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed after encryption update'
-    assert_equal new_cost, users(:legacy_user).send(:bcrypt_password).cost
+    assert_equal new_cost, users(:legacy_user).send(:password_object).cost
   end
 end

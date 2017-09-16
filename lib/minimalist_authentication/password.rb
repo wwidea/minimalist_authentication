@@ -2,12 +2,8 @@ module MinimalistAuthentication
   class Password
     class << self
       # Create a bcrypt password hash with a calibrated cost factor.
-      def create(password)
-        ::BCrypt::Password.create(password, cost: cost)
-      end
-
-      def stale?(password_hash)
-        password_hash.cost < cost
+      def create(secret)
+        new ::BCrypt::Engine.hash_secret(secret, BCrypt::Engine.generate_salt(cost))
       end
 
       # Cache the calibrated bcrypt cost factor.
@@ -17,12 +13,34 @@ module MinimalistAuthentication
 
       private
 
+      # Calibrates cost so that new user passwords can automatically take
+      # advantage of faster server hardware in the future.
+      # Sets cost to BCrypt::Engine::MIN_COST in the test environment
       def calibrate_cost
-        # Calibrates cost so that new user passwords can automatically take
-        # advantage of faster server hardware in the future.
-        # Sets cost to BCrypt::Engine::MIN_COST in the test environment
         ::Rails.env.test? ? ::BCrypt::Engine::MIN_COST : ::BCrypt::Engine.calibrate(750)
       end
+    end
+
+    attr_accessor :bcrypt_password
+
+    # Returns a password object wrapping a valid BCrypt password or a NullPassword
+    def initialize(password_hash)
+      begin
+        self.bcrypt_password = ::BCrypt::Password.new(password_hash)
+      rescue ::BCrypt::Errors::InvalidHash
+        self.bcrypt_password = NullPassword.new
+      end
+    end
+
+    # Delegate methods to bcrypt_password
+    delegate :==, :to_s, :cost, to: :bcrypt_password
+
+    # Temporary access to checksum and salt for backwards compatibility
+    delegate :checksum, :salt,  to: :bcrypt_password
+
+    # Checks if the password_hash cost factor is less than the current cost.
+    def stale?
+      cost < self.class.cost
     end
   end
 end
