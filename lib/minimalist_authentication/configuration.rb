@@ -23,9 +23,20 @@ module MinimalistAuthentication
     # Defaults to '::User'
     attr_accessor :user_model_name
 
+    # Toggle all email validations.
+    # Defaults to true.
+    attr_accessor :validate_email
+
+    # Toggle email presence validation.
+    # Defaults to true.
+    # Note: validate_email_presence is only checked if validate_email is true.
+    attr_accessor :validate_email_presence
+
     def initialize
-      self.user_model_name  = '::User'
-      self.session_key      = :user_id
+      self.user_model_name          = '::User'
+      self.session_key              = :user_id
+      self.validate_email           = true
+      self.validate_email_presence  = true
     end
 
     # Returns the user_model class

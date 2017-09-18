@@ -7,58 +7,65 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = 'guest'
     EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
-    # Recalibrates cost when class is loaded so that new user passwords
-    # can automatically take advantage of faster server hardware in the
-    # future for better encryption.
-    # sets cost to BCrypt::Engine::MIN_COST in the test environment
-    CALIBRATED_BCRYPT_COST = (::Rails.env.test? ? ::BCrypt::Engine::MIN_COST : ::BCrypt::Engine.calibrate(750))
-
     included do
+      # Stores the plain text password.
       attr_accessor :password
-      before_save :encrypt_password
 
-      # email validations
+      # Hashes and stores the password on save.
+      before_save :hash_password
+
+      # Email validations
       validates_presence_of     :email,                                       if: :validate_email_presence?
       validates_uniqueness_of   :email, allow_blank: true,                    if: :validate_email?
       validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX, if: :validate_email?
 
-      # password validations
-      validates_presence_of     :password,                  if: :password_required?
-      validates_confirmation_of :password,                  if: :password_required?
-      validates_length_of       :password, within: 6..40,   if: :password_required?
+      # Password validations
+      validates_presence_of     :password,                  if: :validate_password?
+      validates_confirmation_of :password,                  if: :validate_password?
+      validates_length_of       :password, within: 8..40,   if: :validate_password?
 
+      # Active scope
       scope :active, ->(active = true) { where active: active }
     end
 
     module ClassMethods
+      # Authenticates a user form the params provied. Expects a params hash with
+      # email or username and passwod keys.
+      # Params examples:
+      # { email: 'user@example.com', password: 'abc123' }
+      # { username: 'user', password: 'abc123' }
+      # Returns user upon successful authentcation.
+      # Otherwise returns nil.
       def authenticate(params)
+        # extract email or username and the associated value
         field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
+        # return nil if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
+        # attempt to find the user using field and value
         user = active.where(field => value).first
+        # check if a user was found and if they can be authenticated
         return unless user && user.authenticated?(params[:password])
+        # return the authenticated user
         return user
       end
 
-      def password_hash(password)
-        ::BCrypt::Password.create(password, cost: calibrated_bcrypt_cost)
-      end
-
-      def calibrated_bcrypt_cost
-        CALIBRATED_BCRYPT_COST
-      end
-
+      # Returns a frozen user with the email set to GUEST_USER_EMAIL.
       def guest
-        new(email: GUEST_USER_EMAIL)
+        new(email: GUEST_USER_EMAIL).freeze
       end
     end
 
+    # Returns true if the user is active.
     def active?
       active
     end
 
+    # Return true if password matches the hashed_password.
+    # If successful checks for an outdated password_hash and updates if
+    # necessary.
     def authenticated?(password)
-      if bcrypt_password == password
-        update_encryption(password) if bcrypt_password.cost < self.class.calibrated_bcrypt_cost
+      if password_object == password
+        update_hash!(password) if password_object.stale?
         return true
       end
 
@@ -70,54 +77,49 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
+    # Check if user is a guest based on their email attribute
     def is_guest?
       email == GUEST_USER_EMAIL
     end
 
     private
 
-    def password_required?
-      active? && (crypted_password.blank? || !password.blank?)
-    end
-
-    def update_encryption(password)
+    # Set self.password to password, hash, and save
+    def update_hash!(password)
       self.password = password
-      encrypt_password
+      hash_password
       save
     end
 
-    def encrypt_password
+    # Hash password and store in hash_password unless password is blank.
+    def hash_password
       return if password.blank?
-      password_hash         = self.class.password_hash(password)
-      self.salt             = password_hash.salt
-      self.crypted_password = password_hash.checksum
+      self.password_hash = Password.create(password)
     end
 
-    def bcrypt_password
-      valid_hash? ? ::BCrypt::Password.new(password_hash) : null_password
+    # Retuns a MinimalistAuthentication::Password object.
+    def password_object
+      Password.new(password_hash)
     end
 
-    def valid_hash?
-      ::BCrypt::Password.valid_hash?(password_hash)
+    # Requre password for active users that either do no have a password hash
+    # stored OR are attempting to set a new password.
+    def validate_password?
+      active? && (password_hash.blank? || password.present?)
     end
 
-    def password_hash
-      "#{salt}#{crypted_password}"
-    end
-
-    def null_password
-      MinimalistAuthentication::NullPassword.new
-    end
-
-    # email validation
+    # Validate email for active users.
+    # Applications can turn off email validation by setting the validate_email
+    # configuration attribute to false.
     def validate_email?
-      # allows applications to turn off all email validation
-      active?
+      MinimalistAuthentication.configuration.validate_email && active?
     end
 
+    # Validate email presence for active users.
+    # Applications can turn offf email presence validation by setting
+    # validate_email_presence configuration attribute to false.
     def validate_email_presence?
-      # allows applications to turn off email presence validation
-      validate_email?
+      MinimalistAuthentication.configuration.validate_email_presence && validate_email?
     end
   end
 end

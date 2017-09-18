@@ -4,7 +4,6 @@ module MinimalistAuthentication
       post session_path, params: { user: { email: users(user_fixture_name).email, password: password } }
     end
 
-
     def current_user
       @current_user ||= load_user_from_session
     end
