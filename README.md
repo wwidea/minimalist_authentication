@@ -98,6 +98,9 @@ bin/rails generate migration AddPasswordHashToUsers password_hash:string
 MinimalistAuthentication::Conversions::MergePasswordHash.run!
 ```
 
+When the conversion is complete the **crypted_password**, **salt**, and
+**using_digest_version** fields can safely be removed.
+
 
 ## Build
 [![Build Status](https://travis-ci.org/wwidea/minimalist_authentication.svg?branch=master)](https://travis-ci.org/wwidea/minimalist_authentication)
