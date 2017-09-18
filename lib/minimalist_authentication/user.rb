@@ -39,7 +39,7 @@ module MinimalistAuthentication
       def authenticate(params)
         # extract email or username and the associated value
         field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
-        # drop out if field, value, or password is blank
+        # return nil if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
         # attempt to find the user using field and value
         user = active.where(field => value).first
@@ -77,6 +77,7 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
+    # Check if user is a guest based on their email attribute
     def is_guest?
       email == GUEST_USER_EMAIL
     end
