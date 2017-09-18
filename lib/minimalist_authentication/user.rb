@@ -22,7 +22,7 @@ module MinimalistAuthentication
       # Password validations
       validates_presence_of     :password,                  if: :validate_password?
       validates_confirmation_of :password,                  if: :validate_password?
-      validates_length_of       :password, within: 6..40,   if: :validate_password?
+      validates_length_of       :password, within: 8..40,   if: :validate_password?
 
       # Active scope
       scope :active, ->(active = true) { where active: active }
