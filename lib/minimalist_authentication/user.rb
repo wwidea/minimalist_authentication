@@ -17,9 +17,9 @@ module MinimalistAuthentication
       validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX, if: :validate_email?
 
       # password validations
-      validates_presence_of     :password,                  if: :password_required?
-      validates_confirmation_of :password,                  if: :password_required?
-      validates_length_of       :password, within: 6..40,   if: :password_required?
+      validates_presence_of     :password,                  if: :validate_password?
+      validates_confirmation_of :password,                  if: :validate_password?
+      validates_length_of       :password, within: 6..40,   if: :validate_password?
 
       scope :active, ->(active = true) { where active: active }
     end
@@ -44,7 +44,7 @@ module MinimalistAuthentication
 
     def authenticated?(password)
       if password_object == password
-        update_hash(password) if password_object.stale?
+        update_hash!(password) if password_object.stale?
         return true
       end
 
@@ -62,34 +62,40 @@ module MinimalistAuthentication
 
     private
 
-    def password_required?
-      active? && (password_hash.blank? || !password.blank?)
-    end
-
-    def update_hash(password)
+    # Set self.password to password, hash, and save
+    def update_hash!(password)
       self.password = password
       hash_password
       save
     end
 
+    # Hash password and store in hash_password unless password is blank.
     def hash_password
       return if password.blank?
       self.password_hash = Password.create(password)
     end
 
+    # Retuns a MinimalistAuthentication::Password object.
     def password_object
       Password.new(password_hash)
     end
 
-    # email validation
-    def validate_email?
-      # allows applications to turn off all email validation
-      active?
+    # Requre password for active users that either do no have a password hash
+    # stored OR are attempting to set a new password.
+    def validate_password?
+      active? && (password_hash.blank? || password.present?)
     end
 
+    # Validate email for active users.
+    # Applications can override to turn off email validation.
+    def validate_email?
+      MinimalistAuthentication.configuration.validate_email && active?
+    end
+
+    # Validate email presence for active users.
+    # Applications can override to turn off email presence validation.
     def validate_email_presence?
-      # allows applications to turn off email presence validation
-      validate_email?
+      MinimalistAuthentication.configuration.validate_email_presence && validate_email?
     end
   end
 end

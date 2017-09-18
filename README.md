@@ -67,6 +67,8 @@ Customize the configuration with an initializer. Create a **minimalist_authentic
 MinimalistAuthentication.configure do |configuration|
   configuration.user_model_name   = 'CustomModelName'     # default is '::User'
   configuration.session_key       = :custom_session_key   # default is ':user_id'
+  validate_email                  = true                  # default is true
+  validate_email_presence         = true                  # default is true
 end
 ```
 
