@@ -72,6 +72,17 @@ MinimalistAuthentication.configure do |configuration|
 end
 ```
 
+
+## Fixtures
+Use **MinimalistAuthentication::Password.create** to create a password for
+fixture users.
+```yaml
+example_user:
+  email:          user@example.com
+  password_hash:  MinimalistAuthentication::Password.create('password')
+```
+
+
 ## Conversions
 Pre 2.0 versions of MinimalistAuthentication supported multiple hash algorithms
 and stored the hashed password and salt as separate fields in the database
@@ -86,6 +97,7 @@ bin/rails generate migration AddPasswordHashToUsers password_hash:string
 ```ruby
 MinimalistAuthentication::Conversions::MergePasswordHash.run!
 ```
+
 
 ## Build
 [![Build Status](https://travis-ci.org/wwidea/minimalist_authentication.svg?branch=master)](https://travis-ci.org/wwidea/minimalist_authentication)
