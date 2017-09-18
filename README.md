@@ -61,7 +61,7 @@ class ActiveSupport::TestCase
 end
 ```
 
-## Example
+## Configuration
 Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in /Users/baldwina/git/brightways/config/initializers.
 ```ruby
 MinimalistAuthentication.configure do |configuration|
