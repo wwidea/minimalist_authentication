@@ -53,6 +53,12 @@ class UserTest < ActiveSupport::TestCase
     assert User.guest.is_guest?
   end
 
+  test "should not be able to moidfy guest user" do
+    assert_raise RuntimeError do
+      User.guest.email = 'test@testing.com'
+    end
+  end
+
   test "should allow inactive user to pass validation without an email or password" do
     assert User.new.valid?
   end
