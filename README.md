@@ -87,9 +87,9 @@ example_user:
 Pre 2.0 versions of MinimalistAuthentication supported multiple hash algorithms
 and stored the hashed password and salt as separate fields in the database
 (crypted_password and salt). The current version of MinimalistAuthentication
-uses BCrypt to hash passwords and stores the result in the **hash_password** field.
+uses BCrypt to hash passwords and stores the result in the **password_hash** field.
 
-To convert from a pre 2.0 version add the **hash_password** to your user model
+To convert from a pre 2.0 version add the **password_hash** to your user model
 and run the conversion routine.
 ```bash
 bin/rails generate migration AddPasswordHashToUsers password_hash:string
