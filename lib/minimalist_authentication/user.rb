@@ -37,10 +37,15 @@ module MinimalistAuthentication
       # Returns user upon successful authentcation.
       # Otherwise returns nil.
       def authenticate(params)
+        # extract email or username and the associated value
         field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
+        # drop out if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
+        # attempt to find the user using field and value
         user = active.where(field => value).first
+        # check if a user was found and if they can be authenticated
         return unless user && user.authenticated?(params[:password])
+        # return the authenticated user
         return user
       end
 
