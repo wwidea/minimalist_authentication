@@ -49,7 +49,7 @@ module MinimalistAuthentication
         return user
       end
 
-      # Retunrs a frozen user with the email set to GUEST_USER_EMAIL.
+      # Returns a frozen user with the email set to GUEST_USER_EMAIL.
       def guest
         new(email: GUEST_USER_EMAIL).freeze
       end
