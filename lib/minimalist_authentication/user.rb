@@ -109,13 +109,15 @@ module MinimalistAuthentication
     end
 
     # Validate email for active users.
-    # Applications can override to turn off email validation.
+    # Applications can turn off email validation by setting the validate_email
+    # configuration attribute to false.
     def validate_email?
       MinimalistAuthentication.configuration.validate_email && active?
     end
 
     # Validate email presence for active users.
-    # Applications can override to turn off email presence validation.
+    # Applications can turn offf email presence validation by setting
+    # validate_email_presence configuration attribute to false.
     def validate_email_presence?
       MinimalistAuthentication.configuration.validate_email_presence && validate_email?
     end
