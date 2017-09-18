@@ -38,10 +38,14 @@ module MinimalistAuthentication
       end
     end
 
+    # Returns true if the user is active.
     def active?
       active
     end
 
+    # Return true if password matches the hashed_password.
+    # If successful checks for an outdated password_hash and updates if
+    # necessary.
     def authenticated?(password)
       if password_object == password
         update_hash!(password) if password_object.stale?
