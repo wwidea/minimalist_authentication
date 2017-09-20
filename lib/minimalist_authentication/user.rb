@@ -29,7 +29,7 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      # Authenticates a user form the params provied. Expects a params hash with
+      # Authenticates a user form the params provided. Expects a params hash with
       # email or username and passwod keys.
       # Params examples:
       # { email: 'user@example.com', password: 'abc123' }
