@@ -19,7 +19,7 @@ module MinimalistAuthentication
     end
 
     def matches_verification_token?(token)
-      verification_token_valid? && secure_match?(token, verification_token)
+      verification_token_valid? && secure_match?(token)
     end
 
     def verification_token_valid?
@@ -41,10 +41,10 @@ module MinimalistAuthentication
     end
 
     # Compare the tokens in a time-constant manner, to mitigate timing attacks.
-    def secure_match?(token1, token2)
+    def secure_match?(token)
       ActiveSupport::SecurityUtils.secure_compare(
-        ::Digest::SHA256.hexdigest(token1),
-        ::Digest::SHA256.hexdigest(token2)
+        ::Digest::SHA256.hexdigest(token),
+        ::Digest::SHA256.hexdigest(verification_token)
       )
     end
   end
