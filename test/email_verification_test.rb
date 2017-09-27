@@ -10,9 +10,9 @@ class EmailVerificationTest < ActiveSupport::TestCase
   end
 
   test 'should fail to verify users email address' do
-    users(:active_user).regenerate_verification_token
+    users(:inactive_user).regenerate_verification_token
 
-    refute users(:active_user).verify_email('does_not_match')
-    refute users(:active_user).email_verified?
+    refute users(:inactive_user).verify_email('does_not_match')
+    refute users(:inactive_user).email_verified?
   end
 end
