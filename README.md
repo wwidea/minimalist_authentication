@@ -83,6 +83,41 @@ example_user:
 ```
 
 
+## Verification Tokens
+Verification token support is provided by the **MinimalistAuthentication::VerifiableToken**
+module. Include the module in your user class and add the verification token columns
+to the database.
+
+Include MinimalistAuthentication::VerifiableToken in your user model (app/models/user.rb)
+```ruby
+class User < ApplicationRecord
+  include MinimalistAuthentication::User
+  include MinimalistAuthentication::VerifiableToken
+end
+```
+
+Add the **verification_token** and **verification_token_generated_at** columns:
+Create a user model with **email** for an identifier:
+```bash
+bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
+```
+
+### Email Verification
+Include MinimalistAuthentication::EmailVerification in your user model (app/models/user.rb)
+```ruby
+class User < ApplicationRecord
+  include MinimalistAuthentication::User
+  include MinimalistAuthentication::VerifiableToken
+  include MinimalistAuthentication::EmailVerification
+end
+```
+
+Add the **email_verified_at** column to your user model:
+```bash
+bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
+```
+
+
 ## Conversions
 Pre 2.0 versions of MinimalistAuthentication supported multiple hash algorithms
 and stored the hashed password and salt as separate fields in the database

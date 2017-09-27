@@ -1,6 +1,8 @@
 require 'minimalist_authentication/engine'
 require 'minimalist_authentication/configuration'
 require 'minimalist_authentication/user'
+require 'minimalist_authentication/verifiable_token'
+require 'minimalist_authentication/email_verification'
 require 'minimalist_authentication/password'
 require 'minimalist_authentication/null_password'
 require 'minimalist_authentication/controller'
