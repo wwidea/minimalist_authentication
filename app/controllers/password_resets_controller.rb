@@ -1,6 +1,8 @@
 class PasswordResetsController < ApplicationController
   skip_before_action :authorization_required
 
+  layout 'sessions'
+
   # Form for user to request a password reset
   def new
     @user = MinimalistAuthentication.configuration.user_model.new
