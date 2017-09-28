@@ -60,4 +60,7 @@ Rails.application.configure do
     host: 'localhost:3000'
   }
   config.action_mailer.asset_host = 'http://localhost:3000'
+
+  # use fixtures from plugin
+  ENV["FIXTURES_PATH"] = '../fixtures'
 end
