@@ -1,0 +1,7 @@
+<h1>Edit Password</h1>
+
+<%= form_for @user, as: :user, url: user_password_path(@user, token: @token), html: { method: :put } do |form| %>
+  <%= form.password_field :password %>
+  <%= form.password_field :password_confirmation %>
+  <%= form.submit 'Update Password' %>
+<% end %>
