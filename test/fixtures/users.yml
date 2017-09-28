@@ -14,4 +14,4 @@ active_user:
 
 legacy_user:
   <<: *user_defaults
-  email:                  legacy@user.com
+  email:                  legacy@example.com
