@@ -10,7 +10,6 @@ class PasswordResetsController < ApplicationController
   def create
     if user
       user.regenerate_verification_token
-      puts user.inspect
       MinimalistAuthenticationMailer.update_password(user).deliver_now
     end
     # always display notice even if the user was not found to prevent leaking user emails

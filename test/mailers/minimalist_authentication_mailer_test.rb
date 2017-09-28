@@ -7,7 +7,6 @@ class MinimalistAuthenticationMailerTest < ActionMailer::TestCase
 
     assert_equal "Email Address Verification",            mail.subject
     assert_equal ["legacy@example.com"],                  mail.to
-    skip
     assert_match users(:legacy_user).verification_token,  mail.body.encoded
   end
 
@@ -17,7 +16,6 @@ class MinimalistAuthenticationMailerTest < ActionMailer::TestCase
 
     assert_equal "Update Password",                       mail.subject
     assert_equal ["active@example.com"],                  mail.to
-    skip
     assert_match users(:active_user).verification_token,  mail.body.encoded
   end
 end
