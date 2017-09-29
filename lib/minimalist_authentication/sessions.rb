@@ -44,13 +44,17 @@ module MinimalistAuthentication
     end
 
     def after_authentication_success
-      if authenticated_user.email.blank?
+      if email_verification_enabled? && authenticated_user.email.blank?
         redirect_to edit_email_path
-      elsif authenticated_user.needs_email_verification? && !attempting_to_verify?
+      elsif email_verification_enabled? && authenticated_user.needs_email_verification? && !attempting_to_verify?
         redirect_to new_email_verification_path
       else
         redirect_back_or_default(login_redirect_to)
       end
+    end
+
+    def email_verification_enabled?
+      MinimalistAuthentication.configuration.verify_email
     end
 
     def attempting_to_verify?

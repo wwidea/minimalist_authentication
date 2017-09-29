@@ -32,11 +32,16 @@ module MinimalistAuthentication
     # Note: validate_email_presence is only checked if validate_email is true.
     attr_accessor :validate_email_presence
 
+    # Vefify users email address at login.
+    # Defautls to true.
+    attr_accessor :verify_email
+
     def initialize
       self.user_model_name          = '::User'
       self.session_key              = :user_id
       self.validate_email           = true
       self.validate_email_presence  = true
+      self.verify_email             = true
     end
 
     # Returns the user_model class

@@ -23,6 +23,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_email_verification_path
   end
 
+  test "should create session and skip email verification" do
+    MinimalistAuthentication.configuration.verify_email = false
+
+    login_as :legacy_user
+    assert_redirected_to root_path
+
+    MinimalistAuthentication.configuration.verify_email = true
+  end
+
   test "should fail to create session" do
     post session_path(user: { email: users(:active_user).email, password: 'wrong_password' } )
     assert_nil current_user
