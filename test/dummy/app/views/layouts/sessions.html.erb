@@ -15,6 +15,13 @@
     <h3>Flash:</h3>
     <%= render 'layouts/hash', hash: flash %>
 
+    <h3>Login Shortcuts</h3>
+    <ul>
+      <% User.active.order(:email).each do |user| %>
+        <li><%= button_to(user.email, session_path(user: { email: user.email, password: 'password' } )) %></li>
+      <% end %>
+    </ul>
+
     <%= yield %>
 
     <%= link_to 'Login', new_session_path %>
