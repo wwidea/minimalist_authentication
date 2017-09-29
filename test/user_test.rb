@@ -72,7 +72,21 @@ class UserTest < ActiveSupport::TestCase
   test "should fail validation for active user without password" do
     user = User.new(active: true)
     refute user.valid?
-    assert user.errors[:password]
+    assert user.errors.has_key?(:password)
+  end
+
+  test "should pass validation for a user with a password hash and a blank password" do
+    user = users(:active_user)
+    user.password = ''
+    assert user.valid?
+  end
+
+  test "should fail validation for a user with blank password and password_required true" do
+    user = users(:active_user)
+    user.password_required = true
+    user.password = ''
+    refute user.valid?
+    assert user.errors.has_key?(:password)
   end
 
   test "should migrate legacy user to new salt" do
