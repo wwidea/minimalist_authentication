@@ -1,0 +1,4 @@
+div.field_with_errors input {
+  border-width: 1px;
+  border: solid red;
+}
