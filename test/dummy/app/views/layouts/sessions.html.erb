@@ -22,6 +22,13 @@
       <% end %>
     </ul>
 
+    <h3>Password Resets</h3>
+    <ul>
+      <% User.active.order(:email).where.not(verification_token: nil).each do |user| %>
+        <li><%= link_to(user.email, edit_user_password_path(user, token: user.verification_token)) %></li>
+      <% end %>
+    </ul>
+
     <%= yield %>
 
     <%= link_to 'Login', new_session_path %>
