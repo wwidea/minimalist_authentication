@@ -44,7 +44,18 @@ module MinimalistAuthentication
     end
 
     def after_authentication_success
-      redirect_back_or_default(login_redirect_to)
+      if authenticated_user.email.blank?
+        redirect_to edit_email_path
+      elsif authenticated_user.needs_email_verification? && !attempting_to_verify?
+        redirect_to new_email_verification_path
+      else
+        redirect_back_or_default(login_redirect_to)
+      end
+    end
+
+    def attempting_to_verify?
+      # check if user is attpting to verify their email
+      session['return_to'].to_s[/token/]
     end
 
     def after_authentication_failure

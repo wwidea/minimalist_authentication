@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  include MinimalistAuthentication::TestHelper
-
   test "should get new" do
     get new_session_path
     assert_response :success
@@ -12,6 +10,17 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     post session_path(user: { email: users(:active_user).email, password: 'password' } )
     assert_equal users(:active_user), current_user
     assert_redirected_to root_path
+  end
+
+  test "should create session and rediret to edit email" do
+    users(:active_user).update_columns(email: nil)
+    post session_path, params: { user: { username: users(:active_user).username, password: 'password' } }
+    assert_redirected_to edit_email_path
+  end
+
+  test "should create session and redirect to email verification" do
+    login_as :legacy_user
+    assert_redirected_to new_email_verification_path
   end
 
   test "should fail to create session" do
