@@ -5,6 +5,9 @@
 </p>
 
 <%= form_for @user, as: :user, url: password_reset_path do |form| %>
-  <%= form.text_field :email %>
+  <div>
+    <%= form.label      :email %>
+    <%= form.text_field :email %>
+  </div>
   <%= form.submit 'Reset Password' %>
 <% end %>
