@@ -65,10 +65,15 @@ end
 Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in /Users/baldwina/git/brightways/config/initializers.
 ```ruby
 MinimalistAuthentication.configure do |configuration|
-  configuration.user_model_name   = 'CustomModelName'     # default is '::User'
-  configuration.session_key       = :custom_session_key   # default is ':user_id'
-  validate_email                  = true                  # default is true
-  validate_email_presence         = true                  # default is true
+  configuration.user_model_name           = 'CustomModelName'   # default is '::User'
+  configuration.session_key               = :custom_session_key # default is :user_id
+  configuration.validate_email            = true                # default is true
+  configuration.validate_email_presence   = true                # default is true
+  configuration.request_email             = true                # default is true
+  configuration.verify_email              = true                # default is true
+  configuration.login_redirect_path       = :custom_path        # default is :root_path
+  configuration.logout_redirect_path      = :custom_path        # default is :new_session_path
+  configuration.email_prefix              = '[Custom Prefix]'   # default is application name
 end
 ```
 

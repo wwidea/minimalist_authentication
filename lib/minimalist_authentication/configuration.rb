@@ -34,11 +34,24 @@ module MinimalistAuthentication
 
     # Check for users email at login and request if blank. Only useful if using
     # username to login and users might not have an email set.
+    # Defaults to true
     attr_accessor :request_email
 
     # Vefify users email address at login.
-    # Defautls to true.
+    # Defaults to true.
     attr_accessor :verify_email
+
+    # Where to route users after a successful login.
+    # Defaults to :root_path
+    attr_accessor :login_redirect_path
+
+    # Where to route users after logging out.
+    # Defaults to :new_session_path
+    attr_accessor :logout_redirect_path
+
+    # Email subject prefix for MinimalistAuthenticationMailer messages
+    # Defaults to application name
+    attr_accessor :email_prefix
 
     def initialize
       self.user_model_name          = '::User'
@@ -47,6 +60,9 @@ module MinimalistAuthentication
       self.validate_email_presence  = true
       self.request_email            = true
       self.verify_email             = true
+      self.login_redirect_path      = :root_path
+      self.logout_redirect_path     = :new_session_path
+      self.email_prefix             = default_email_prefix
     end
 
     # Returns the user_model class
@@ -54,6 +70,12 @@ module MinimalistAuthentication
     # the spring application preloader gem.
     def user_model
       @user_model ||= user_model_name.constantize
+    end
+
+    private
+
+    def default_email_prefix
+      "[#{Rails.application.engine_name.gsub(/_application\z/, '').titleize}]"
     end
   end
 end

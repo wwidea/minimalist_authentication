@@ -75,11 +75,11 @@ module MinimalistAuthentication
     end
 
     def login_redirect_to
-      root_path
+      send(MinimalistAuthentication.configuration.login_redirect_path)
     end
 
     def logout_redirect_to
-      new_session_path
+      send(MinimalistAuthentication.configuration.logout_redirect_path)
     end
   end
 end

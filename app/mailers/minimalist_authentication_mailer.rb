@@ -13,6 +13,10 @@ class MinimalistAuthenticationMailer < ApplicationMailer
 
   def send_to(user, subject)
     @user = user
-    mail to: @user.email, subject: subject
+    mail to: @user.email, subject: prefixed_subject(subject)
+  end
+
+  def prefixed_subject(subject)
+    "#{MinimalistAuthentication.configuration.email_prefix} #{subject}"
   end
 end
