@@ -32,6 +32,10 @@ module MinimalistAuthentication
     # Note: validate_email_presence is only checked if validate_email is true.
     attr_accessor :validate_email_presence
 
+    # Check for users email at login and request if blank. Only useful if using
+    # username to login and users might not have an email set.
+    attr_accessor :request_email
+
     # Vefify users email address at login.
     # Defautls to true.
     attr_accessor :verify_email
@@ -41,6 +45,7 @@ module MinimalistAuthentication
       self.session_key              = :user_id
       self.validate_email           = true
       self.validate_email_presence  = true
+      self.request_email            = true
       self.verify_email             = true
     end
 

@@ -8,8 +8,12 @@ module MinimalistAuthentication
       scope :email_verified, -> { where('LENGTH(email) > 2').where.not(email_verified_at: nil) }
     end
 
+    def needs_email_set?
+      request_email_enabled? && email.blank?
+    end
+
     def needs_email_verification?
-      email.present? && email_verified_at.blank?
+      email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
     def email_verified?
@@ -21,6 +25,14 @@ module MinimalistAuthentication
     end
 
     private
+
+    def request_email_enabled?
+      MinimalistAuthentication.configuration.request_email
+    end
+
+    def email_verification_enabled?
+      MinimalistAuthentication.configuration.verify_email
+    end
 
     def clear_email_verification
       self.email_verified_at = nil

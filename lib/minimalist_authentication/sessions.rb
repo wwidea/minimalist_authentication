@@ -16,7 +16,7 @@ module MinimalistAuthentication
         scrub_session!
         authenticated_user.logged_in
         session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
-        after_authentication_success
+        set_or_verify_email || after_authentication_success
         return
       else
         after_authentication_failure
@@ -43,18 +43,18 @@ module MinimalistAuthentication
       @user_params ||= params.require(:user).permit(:email, :username, :password)
     end
 
-    def after_authentication_success
-      if email_verification_enabled? && authenticated_user.email.blank?
+    def set_or_verify_email
+      if authenticated_user.needs_email_set?
         redirect_to edit_email_path
-      elsif email_verification_enabled? && authenticated_user.needs_email_verification? && !attempting_to_verify?
+      elsif authenticated_user.needs_email_verification? && !attempting_to_verify?
         redirect_to new_email_verification_path
       else
-        redirect_back_or_default(login_redirect_to)
+        false
       end
     end
 
-    def email_verification_enabled?
-      MinimalistAuthentication.configuration.verify_email
+    def after_authentication_success
+      redirect_back_or_default(login_redirect_to)
     end
 
     def attempting_to_verify?
