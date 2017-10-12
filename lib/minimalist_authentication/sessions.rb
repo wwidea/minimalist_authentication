@@ -8,7 +8,7 @@ module MinimalistAuthentication
     end
 
     def new
-      @user = MinimalistAuthentication.configuration.user_model.new
+      new_user
     end
 
     def create
@@ -16,7 +16,7 @@ module MinimalistAuthentication
         scrub_session!
         authenticated_user.logged_in
         session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
-        after_authentication_success
+        set_or_verify_email || after_authentication_success
         return
       else
         after_authentication_failure
@@ -31,6 +31,10 @@ module MinimalistAuthentication
 
     private
 
+    def new_user
+      @user ||= MinimalistAuthentication.configuration.user_model.new
+    end
+
     def authenticated_user
       @authenticated_user ||= MinimalistAuthentication.configuration.user_model.authenticate(user_params)
     end
@@ -39,12 +43,28 @@ module MinimalistAuthentication
       @user_params ||= params.require(:user).permit(:email, :username, :password)
     end
 
+    def set_or_verify_email
+      if authenticated_user.needs_email_set?
+        redirect_to edit_email_path
+      elsif authenticated_user.needs_email_verification? && !attempting_to_verify?
+        redirect_to new_email_verification_path
+      else
+        false
+      end
+    end
+
     def after_authentication_success
       redirect_back_or_default(login_redirect_to)
     end
 
+    def attempting_to_verify?
+      # check if user is attpting to verify their email
+      session['return_to'].to_s[/token/]
+    end
+
     def after_authentication_failure
       flash.now[:alert] = "Couldn't log you in as '#{user_params[:email] || user_params[:username]}'"
+      new_user
       render :new
     end
 
@@ -55,11 +75,11 @@ module MinimalistAuthentication
     end
 
     def login_redirect_to
-      root_path
+      send(MinimalistAuthentication.configuration.login_redirect_path)
     end
 
     def logout_redirect_to
-      new_session_path
+      send(MinimalistAuthentication.configuration.logout_redirect_path)
     end
   end
 end

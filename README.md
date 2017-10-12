@@ -65,10 +65,15 @@ end
 Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in /Users/baldwina/git/brightways/config/initializers.
 ```ruby
 MinimalistAuthentication.configure do |configuration|
-  configuration.user_model_name   = 'CustomModelName'     # default is '::User'
-  configuration.session_key       = :custom_session_key   # default is ':user_id'
-  validate_email                  = true                  # default is true
-  validate_email_presence         = true                  # default is true
+  configuration.user_model_name           = 'CustomModelName'   # default is '::User'
+  configuration.session_key               = :custom_session_key # default is :user_id
+  configuration.validate_email            = true                # default is true
+  configuration.validate_email_presence   = true                # default is true
+  configuration.request_email             = true                # default is true
+  configuration.verify_email              = true                # default is true
+  configuration.login_redirect_path       = :custom_path        # default is :root_path
+  configuration.logout_redirect_path      = :custom_path        # default is :new_session_path
+  configuration.email_prefix              = '[Custom Prefix]'   # default is application name
 end
 ```
 
@@ -80,6 +85,41 @@ fixture users.
 example_user:
   email:          user@example.com
   password_hash:  <%= MinimalistAuthentication::Password.create('password') %>
+```
+
+
+## Verification Tokens
+Verification token support is provided by the **MinimalistAuthentication::VerifiableToken**
+module. Include the module in your user class and add the verification token columns
+to the database.
+
+Include MinimalistAuthentication::VerifiableToken in your user model (app/models/user.rb)
+```ruby
+class User < ApplicationRecord
+  include MinimalistAuthentication::User
+  include MinimalistAuthentication::VerifiableToken
+end
+```
+
+Add the **verification_token** and **verification_token_generated_at** columns:
+Create a user model with **email** for an identifier:
+```bash
+bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
+```
+
+### Email Verification
+Include MinimalistAuthentication::EmailVerification in your user model (app/models/user.rb)
+```ruby
+class User < ApplicationRecord
+  include MinimalistAuthentication::User
+  include MinimalistAuthentication::VerifiableToken
+  include MinimalistAuthentication::EmailVerification
+end
+```
+
+Add the **email_verified_at** column to your user model:
+```bash
+bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
 ```
 
 

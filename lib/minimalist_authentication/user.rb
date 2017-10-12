@@ -13,6 +13,9 @@ module MinimalistAuthentication
       # Stores the plain text password.
       attr_accessor :password
 
+      # Force validations for a blank password.
+      attr_accessor :password_required
+
       # Hashes and stores the password on save.
       before_save :hash_password
 
@@ -105,9 +108,10 @@ module MinimalistAuthentication
     end
 
     # Requre password for active users that either do no have a password hash
-    # stored OR are attempting to set a new password.
+    # stored OR are attempting to set a new password. Set **password_required**
+    # to true to force validations even when the password field is blank.
     def validate_password?
-      active? && (password_hash.blank? || password.present?)
+      active? && (password_hash.blank? || password.present? || password_required)
     end
 
     # Validate email for active users.

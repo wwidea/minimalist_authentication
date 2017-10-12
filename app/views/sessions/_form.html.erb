@@ -1,5 +1,11 @@
-<%= form_for :user, url: session_path do |form| %>
-  <%= form.text_field     :email %>
-  <%= form.password_field :password %>
+<%= form_for @user, url: session_path do |form| %>
+  <div>
+    <%= form.label          :email %>
+    <%= form.text_field     :email %>
+  </div>
+  <div>
+    <%= form.label          :password %>
+    <%= form.password_field :password %>
+  </div>
   <%= form.submit         'Log in' %>
 <% end %>

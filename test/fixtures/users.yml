@@ -9,8 +9,9 @@ DEFAULTS: &user_defaults
 active_user:
   <<: *user_defaults
   username:               test
-  email:                  test@testing.com
+  email:                  active@example.com
+  email_verified_at:      <%= 42.days.ago.to_s(:db) %>
 
 legacy_user:
   <<: *user_defaults
-  email:                  legacy@user.com
+  email:                  legacy@example.com

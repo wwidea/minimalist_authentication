@@ -1,0 +1,13 @@
+<h1>Request Password Reset</h1>
+
+<p>
+  Enter your email address we'll send you a link to reset your password.
+</p>
+
+<%= form_for @user, as: :user, url: password_reset_path do |form| %>
+  <div>
+    <%= form.label      :email %>
+    <%= form.text_field :email %>
+  </div>
+  <%= form.submit 'Reset Password' %>
+<% end %>

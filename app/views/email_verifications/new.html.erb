@@ -1,0 +1,14 @@
+<h2>Please verify your email address</h2>
+
+<p>
+  <strong><%= current_user.email %></strong>
+  <em><%= link_to('change', edit_email_path) %></em>
+</p>
+
+<%= form_tag email_verification_path do |form| %>
+  <%= submit_tag 'Send Verification Email' %>
+<% end %>
+
+<p>Verifying your email will allow you to receive confidential messages and reset your password.</p>
+
+<%= link_to('Skip Email Verification', dashboard_path) %>
