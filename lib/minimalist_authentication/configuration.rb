@@ -69,7 +69,7 @@ module MinimalistAuthentication
     # Calling constantize on a string makes this work correctly with
     # the spring application preloader gem.
     def user_model
-      @user_model ||= user_model_name.constantize
+      user_model_name.constantize
     end
 
     private
