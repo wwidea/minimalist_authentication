@@ -119,7 +119,7 @@ end
 
 Add the **email_verified_at** column to your user model:
 ```bash
-bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
+bin/rails generate migration AddEmailVerifiedAtToUsers email_verified_at:datetime
 ```
 
 
