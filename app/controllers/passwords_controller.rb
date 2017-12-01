@@ -21,7 +21,7 @@ class PasswordsController < ApplicationController
   private
 
   def user
-    @user ||= User.find(params[:user_id])
+    @user ||= MinimalistAuthentication.configuration.user_model.find(params[:user_id])
   end
 
   def token
