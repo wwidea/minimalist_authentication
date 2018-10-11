@@ -4,7 +4,6 @@ module MinimalistAuthentication
 
     included do
       skip_before_action :authorization_required,     only: %i(new create)
-      skip_before_action :verify_authenticity_token,  only: %i(create destroy)
     end
 
     def new
@@ -69,7 +68,7 @@ module MinimalistAuthentication
     end
 
     def scrub_session!
-      (session.keys - %w(session_id _csrf_token return_to)).each do |key|
+      (session.keys - %w(session_id return_to)).each do |key|
         session.delete(key)
       end
     end

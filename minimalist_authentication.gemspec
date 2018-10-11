@@ -14,11 +14,11 @@ Gem::Specification.new do |s|
   s.summary       = %q{A Rails authentication plugin that takes a minimalist approach.}
   s.description   = %q{A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.}
   s.license       = 'MIT'
-  
+
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
-  
+
   s.add_dependency 'rails',  '~> 5.0'
   s.add_dependency 'bcrypt', '~> 3.1', '>= 3.1.3'
-  
-  s.add_development_dependency  'sqlite3'
+
+  s.add_development_dependency  'sqlite3', '~> 1.3'
 end
