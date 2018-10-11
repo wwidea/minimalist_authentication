@@ -172,7 +172,7 @@ DEPENDENCIES
   mocha
   pry
   simplecov
-  sqlite3
+  sqlite3 (~> 1.3)
   terminal-notifier-guard
 
 BUNDLED WITH
