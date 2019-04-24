@@ -4,3 +4,4 @@ coverage
 .project
 .redcar
 *.gem
+Gemfile.lock
