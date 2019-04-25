@@ -6,6 +6,12 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should redirect logged in user" do
+    login_as :active_user
+    get new_session_path
+    assert_redirected_to root_path
+  end
+
   test "should create session" do
     post session_path(user: { email: users(:active_user).email, password: 'password' } )
     assert_equal users(:active_user), current_user
