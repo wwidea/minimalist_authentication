@@ -3,7 +3,8 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      skip_before_action :authorization_required,     only: %i(new create)
+      skip_before_action  :authorization_required,    only: %i(new create)
+      before_action       :redirect_logged_in_users,  only: :new
     end
 
     def new
@@ -51,6 +52,11 @@ module MinimalistAuthentication
         false
       end
     end
+
+    def redirect_logged_in_users
+      redirect_to(login_redirect_to) if logged_in?
+    end
+
 
     def after_authentication_success
       redirect_back_or_default(login_redirect_to)
