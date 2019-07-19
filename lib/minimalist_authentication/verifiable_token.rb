@@ -19,7 +19,7 @@ module MinimalistAuthentication
     end
 
     def matches_verification_token?(token)
-      verification_token_valid? && secure_match?(token)
+      token.present? && verification_token_valid? && secure_match?(token)
     end
 
     def verification_token_valid?
