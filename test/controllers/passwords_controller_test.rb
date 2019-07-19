@@ -13,6 +13,12 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
+  test 'should redirect to new_session_path when token is nil' do
+    users(:active_user).regenerate_verification_token
+    get edit_user_password_path(users(:active_user), token: nil)
+    assert_redirected_to new_session_path
+  end
+
   test 'should update password for verified user' do
     users(:active_user).regenerate_verification_token
     put user_password_path(*password_params)
