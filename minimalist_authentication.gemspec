@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'loofah',  '>= 2.3.1'
 
   s.add_development_dependency  'sqlite3', '~> 1.3'
+
 end
