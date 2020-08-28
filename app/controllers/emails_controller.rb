@@ -3,7 +3,7 @@ class EmailsController < ApplicationController
   end
 
   def update
-    if current_user.update_attributes(user_params)
+    if current_user.update(user_params)
       redirect_to update_redirect_path, notice: 'Email successfully updated'
     else
       render :edit
