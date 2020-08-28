@@ -19,6 +19,10 @@ group :development, :test do
   gem 'guard'
   gem 'guard-minitest'
   gem 'terminal-notifier-guard'
+
+  # ruby 2.7 deprecation warning
+  # https://github.com/rails/sprockets/issues/659
+  gem 'sprockets-rails', git: 'https://github.com/rails/sprockets-rails.git'
 end
 
 group :test do
