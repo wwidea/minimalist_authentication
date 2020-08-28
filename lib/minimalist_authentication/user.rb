@@ -20,9 +20,9 @@ module MinimalistAuthentication
       before_save :hash_password
 
       # Email validations
-      validates_presence_of     :email,                                         if: :validate_email_presence?
-      validates_uniqueness_of   :email, allow_blank: true,                      if: :validate_email?
-      validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX,   if: :validate_email?
+      validates_presence_of     :email,                                           if: :validate_email_presence?
+      validates_uniqueness_of   :email, allow_blank: true, case_sensitive: false, if: :validate_email?
+      validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX,     if: :validate_email?
 
       # Password validations
       validates_presence_of     :password,                                      if: :validate_password?
