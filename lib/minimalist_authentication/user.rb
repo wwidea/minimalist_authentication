@@ -35,11 +35,11 @@ module MinimalistAuthentication
 
     module ClassMethods
       # Authenticates a user form the params provided. Expects a params hash with
-      # email or username and passwod keys.
+      # email or username and password keys.
       # Params examples:
       # { email: 'user@example.com', password: 'abc123' }
       # { username: 'user', password: 'abc123' }
-      # Returns user upon successful authentcation.
+      # Returns user upon successful authentication.
       # Otherwise returns nil.
       def authenticate(params)
         # extract email or username and the associated value
@@ -107,7 +107,7 @@ module MinimalistAuthentication
       Password.new(password_hash)
     end
 
-    # Requre password for active users that either do no have a password hash
+    # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.
     def validate_password?
@@ -122,7 +122,7 @@ module MinimalistAuthentication
     end
 
     # Validate email presence for active users.
-    # Applications can turn offf email presence validation by setting
+    # Applications can turn off email presence validation by setting
     # validate_email_presence configuration attribute to false.
     def validate_email_presence?
       MinimalistAuthentication.configuration.validate_email_presence && validate_email?
