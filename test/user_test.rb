@@ -2,8 +2,13 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
 
-  test "should return active user" do
+  test "should return active users" do
     assert_equal users(:active_user, :legacy_user).sort, User.active.sort
+  end
+
+  test "should return inactive users" do
+    assert user = User.create(username: 'inactive')
+    assert_equal %w(inactive), User.inactive.map(&:username)
   end
 
   test "should authenticate user with email" do
@@ -29,6 +34,22 @@ class UserTest < ActiveSupport::TestCase
 
   test "should fail to authenticate for incorrect password" do
     assert_nil User.authenticate(email: users(:active_user).email, password: 'incorrect_password')
+  end
+
+  test "should return true for active?" do
+    assert User.new(active: true).active?
+  end
+
+  test "should return false for active?" do
+    refute User.new.active?
+  end
+
+  test "should return true for inactive?" do
+    assert User.new.inactive?
+  end
+
+  test "should return false for inactive?" do
+    refute User.new(active: true).inactive?
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
