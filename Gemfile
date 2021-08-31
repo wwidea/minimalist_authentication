@@ -15,6 +15,10 @@ gemspec
 
 group :development, :test do
   gem 'pry'
+
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'terminal-notifier-guard'
 end
 
 group :test do
