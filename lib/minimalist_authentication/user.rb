@@ -30,7 +30,8 @@ module MinimalistAuthentication
       validates_length_of       :password, within: PASSWORD_MIN..PASSWORD_MAX,  if: :validate_password?
 
       # Active scope
-      scope :active, ->(active = true) { where active: active }
+      scope :active,    ->(state = true)  { where(active: state) }
+      scope :inactive,  ->                { active(false) }
     end
 
     module ClassMethods
@@ -63,6 +64,11 @@ module MinimalistAuthentication
     # Returns true if the user is active.
     def active?
       active
+    end
+
+    # Returns true if the user is not active.
+    def inactive?
+      !active
     end
 
     # Return true if password matches the hashed_password.
