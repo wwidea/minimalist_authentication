@@ -20,6 +20,12 @@ class ControllerTest < ActiveSupport::TestCase
     assert_equal users(:active_user), current_user
   end
 
+  test "should not return inactive logged_in user for current_user" do
+    users(:active_user).update_column(:active, false)
+    session[:user_id] = users(:active_user).id
+    assert current_user.is_guest?
+  end
+
   test "should pass authorization" do
     session[:user_id] = users(:active_user).id
     assert_equal true, authorization_required

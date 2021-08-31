@@ -17,7 +17,8 @@ module MinimalistAuthentication
     end
 
     def get_user_from_session
-      MinimalistAuthentication.configuration.user_model.find_by_id(session_user_id) if session_user_id
+      return unless session_user_id
+      MinimalistAuthentication.configuration.user_model.active.find_by(id: session_user_id)
     end
 
     def session_user_id
