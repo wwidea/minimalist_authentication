@@ -5,7 +5,6 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL  = 'guest'
-    EMAIL_REGEX       = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
     PASSWORD_MIN      = 8
     PASSWORD_MAX      = 40
 
@@ -20,14 +19,22 @@ module MinimalistAuthentication
       before_save :hash_password
 
       # Email validations
-      validates_presence_of     :email,                                           if: :validate_email_presence?
-      validates_uniqueness_of   :email, allow_blank: true, case_sensitive: false, if: :validate_email?
-      validates_format_of       :email, allow_blank: true, with: EMAIL_REGEX,     if: :validate_email?
+      validates(
+        :email,
+        presence:   { if: :validate_email_presence? },
+        format:     { allow_blank: true, with: URI::MailTo::EMAIL_REGEXP },
+        uniqueness: { allow_blank: true, case_sensitive: false },
+        if:         :validate_email?
+      )
 
       # Password validations
-      validates_presence_of     :password,                                      if: :validate_password?
-      validates_confirmation_of :password,                                      if: :validate_password?
-      validates_length_of       :password, within: PASSWORD_MIN..PASSWORD_MAX,  if: :validate_password?
+      validates(
+        :password,
+        confirmation: true,
+        length:       { within: PASSWORD_MIN..PASSWORD_MAX },
+        presence:     true,
+        if:           :validate_password?
+      )
 
       # Active scope
       scope :active,    ->(state = true)  { where(active: state) }
