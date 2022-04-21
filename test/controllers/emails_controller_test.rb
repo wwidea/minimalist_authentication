@@ -27,7 +27,7 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
   test 'should fail to update email' do
     login_as :active_user
 
-    put email_path(user: { email: 'testing@invalid' } )
+    put email_path(user: { email: 'testing-invalid' } )
     assert_response :success
   end
 end

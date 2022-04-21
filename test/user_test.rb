@@ -7,8 +7,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return inactive users" do
-    assert user = User.create(username: 'inactive')
-    assert_equal %w(inactive), User.inactive.map(&:username)
+    assert_equal [users(:inactive_user).email], User.inactive.map(&:email)
   end
 
   test "should authenticate user with email" do
@@ -110,6 +109,18 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors.has_key?(:password)
   end
 
+  test "should allow an active user to have a dupliate email with an inactive user" do
+    assert new_user(active: true, email: users(:inactive_user).email).valid?
+  end
+
+  test "shold not allow an active user to have a duplicate email with another active user" do
+    assert_not new_user(email: users(:active_user).email).valid?
+  end
+
+  test "should allow an inactive user to have a dupliate email with another inactive user" do
+    assert new_user(active: false, email: users(:inactive_user).email).valid?
+  end
+
   test "should migrate legacy user to new salt" do
     new_cost = MinimalistAuthentication::Password.cost + 1
     MinimalistAuthentication::Password.expects(:cost).returns(new_cost).times(4)
@@ -120,5 +131,11 @@ class UserTest < ActiveSupport::TestCase
 
     assert users(:legacy_user).authenticated?('password'), 'authenticated? failed after encryption update'
     assert_equal new_cost, users(:legacy_user).send(:password_object).cost
+  end
+
+  private
+
+  def new_user(active: true, email: 'test@example.com')
+    User.new(active: active, email: email, password: 'password')
   end
 end
