@@ -1,17 +1,21 @@
 <% password_hash = MinimalistAuthentication::Password.create('password') %>
 
 DEFAULTS: &user_defaults
-  active:                 true
-  password_hash:          <%= password_hash %>
-  crypted_password:       <%= password_hash.checksum %>
-  salt:                   <%= password_hash.salt %>
+  active:             true
+  password_hash:      <%= password_hash %>
+  crypted_password:   <%= password_hash.checksum %>
+  salt:               <%= password_hash.salt %>
 
 active_user:
   <<: *user_defaults
-  username:               test
-  email:                  active@example.com
-  email_verified_at:      <%= 42.days.ago.to_s(:db) %>
+  username:           test
+  email:              active@example.com
+  email_verified_at:  <%= 42.days.ago.to_s(:db) %>
 
 legacy_user:
   <<: *user_defaults
-  email:                  legacy@example.com
+  email:              legacy@example.com
+
+inactive_user:
+  active:             false
+  email:              inactive@example.com

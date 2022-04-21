@@ -21,11 +21,11 @@ module MinimalistAuthentication
       # Email validations
       validates(
         :email,
-        presence:   { if: :validate_email_presence? },
         format:     { allow_blank: true, with: URI::MailTo::EMAIL_REGEXP },
-        uniqueness: { allow_blank: true, case_sensitive: false },
+        uniqueness: { allow_blank: true, case_sensitive: false, scope: :active },
         if:         :validate_email?
       )
+      validates(:email, presence: true, if: :validate_email_presence?)
 
       # Password validations
       validates(
