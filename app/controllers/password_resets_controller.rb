@@ -15,16 +15,17 @@ class PasswordResetsController < ApplicationController
       MinimalistAuthenticationMailer.update_password(user).deliver_now
     end
     # always display notice even if the user was not found to prevent leaking user emails
-    redirect_to new_session_path, notice: "Password reset instructions were mailed to #{email_params[:email]}"
+    redirect_to new_session_path, notice: "Password reset instructions were mailed to #{email}"
   end
 
   private
 
   def user
-    @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email_params)
+    return unless URI::MailTo::EMAIL_REGEXP.match?(email)
+    @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email: email)
   end
 
-  def email_params
-    params.require(:user).permit(:email)
+  def email
+    params.require(:user).fetch(:email)
   end
 end
