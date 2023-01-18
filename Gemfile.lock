@@ -179,7 +179,7 @@ DEPENDENCIES
   minimalist_authentication!
   mocha
   pry
-  sqlite3 (~> 1.3)
+  sqlite3
   terminal-notifier-guard
 
 BUNDLED WITH

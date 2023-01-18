@@ -14,10 +14,10 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 group :development, :test do
-  gem 'pry'
-
-  gem 'guard'
   gem 'guard-minitest'
+  gem 'guard'
+  gem 'pry'
+  gem 'sqlite3'
   gem 'terminal-notifier-guard'
 end
 
