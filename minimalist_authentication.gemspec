@@ -1,7 +1,4 @@
-$:.push File.expand_path("../lib", __FILE__)
-
-# Maintain your gem's version:
-require "minimalist_authentication/version"
+require_relative "lib/minimalist_authentication/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
