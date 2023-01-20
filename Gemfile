@@ -14,7 +14,7 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 group :development, :test do
-  gem 'guard-minitest'
+  gem 'guard-shell'
   gem 'guard'
   gem 'pry'
   gem 'sqlite3'
