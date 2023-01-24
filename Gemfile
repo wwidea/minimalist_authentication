@@ -8,6 +8,7 @@ gem "guard-shell"
 gem "guard"
 gem "puma"
 gem "sqlite3"
+gem "sprockets-rails"
 gem "terminal-notifier-guard"
 
 group :test do
