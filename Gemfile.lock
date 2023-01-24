@@ -197,7 +197,6 @@ DEPENDENCIES
   guard-shell
   minimalist_authentication!
   mocha
-  pry
   puma
   sqlite3
   terminal-notifier-guard

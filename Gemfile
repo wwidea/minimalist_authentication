@@ -6,7 +6,6 @@ gemspec
 
 gem "guard-shell"
 gem "guard"
-gem "pry"
 gem "puma"
 gem "sqlite3"
 gem "terminal-notifier-guard"
