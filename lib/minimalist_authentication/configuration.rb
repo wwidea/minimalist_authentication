@@ -67,7 +67,7 @@ module MinimalistAuthentication
 
     # Returns the user_model class
     # Calling constantize on a string makes this work correctly with
-    # the spring application preloader gem.
+    # the Spring application preloader gem.
     def user_model
       user_model_name.constantize
     end
