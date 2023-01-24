@@ -132,6 +132,8 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    puma (6.0.2)
+      nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.6.2)
     rack-test (2.0.2)
@@ -196,6 +198,7 @@ DEPENDENCIES
   minimalist_authentication!
   mocha
   pry
+  puma
   sqlite3
   terminal-notifier-guard
 
