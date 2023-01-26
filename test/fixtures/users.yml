@@ -10,7 +10,7 @@ active_user:
   <<: *user_defaults
   username:           test
   email:              active@example.com
-  email_verified_at:  <%= 42.days.ago.to_s(:db) %>
+  email_verified_at:  <%= 42.days.ago.to_fs(:db) %>
 
 legacy_user:
   <<: *user_defaults

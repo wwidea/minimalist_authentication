@@ -1,24 +1,20 @@
-$:.push File.expand_path("../lib", __FILE__)
+require_relative "lib/minimalist_authentication/version"
 
-# Maintain your gem's version:
-require "minimalist_authentication/version"
+Gem::Specification.new do |spec|
+  spec.name          = "minimalist_authentication"
+  spec.version       = MinimalistAuthentication::VERSION
+  spec.authors       = ["Aaron Baldwin", "Brightways Learning"]
+  spec.email         = ["baldwina@brightwayslearning.org"]
+  spec.homepage      = "https://github.com/wwidea/minimalist_authentication"
+  spec.summary       = %q{A Rails authentication plugin that takes a minimalist approach.}
+  spec.description   = %q{A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.}
+  spec.license       = "MIT"
 
-# Describe your gem and declare its dependencies:
-Gem::Specification.new do |s|
-  s.name          = "minimalist_authentication"
-  s.version       = MinimalistAuthentication::VERSION
-  s.platform      = Gem::Platform::RUBY
-  s.authors       = ['Aaron Baldwin', 'Brightways Learning']
-  s.email         = ["baldwina@brightwayslearning.org"]
-  s.homepage      = "https://github.com/wwidea/minimalist_authentication"
-  s.summary       = %q{A Rails authentication plugin that takes a minimalist approach.}
-  s.description   = %q{A Rails authentication plugin that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.}
-  s.license       = 'MIT'
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency 'rails',   '>= 5.0'
-  s.add_dependency 'bcrypt',  '~> 3.1', '>= 3.1.3'
-
-  s.add_development_dependency  'sqlite3', '~> 1.3'
+  spec.add_dependency "rails",  ">= 5.0"
+  spec.add_dependency "bcrypt", "~> 3.1", ">= 3.1.3"
 end
