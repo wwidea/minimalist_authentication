@@ -10,7 +10,6 @@ gem "puma"
 gem "ruby-lsp"
 gem "sqlite3"
 gem "sprockets-rails"
-gem "terminal-notifier-guard"
 
 group :test do
   gem "mocha"
