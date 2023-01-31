@@ -6,11 +6,8 @@ gemspec
 
 gem "guard-shell"
 gem "guard"
+gem "mocha"
 gem "puma"
 gem "ruby-lsp"
 gem "sqlite3"
 gem "sprockets-rails"
-
-group :test do
-  gem "mocha"
-end
