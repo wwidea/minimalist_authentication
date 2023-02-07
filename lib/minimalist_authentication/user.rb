@@ -56,10 +56,12 @@ module MinimalistAuthentication
         field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
         # return nil if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
+
         # attempt to find the user using field and value
         user = active.where(field => value).first
         # check if a user was found and if they can be authenticated
         return unless user && user.authenticated?(params[:password])
+
         # return the authenticated user
         user
       end
@@ -114,6 +116,7 @@ module MinimalistAuthentication
     # Hash password and store in hash_password unless password is blank.
     def hash_password
       return if password.blank?
+
       self.password_hash = Password.create(password)
     end
 
