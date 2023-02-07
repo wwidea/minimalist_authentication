@@ -94,7 +94,7 @@ class UserTest < ActiveSupport::TestCase
   test "should fail validation for active user without password" do
     user = User.new(active: true)
     assert_not user.valid?
-    assert user.errors.has_key?(:password)
+    assert user.errors.key?(:password)
   end
 
   test "should pass validation for a user with a password hash and a blank password" do
@@ -108,7 +108,7 @@ class UserTest < ActiveSupport::TestCase
     user.password_required = true
     user.password = ""
     assert_not user.valid?
-    assert user.errors.has_key?(:password)
+    assert user.errors.key?(:password)
   end
 
   test "should allow an active user to have a dupliate email with an inactive user" do
@@ -129,7 +129,7 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal (new_cost - 1), users(:legacy_user).send(:password_object).cost
     assert users(:legacy_user).authenticated?("password"), "authenticated? failed during encryption update"
-    assert users(:legacy_user).saved_changes.has_key?(:password_hash)
+    assert users(:legacy_user).saved_changes.key?(:password_hash)
 
     assert users(:legacy_user).authenticated?("password"), "authenticated? failed after encryption update"
     assert_equal new_cost, users(:legacy_user).send(:password_object).cost
