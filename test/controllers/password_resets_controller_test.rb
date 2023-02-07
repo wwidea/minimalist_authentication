@@ -11,7 +11,7 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create password reset email for known user" do
     assert_difference "ActionMailer::Base.deliveries.size" do
-      post password_reset_path(user: { email: users(:active_user).email } )
+      post password_reset_path(user: { email: users(:active_user).email })
 
       assert_predicate users(:active_user).reload.verification_token, :present?
     end
@@ -20,14 +20,14 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
 
   test "should fail to create password reset email for unknown user" do
     assert_no_difference "ActionMailer::Base.deliveries.size" do
-      post password_reset_path(user: { email: "not_a_user@example.com" } )
+      post password_reset_path(user: { email: "not_a_user@example.com" })
     end
     assert_redirected_to new_session_path
   end
 
   test "should raise error when email paramater is not provided" do
     assert_raise ActionController::ParameterMissing do
-      post password_reset_path(user: { foo: "bar" } )
+      post password_reset_path(user: { foo: "bar" })
     end
   end
 end

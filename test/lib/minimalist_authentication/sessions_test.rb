@@ -17,7 +17,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create session" do
-    post session_path(user: { email: users(:active_user).email, password: "password" } )
+    post session_path(user: { email: users(:active_user).email, password: "password" })
 
     assert_equal users(:active_user), current_user
     assert_redirected_to root_path
@@ -46,7 +46,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should fail to create session" do
-    post session_path(user: { email: users(:active_user).email, password: "wrong_password" } )
+    post session_path(user: { email: users(:active_user).email, password: "wrong_password" })
 
     assert_nil current_user
     assert_response :success
