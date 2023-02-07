@@ -42,7 +42,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return false for active?" do
-    refute User.new.active?
+    assert_not User.new.active?
   end
 
   test "should return true for inactive?" do
@@ -50,11 +50,11 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return false for inactive?" do
-    refute User.new(active: true).inactive?
+    assert_not User.new(active: true).inactive?
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
-    refute User.new(password_hash: "password").authenticated?("password")
+    assert_not User.new(password_hash: "password").authenticated?("password")
   end
 
   test "should create password_hash for new user" do
@@ -87,13 +87,13 @@ class UserTest < ActiveSupport::TestCase
 
   test "should fail validation for active user without email" do
     user = User.new(active: true)
-    refute user.valid?
+    assert_not user.valid?
     assert user.errors[:email]
   end
 
   test "should fail validation for active user without password" do
     user = User.new(active: true)
-    refute user.valid?
+    assert_not user.valid?
     assert user.errors.has_key?(:password)
   end
 
@@ -107,7 +107,7 @@ class UserTest < ActiveSupport::TestCase
     user = users(:active_user)
     user.password_required = true
     user.password = ""
-    refute user.valid?
+    assert_not user.valid?
     assert user.errors.has_key?(:password)
   end
 

@@ -15,7 +15,7 @@ class PasswordTest < ActiveSupport::TestCase
   end
 
   test "should return false for stale?" do
-    refute hashed_password.stale?
+    assert_not hashed_password.stale?
   end
 
   test "should return true for stale?" do

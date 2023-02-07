@@ -9,6 +9,6 @@ class VerifiableTokenTest < ActiveSupport::TestCase
   end
 
   test "should not have valid verification_token" do
-    refute users(:active_user).verification_token_valid?
+    assert_not users(:active_user).verification_token_valid?
   end
 end
