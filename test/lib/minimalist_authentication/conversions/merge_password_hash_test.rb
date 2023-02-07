@@ -23,6 +23,6 @@ class MergePasswordHashTest < ActiveSupport::TestCase
   test "should mmerge password hash" do
     MinimalistAuthentication::Conversions::MergePasswordHash.new(users(:legacy_user)).update!
 
-    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]) == "password"
+    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]).is_password?("password")
   end
 end
