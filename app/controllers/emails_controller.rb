@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class EmailsController < ApplicationController
-  def edit
-  end
+  def edit; end
 
   def update
     if current_user.update(user_params)
