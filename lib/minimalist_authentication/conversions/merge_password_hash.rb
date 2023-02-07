@@ -3,7 +3,6 @@
 module MinimalistAuthentication
   module Conversions
     class MergePasswordHash
-
       class << self
         def run!
           user_model.where(using_digest_version: 3, password_hash: nil).each do |user|

@@ -3,7 +3,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-
   test "should return active users" do
     assert_equal users(:active_user, :legacy_user).sort, User.active.sort
   end
