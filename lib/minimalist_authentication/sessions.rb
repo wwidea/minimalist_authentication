@@ -5,7 +5,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      skip_before_action  :authorization_required,    only: %i(new create)
+      skip_before_action  :authorization_required,    only: %i[new create]
       before_action       :redirect_logged_in_users,  only: :new
     end
 
@@ -74,7 +74,7 @@ module MinimalistAuthentication
     end
 
     def scrub_session!
-      (session.keys - %w(session_id return_to)).each do |key|
+      (session.keys - %w[session_id return_to]).each do |key|
         session.delete(key)
       end
     end
