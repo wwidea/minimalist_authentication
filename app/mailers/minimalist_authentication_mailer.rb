@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MinimalistAuthenticationMailer < ApplicationMailer
   def verify_email(user)
     @verify_email_link = email_verification_url(token: user.verification_token)

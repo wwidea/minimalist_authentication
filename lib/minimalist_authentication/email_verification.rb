@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   module EmailVerification
     extend ActiveSupport::Concern

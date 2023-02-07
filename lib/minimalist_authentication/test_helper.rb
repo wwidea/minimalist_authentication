@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   module TestHelper
     def login_as(user_fixture_name, password = "password")

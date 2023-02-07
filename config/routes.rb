@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   resources :user, only: [] do
     resource :password,         only: %i(edit update)

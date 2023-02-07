@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordsController < ApplicationController
   skip_before_action :authorization_required
 

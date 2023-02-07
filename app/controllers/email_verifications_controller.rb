@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailVerificationsController < ApplicationController
   def new
     # verify email for current_user

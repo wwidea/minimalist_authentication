@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "minimalist_authentication/engine"
 require "minimalist_authentication/configuration"
 require "minimalist_authentication/user"

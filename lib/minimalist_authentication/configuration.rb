@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   # store the configuration object
   def self.configuration
