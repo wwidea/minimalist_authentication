@@ -69,7 +69,6 @@ class ControllerTest < ActiveSupport::TestCase
     assert_equal "/", redirect_to
   end
 
-
   private
 
   def redirect_to(path = nil)

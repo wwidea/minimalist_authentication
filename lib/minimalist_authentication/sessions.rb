@@ -59,7 +59,6 @@ module MinimalistAuthentication
       redirect_to(login_redirect_to) if logged_in?
     end
 
-
     def after_authentication_success
       redirect_back_or_default(login_redirect_to)
     end
