@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   resource :dashboard,  only: :show
   resource :session,    only: %i(new create destroy)
   
-  root to: 'dashboards#show'
+  root to: "dashboards#show"
 end

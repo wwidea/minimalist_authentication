@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ControllerTest < ActiveSupport::TestCase
   def self.helper_method(*args)
@@ -12,7 +12,7 @@ class ControllerTest < ActiveSupport::TestCase
   include MinimalistAuthentication::Controller
 
   test "should return guest for current_user" do
-    assert_equal 'guest', current_user.email
+    assert_equal "guest", current_user.email
   end
 
   test "should return logged_in user for current_user" do
@@ -37,26 +37,26 @@ class ControllerTest < ActiveSupport::TestCase
 
   test "should store location" do
     store_location
-    assert_equal request.fullpath, session['return_to']
+    assert_equal request.fullpath, session["return_to"]
   end
 
   test "should redirect to stored location" do
     store_location
-    redirect_back_or_default('/')
+    redirect_back_or_default("/")
     assert_equal request.fullpath, redirect_to
   end
 
   test "should redirect to stored location only once" do
     store_location
-    redirect_back_or_default('/')
+    redirect_back_or_default("/")
     assert_equal request.fullpath, redirect_to
-    redirect_back_or_default('/')
-    assert_equal '/', redirect_to
+    redirect_back_or_default("/")
+    assert_equal "/", redirect_to
   end
 
   test "should redirect to default" do
-    redirect_back_or_default('/')
-    assert_equal '/', redirect_to
+    redirect_back_or_default("/")
+    assert_equal "/", redirect_to
   end
 
 
@@ -80,7 +80,7 @@ class ControllerTest < ActiveSupport::TestCase
   end
 
   def new_session_path
-    '/session/new'
+    "/session/new"
   end
 
   def request
@@ -90,7 +90,7 @@ class ControllerTest < ActiveSupport::TestCase
       end
 
       def fullpath
-        'http://www.example.com'
+        "http://www.example.com"
       end
     end).new
   end

@@ -1,7 +1,7 @@
 class PasswordsController < ApplicationController
   skip_before_action :authorization_required
 
-  layout 'sessions'
+  layout "sessions"
 
   # From for user to update password
   def edit
@@ -12,7 +12,7 @@ class PasswordsController < ApplicationController
   # Update user's password
   def update
     if user.secure_update(token, password_params.merge(password_required: true))
-      redirect_to new_session_path, notice: 'Password successfully updated'
+      redirect_to new_session_path, notice: "Password successfully updated"
     else
       render :edit
     end

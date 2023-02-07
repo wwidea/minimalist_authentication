@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
@@ -13,14 +13,14 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create session" do
-    post session_path(user: { email: users(:active_user).email, password: 'password' } )
+    post session_path(user: { email: users(:active_user).email, password: "password" } )
     assert_equal users(:active_user), current_user
     assert_redirected_to root_path
   end
 
   test "should create session and rediret to edit email" do
     users(:active_user).update_columns(email: nil)
-    post session_path, params: { user: { username: users(:active_user).username, password: 'password' } }
+    post session_path, params: { user: { username: users(:active_user).username, password: "password" } }
     assert_redirected_to edit_email_path
   end
 
@@ -39,7 +39,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should fail to create session" do
-    post session_path(user: { email: users(:active_user).email, password: 'wrong_password' } )
+    post session_path(user: { email: users(:active_user).email, password: "wrong_password" } )
     assert_nil current_user
     assert_response :success
   end

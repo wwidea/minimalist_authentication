@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
 
@@ -11,28 +11,28 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should authenticate user with email" do
-    assert_equal users(:active_user), User.authenticate(email: users(:active_user).email, password: 'password')
+    assert_equal users(:active_user), User.authenticate(email: users(:active_user).email, password: "password")
   end
 
   test "should authenticate user with username" do
-    assert_equal users(:active_user), User.authenticate(username: users(:active_user).username, password: 'password')
+    assert_equal users(:active_user), User.authenticate(username: users(:active_user).username, password: "password")
   end
 
   test "should fail to authenticate when email is blank" do
-    assert_nil User.authenticate(email: '', password: 'password')
+    assert_nil User.authenticate(email: "", password: "password")
   end
 
   test "should fail to authenticate when password is blank" do
-    assert_nil User.authenticate(email: users(:active_user).email, password: '')
+    assert_nil User.authenticate(email: users(:active_user).email, password: "")
   end
 
   test "should fail to authenticate when user is not active" do
     users(:active_user).update_column(:active, false)
-    assert_nil User.authenticate(email: users(:active_user).email, password: 'password')
+    assert_nil User.authenticate(email: users(:active_user).email, password: "password")
   end
 
   test "should fail to authenticate for incorrect password" do
-    assert_nil User.authenticate(email: users(:active_user).email, password: 'incorrect_password')
+    assert_nil User.authenticate(email: users(:active_user).email, password: "incorrect_password")
   end
 
   test "should return true for active?" do
@@ -52,14 +52,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
-    refute User.new(password_hash: 'password').authenticated?('password')
+    refute User.new(password_hash: "password").authenticated?("password")
   end
 
   test "should create password_hash for new user" do
-    user = User.new(email: 'test-new@testing.com', password: 'testing')
+    user = User.new(email: "test-new@testing.com", password: "testing")
     assert          user.save
     assert_not_nil  user.password_hash
-    assert          user.authenticated?('testing')
+    assert          user.authenticated?("testing")
   end
 
   test "should update last_logged_in_at without updating updated_at timestamp" do
@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "should not be able to moidfy guest user" do
     assert_raise RuntimeError do
-      User.guest.email = 'test@testing.com'
+      User.guest.email = "test@testing.com"
     end
   end
 
@@ -97,14 +97,14 @@ class UserTest < ActiveSupport::TestCase
 
   test "should pass validation for a user with a password hash and a blank password" do
     user = users(:active_user)
-    user.password = ''
+    user.password = ""
     assert user.valid?
   end
 
   test "should fail validation for a user with blank password and password_required true" do
     user = users(:active_user)
     user.password_required = true
-    user.password = ''
+    user.password = ""
     refute user.valid?
     assert user.errors.has_key?(:password)
   end
@@ -126,16 +126,16 @@ class UserTest < ActiveSupport::TestCase
     MinimalistAuthentication::Password.expects(:cost).returns(new_cost).times(4)
 
     assert_equal (new_cost - 1), users(:legacy_user).send(:password_object).cost
-    assert users(:legacy_user).authenticated?('password'), 'authenticated? failed during encryption update'
+    assert users(:legacy_user).authenticated?("password"), "authenticated? failed during encryption update"
     assert users(:legacy_user).saved_changes.has_key?(:password_hash)
 
-    assert users(:legacy_user).authenticated?('password'), 'authenticated? failed after encryption update'
+    assert users(:legacy_user).authenticated?("password"), "authenticated? failed after encryption update"
     assert_equal new_cost, users(:legacy_user).send(:password_object).cost
   end
 
   private
 
-  def new_user(active: true, email: 'test@example.com')
-    User.new(active: active, email: email, password: 'password')
+  def new_user(active: true, email: "test@example.com")
+    User.new(active: active, email: email, password: "password")
   end
 end

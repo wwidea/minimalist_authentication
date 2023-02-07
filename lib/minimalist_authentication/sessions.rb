@@ -64,7 +64,7 @@ module MinimalistAuthentication
 
     def attempting_to_verify?
       # check if user is attpting to verify their email
-      session['return_to'].to_s[/token/]
+      session["return_to"].to_s[/token/]
     end
 
     def after_authentication_failure

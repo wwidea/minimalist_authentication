@@ -1,22 +1,22 @@
-require 'test_helper'
+require "test_helper"
 
 class PasswordTest < ActiveSupport::TestCase
-  test 'should create password hash' do
+  test "should create password hash" do
     assert hashed_password
   end
 
-  test 'should return NullPassword for invalid hash' do
+  test "should return NullPassword for invalid hash" do
     assert_kind_of(
       MinimalistAuthentication::NullPassword,
-      MinimalistAuthentication::Password.new('').bcrypt_password
+      MinimalistAuthentication::Password.new("").bcrypt_password
     )
   end
 
-  test 'should return false for stale?' do
+  test "should return false for stale?" do
     refute hashed_password.stale?
   end
 
-  test 'should return true for stale?' do
+  test "should return true for stale?" do
     password = hashed_password
     password.expects(:cost).returns(0)
     assert password.stale?
@@ -25,6 +25,6 @@ class PasswordTest < ActiveSupport::TestCase
   private
 
   def hashed_password
-    MinimalistAuthentication::Password.create('testing')
+    MinimalistAuthentication::Password.create("testing")
   end
 end

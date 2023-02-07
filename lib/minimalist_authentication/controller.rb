@@ -38,16 +38,16 @@ module MinimalistAuthentication
     end
 
     def access_denied
-      store_location if request.method.to_s.downcase == 'get' && !logged_in?
+      store_location if request.method.to_s.downcase == "get" && !logged_in?
       redirect_to new_session_path
     end
 
     def store_location
-      session['return_to'] = request.fullpath
+      session["return_to"] = request.fullpath
     end
 
     def redirect_back_or_default(default)
-      redirect_to(session.delete('return_to') || default)
+      redirect_to(session.delete("return_to") || default)
     end
   end
 end

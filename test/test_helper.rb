@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mocha/minitest'
+require "mocha/minitest"
 
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"

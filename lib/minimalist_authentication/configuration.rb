@@ -54,7 +54,7 @@ module MinimalistAuthentication
     attr_accessor :email_prefix
 
     def initialize
-      self.user_model_name          = '::User'
+      self.user_model_name          = "::User"
       self.session_key              = :user_id
       self.validate_email           = true
       self.validate_email_presence  = true
