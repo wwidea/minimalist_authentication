@@ -78,7 +78,7 @@ class ControllerTest < ActiveSupport::TestCase
   end
 
   def session
-    @session ||= Hash.new
+    @session ||= {}
   end
 
   def action_name
