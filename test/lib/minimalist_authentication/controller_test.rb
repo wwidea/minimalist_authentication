@@ -19,17 +19,20 @@ class ControllerTest < ActiveSupport::TestCase
 
   test "should return logged_in user for current_user" do
     session[:user_id] = users(:active_user).id
+
     assert_equal users(:active_user), current_user
   end
 
   test "should not return inactive logged_in user for current_user" do
     users(:active_user).update_column(:active, false)
     session[:user_id] = users(:active_user).id
+
     assert current_user.is_guest?
   end
 
   test "should pass authorization" do
     session[:user_id] = users(:active_user).id
+
     assert_equal true, authorization_required
   end
 
@@ -39,25 +42,30 @@ class ControllerTest < ActiveSupport::TestCase
 
   test "should store location" do
     store_location
+
     assert_equal request.fullpath, session["return_to"]
   end
 
   test "should redirect to stored location" do
     store_location
     redirect_back_or_default("/")
+
     assert_equal request.fullpath, redirect_to
   end
 
   test "should redirect to stored location only once" do
     store_location
     redirect_back_or_default("/")
+
     assert_equal request.fullpath, redirect_to
     redirect_back_or_default("/")
+
     assert_equal "/", redirect_to
   end
 
   test "should redirect to default" do
     redirect_back_or_default("/")
+
     assert_equal "/", redirect_to
   end
 

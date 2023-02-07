@@ -21,6 +21,7 @@ class PasswordTest < ActiveSupport::TestCase
   test "should return true for stale?" do
     password = hashed_password
     password.expects(:cost).returns(0)
+
     assert password.stale?
   end
 

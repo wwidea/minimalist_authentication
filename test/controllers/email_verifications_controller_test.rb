@@ -5,8 +5,8 @@ require "test_helper"
 class EmailVerificationsControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
     login_as :legacy_user
-
     get new_email_verification_path
+
     assert_response :success
   end
 
@@ -20,8 +20,8 @@ class EmailVerificationsControllerTest < ActionDispatch::IntegrationTest
 
   test "should get show" do
     login_as :legacy_user
-
     get email_verification_path
+
     assert_response :success
   end
 end
