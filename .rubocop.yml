@@ -1,0 +1,51 @@
+# https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml
+
+require:
+  - rubocop-minitest
+  - rubocop-packaging
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.7
+  Exclude:
+    - test/dummy/config/environments/*
+    - test/dummy/db/schema.rb
+    - test/dummy/tmp/**/*
+
+
+# Layout
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/LineLength:
+  Max: 200
+
+
+# Packaging
+Packaging/BundlerSetupInTests:
+  Exclude:
+    - test/dummy/config/boot.rb
+
+
+# Style
+Style/ClassAndModuleChildren:
+  Exclude:
+    - Guardfile
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - db/migrate/*
+    - test/dummy/db/migrate/*
+
+Style/StringConcatenation:
+  Exclude:
+    - test/test_helper.rb
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
