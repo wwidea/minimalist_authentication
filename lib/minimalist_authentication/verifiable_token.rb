@@ -26,6 +26,7 @@ module MinimalistAuthentication
 
     def verification_token_valid?
       return false if verification_token.blank? || verification_token_generated_at.blank?
+
       verification_token_generated_at > TOKEN_EXPIRATION_HOURS.hours.ago
     end
 
@@ -37,8 +38,8 @@ module MinimalistAuthentication
 
     def update_token(token: self.class.generate_unique_secure_token, time: Time.now.utc)
       update!(
-        verification_token:               token,
-        verification_token_generated_at:  time
+        verification_token:              token,
+        verification_token_generated_at: time
       )
     end
 
