@@ -39,7 +39,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return true for active?" do
-    assert User.new(active: true).active?
+    assert_predicate User.new(active: true), :active?
   end
 
   test "should return false for active?" do
@@ -47,7 +47,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should return true for inactive?" do
-    assert User.new.inactive?
+    assert_predicate User.new, :inactive?
   end
 
   test "should return false for inactive?" do
@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "guest should be guest" do
-    assert User.guest.is_guest?
+    assert_predicate User.guest, :is_guest?
   end
 
   test "should not be able to moidfy guest user" do
@@ -85,7 +85,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should allow inactive user to pass validation without an email or password" do
-    assert User.new.valid?
+    assert_predicate User.new, :valid?
   end
 
   test "should fail validation for active user without email" do
@@ -106,7 +106,7 @@ class UserTest < ActiveSupport::TestCase
     user = users(:active_user)
     user.password = ""
 
-    assert user.valid?
+    assert_predicate user, :valid?
   end
 
   test "should fail validation for a user with blank password and password_required true" do
@@ -119,7 +119,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should allow an active user to have a dupliate email with an inactive user" do
-    assert new_user(active: true, email: users(:inactive_user).email).valid?
+    assert_predicate new_user(active: true, email: users(:inactive_user).email), :valid?
   end
 
   test "shold not allow an active user to have a duplicate email with another active user" do
@@ -127,7 +127,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should allow an inactive user to have a dupliate email with another inactive user" do
-    assert new_user(active: false, email: users(:inactive_user).email).valid?
+    assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
   test "should migrate legacy user to new salt" do

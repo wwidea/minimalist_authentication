@@ -30,7 +30,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_session_path
     assert users(:active_user).reload.authenticated?("abcd1234"), "password should be changed"
-    assert users(:active_user).verification_token.blank?
+    assert_predicate users(:active_user).verification_token, :blank?
   end
 
   test "should fail to update password for verified user when confirmation does not match" do
@@ -39,7 +39,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert users(:active_user).reload.authenticated?("password"), "password should not be changed"
-    assert users(:active_user).verification_token.present?
+    assert_predicate users(:active_user).verification_token, :present?
   end
 
   test "should fail to update password for unverifed user" do
@@ -48,7 +48,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert users(:active_user).reload.authenticated?("password"), "password should not be changed"
-    assert users(:active_user).verification_token.present?
+    assert_predicate users(:active_user).verification_token, :present?
   end
 
   private

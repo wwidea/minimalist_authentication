@@ -22,7 +22,7 @@ class PasswordTest < ActiveSupport::TestCase
     password = hashed_password
     password.expects(:cost).returns(0)
 
-    assert password.stale?
+    assert_predicate password, :stale?
   end
 
   private
