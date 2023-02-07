@@ -7,6 +7,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL  = "guest"
+    LOGIN_FIELDS      = %w[email username].freeze
     PASSWORD_MIN      = 8
     PASSWORD_MAX      = 40
 
@@ -53,7 +54,7 @@ module MinimalistAuthentication
       # Otherwise returns nil.
       def authenticate(params)
         # extract email or username and the associated value
-        field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
+        field, value = params.to_h.select { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }.first
         # return nil if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
 
