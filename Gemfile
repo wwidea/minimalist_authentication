@@ -8,6 +8,10 @@ gem "guard-shell"
 gem "guard"
 gem "mocha"
 gem "puma"
-gem "ruby-lsp"
+gem "rubocop-minitest",     require: false
+gem "rubocop-packaging",    require: false
+gem "rubocop-performance",  require: false
+gem "rubocop-rails",        require: false
+gem "ruby-lsp",             require: false
 gem "sqlite3"
 gem "sprockets-rails"
