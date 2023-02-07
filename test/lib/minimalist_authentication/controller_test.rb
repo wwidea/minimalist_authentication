@@ -73,7 +73,7 @@ class ControllerTest < ActiveSupport::TestCase
 
   def redirect_to(path = nil)
     @redirect_to = path if path
-    return @redirect_to
+    @redirect_to
   end
 
   def session

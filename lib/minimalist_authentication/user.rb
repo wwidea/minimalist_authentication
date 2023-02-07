@@ -61,7 +61,7 @@ module MinimalistAuthentication
         # check if a user was found and if they can be authenticated
         return unless user && user.authenticated?(params[:password])
         # return the authenticated user
-        return user
+        user
       end
 
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
@@ -89,7 +89,7 @@ module MinimalistAuthentication
         return true
       end
 
-      return false
+      false
     end
 
     def logged_in

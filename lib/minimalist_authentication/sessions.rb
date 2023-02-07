@@ -19,7 +19,6 @@ module MinimalistAuthentication
         authenticated_user.logged_in
         session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
         set_or_verify_email || after_authentication_success
-        return
       else
         after_authentication_failure
       end
