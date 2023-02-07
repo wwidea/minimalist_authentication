@@ -30,6 +30,11 @@ Packaging/BundlerSetupInTests:
     - test/dummy/config/boot.rb
 
 
+# Rails
+Rails/SkipsModelValidations:
+  Enabled: false
+
+
 # Style
 Style/ClassAndModuleChildren:
   Exclude:
