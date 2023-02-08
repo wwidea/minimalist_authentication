@@ -15,10 +15,10 @@ module MinimalistAuthentication
     private
 
     def current_user
-      @current_user ||= (get_user_from_session || MinimalistAuthentication.configuration.user_model.guest)
+      @current_user ||= (find_session_user || MinimalistAuthentication.configuration.user_model.guest)
     end
 
-    def get_user_from_session
+    def find_session_user
       return unless session_user_id
 
       MinimalistAuthentication.configuration.user_model.active.find_by(id: session_user_id)
@@ -32,7 +32,7 @@ module MinimalistAuthentication
       authorized? || access_denied
     end
 
-    def authorized?(action = action_name, resource = controller_name)
+    def authorized?(_action = action_name, _resource = controller_name)
       logged_in?
     end
 
