@@ -94,8 +94,8 @@ class ControllerTest < ActiveSupport::TestCase
 
   def request
     (Class.new do
-      def method
-        :get
+      def get?
+        true
       end
 
       def fullpath

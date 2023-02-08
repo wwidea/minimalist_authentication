@@ -41,7 +41,7 @@ module MinimalistAuthentication
     end
 
     def access_denied
-      store_location if request.method.to_s.downcase == "get" && !logged_in?
+      store_location if request.get? && !logged_in?
       redirect_to new_session_path
     end
 
