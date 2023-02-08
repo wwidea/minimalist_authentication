@@ -10,7 +10,7 @@ module MinimalistAuthentication
     end
 
     def new
-      new_user
+      user
     end
 
     def create
@@ -32,7 +32,7 @@ module MinimalistAuthentication
 
     private
 
-    def new_user
+    def user
       @user ||= MinimalistAuthentication.configuration.user_model.new
     end
 
@@ -69,7 +69,7 @@ module MinimalistAuthentication
 
     def after_authentication_failure
       flash.now[:alert] = "Couldn't log you in as '#{user_params[:email] || user_params[:username]}'"
-      new_user
+      user
       render :new
     end
 
