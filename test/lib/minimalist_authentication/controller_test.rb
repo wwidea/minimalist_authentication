@@ -33,7 +33,7 @@ class ControllerTest < ActiveSupport::TestCase
   test "should pass authorization" do
     session[:user_id] = users(:active_user).id
 
-    assert_equal true, authorization_required
+    assert authorization_required
   end
 
   test "should fail authorization" do
