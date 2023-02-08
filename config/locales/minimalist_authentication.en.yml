@@ -1,7 +1,15 @@
 en:
+  # controllers
+  sessions:
+    create:
+      alert: Couldn't log you in as %{identifier}
+    destroy:
+      notice: You have been logged out.
+
+  # mailers
   minimalist_authentication_mailer:
     update_password:
-      opening: 'Please click the link below to update your password:'
+      opening: Please click the link below to update your password.
     verify_email:
-      opening: "Please click the link below to complete your email verification:"
-      closing: 'If you did not request email verification you can safely ignore this message.'
+      opening: Please click the link below to complete your email verification.
+      closing: If you did not request email verification you can safely ignore this message.
