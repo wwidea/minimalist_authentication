@@ -18,6 +18,8 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixtures :all
 end
 
-class ActiveSupport::TestCase
-  include MinimalistAuthentication::TestHelper
+module ActiveSupport
+  class TestCase
+    include MinimalistAuthentication::TestHelper
+  end
 end
