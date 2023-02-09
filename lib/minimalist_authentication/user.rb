@@ -52,7 +52,7 @@ module MinimalistAuthentication
       # { username: 'user', password: 'abc123' }
       # Returns user upon successful authentication.
       # Otherwise returns nil.
-      def authenticate(params)
+      def authenticate(params) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
         # extract email or username and the associated value
         field, value = params.to_h.select { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }.first
         # return nil if field, value, or password is blank
@@ -61,7 +61,7 @@ module MinimalistAuthentication
         # attempt to find the user using field and value
         user = active.where(field => value).first
         # check if a user was found and if they can be authenticated
-        return unless user && user.authenticated?(params[:password])
+        return unless user&.authenticated?(params[:password])
 
         # return the authenticated user
         user
