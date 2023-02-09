@@ -19,6 +19,10 @@ class ConfigurationTest < ActiveSupport::TestCase
     assert_equal :user_id, configuration.session_key
   end
 
+  test "should set default email_prefix" do
+    assert_equal "[Dummy]", configuration.email_prefix
+  end
+
   test "should configure options" do
     MinimalistAuthentication.configure do |configuration|
       configuration.user_model_name = "Object"
