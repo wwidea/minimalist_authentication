@@ -77,7 +77,7 @@ module MinimalistAuthentication
     end
 
     def identifier
-      user_params[:email] || user_params[:username]
+      user_params.values_at(*MinimalistAuthentication::User::LOGIN_FIELDS).compact.first
     end
 
     def scrub_session!
