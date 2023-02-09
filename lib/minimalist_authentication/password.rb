@@ -27,11 +27,9 @@ module MinimalistAuthentication
 
     # Returns a password object wrapping a valid BCrypt password or a NullPassword
     def initialize(password_hash)
-      begin
-        self.bcrypt_password = ::BCrypt::Password.new(password_hash)
-      rescue ::BCrypt::Errors::InvalidHash
-        self.bcrypt_password = NullPassword.new
-      end
+      self.bcrypt_password = ::BCrypt::Password.new(password_hash)
+    rescue ::BCrypt::Errors::InvalidHash
+      self.bcrypt_password = NullPassword.new
     end
 
     # Delegate methods to bcrypt_password
