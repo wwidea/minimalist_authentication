@@ -129,19 +129,26 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
-  test "should migrate legacy user to new salt" do
-    new_cost = MinimalistAuthentication::Password.cost + 1
-    MinimalistAuthentication::Password.expects(:cost).returns(new_cost).times(4)
+  test "should update password_hash with increased cost" do
+    increase_password_hash_cost(times: 3)
 
-    assert_equal (new_cost - 1), users(:legacy_user).send(:password_object).cost
-    assert users(:legacy_user).authenticated?("password"), "authenticated? failed during encryption update"
-    assert users(:legacy_user).saved_changes.key?(:password_hash)
+    assert_difference "users(:legacy_user).send(:password_object).cost" do
+      assert users(:legacy_user).authenticated?("password")
+    end
+  end
 
-    assert users(:legacy_user).authenticated?("password"), "authenticated? failed after encryption update"
-    assert_equal new_cost, users(:legacy_user).send(:password_object).cost
+  test "should authenticate user during and after password_hash cost update" do
+    increase_password_hash_cost(times: 4)
+
+    assert users(:legacy_user).authenticated?("password")
+    assert users(:legacy_user).authenticated?("password")
   end
 
   private
+
+  def increase_password_hash_cost(times:)
+    MinimalistAuthentication::Password.expects(:cost).returns(BCrypt::Engine::MIN_COST + 1).times(times)
+  end
 
   def new_user(active: true, email: "test@example.com")
     User.new(active: active, email: email, password: "password")
