@@ -14,7 +14,7 @@ class PasswordsController < ApplicationController
   # Update user's password
   def update
     if user.secure_update(token, password_params.merge(password_required: true))
-      redirect_to new_session_path, notice: "Password successfully updated"
+      redirect_to new_session_path, notice: t(".notice")
     else
       render :edit
     end
