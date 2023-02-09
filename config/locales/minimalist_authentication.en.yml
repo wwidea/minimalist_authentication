@@ -2,10 +2,10 @@ en:
   # controllers
   emails:
     update:
-      notice: Email successfully updated.
+      notice: Email successfully updated
   passwords:
     update:
-      notice: Password successfully updated.
+      notice: Password successfully updated
   sessions:
     create:
       alert: Couldn't log you in as %{identifier}
