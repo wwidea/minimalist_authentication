@@ -74,7 +74,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "guest should be guest" do
-    assert_predicate User.guest, :is_guest?
+    assert_predicate User.guest, :guest?
   end
 
   test "should not be able to moidfy guest user" do

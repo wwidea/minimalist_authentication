@@ -27,7 +27,7 @@ class ControllerTest < ActiveSupport::TestCase
     users(:active_user).update_column(:active, false)
     session[:user_id] = users(:active_user).id
 
-    assert_predicate current_user, :is_guest?
+    assert_predicate current_user, :guest?
   end
 
   test "should pass authorization" do

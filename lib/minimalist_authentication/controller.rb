@@ -37,7 +37,7 @@ module MinimalistAuthentication
     end
 
     def logged_in?
-      !current_user.is_guest?
+      !current_user.guest?
     end
 
     def access_denied

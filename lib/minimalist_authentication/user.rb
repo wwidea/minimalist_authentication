@@ -101,8 +101,13 @@ module MinimalistAuthentication
     end
 
     # Check if user is a guest based on their email attribute
-    def is_guest?
+    def guest?
       email == GUEST_USER_EMAIL
+    end
+
+    def is_guest? # rubocop:disable Naming/PredicateName
+      ActiveSupport::Deprecation.warn("Calling #is_guest? is deprecated. Use #guest? instead")
+      guest?
     end
 
     private
