@@ -10,7 +10,7 @@ module MinimalistAuthentication
 
       # Cache the calibrated bcrypt cost factor.
       def cost
-        @bcrypt_cost ||= calibrate_cost
+        @cost ||= calibrate_cost
       end
 
       private
