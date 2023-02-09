@@ -69,14 +69,9 @@ module MinimalistAuthentication
       end
     end
 
-    # Returns true if the user is active.
-    def active?
-      active
-    end
-
     # Returns true if the user is not active.
     def inactive?
-      !active
+      !active?
     end
 
     # Return self if password matches the hashed_password, otherwise returns false.

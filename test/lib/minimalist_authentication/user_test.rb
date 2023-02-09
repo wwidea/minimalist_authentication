@@ -41,14 +41,6 @@ class UserTest < ActiveSupport::TestCase
     assert_not User.authenticate(email: users(:active_user).email, password: "incorrect_password")
   end
 
-  test "should return true for active?" do
-    assert_predicate User.new(active: true), :active?
-  end
-
-  test "should return false for active?" do
-    assert_not User.new.active?
-  end
-
   test "should return true for inactive?" do
     assert_predicate User.new, :inactive?
   end
