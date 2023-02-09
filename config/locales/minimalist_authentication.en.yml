@@ -1,5 +1,8 @@
 en:
   # controllers
+  email_verifications:
+    create:
+      notice: Verification email sent to %{email}, follow the instructions to complete verification. Thank you!
   emails:
     update:
       notice: Email successfully updated
