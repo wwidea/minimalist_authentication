@@ -77,7 +77,7 @@ module MinimalistAuthentication
     private
 
     def default_email_prefix
-      "[#{Rails.application.engine_name.delete_suffix("_application").titleize}]"
+      "[#{Rails.application.engine_name.delete_suffix('_application').titleize}]"
     end
   end
 end
