@@ -54,7 +54,7 @@ module MinimalistAuthentication
       # Otherwise returns nil.
       def authenticate(params) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
         # extract email or username and the associated value
-        field, value = params.to_h.select { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }.first
+        field, value = params.to_h.find { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }
         # return nil if field, value, or password is blank
         return if field.blank? || value.blank? || params[:password].blank?
 
