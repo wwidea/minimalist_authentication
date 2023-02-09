@@ -87,12 +87,10 @@ module MinimalistAuthentication
     # If successful checks for an outdated password_hash and updates if
     # necessary.
     def authenticated?(password)
-      if password_object == password
-        update_hash!(password) if password_object.stale?
-        return true
-      end
+      return unless password_object == password
 
-      false
+      update_hash!(password) if password_object.stale?
+      true
     end
 
     def logged_in
