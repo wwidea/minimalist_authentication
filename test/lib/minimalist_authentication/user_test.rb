@@ -19,22 +19,26 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:active_user), User.authenticate(username: users(:active_user).username, password: "password")
   end
 
+  test "should fail to authenticate when params are empty" do
+    assert_not User.authenticate({})
+  end
+
   test "should fail to authenticate when email is blank" do
-    assert_nil User.authenticate(email: "", password: "password")
+    assert_not User.authenticate(email: "", password: "password")
   end
 
   test "should fail to authenticate when password is blank" do
-    assert_nil User.authenticate(email: users(:active_user).email, password: "")
+    assert_not User.authenticate(email: users(:active_user).email, password: "")
   end
 
   test "should fail to authenticate when user is not active" do
     users(:active_user).update_column(:active, false)
 
-    assert_nil User.authenticate(email: users(:active_user).email, password: "password")
+    assert_not User.authenticate(email: users(:active_user).email, password: "password")
   end
 
   test "should fail to authenticate for incorrect password" do
-    assert_nil User.authenticate(email: users(:active_user).email, password: "incorrect_password")
+    assert_not User.authenticate(email: users(:active_user).email, password: "incorrect_password")
   end
 
   test "should return true for active?" do
