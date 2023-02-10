@@ -45,19 +45,20 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      # Authenticates a user form the params provided. Expects a params hash with
-      # email or username and password keys.
+      # Attempts to find and authenticate a user based on the provided params. Expects a params
+      # hash with email or username and password keys. Returns user upon successful authentication.
+      # Otherwise returns nil.
+      #
       # Params examples:
       # { email: 'user@example.com', password: 'abc123' }
       # { username: 'user', password: 'abc123' }
       # Returns user upon successful authentication.
-      # Otherwise returns nil.
       def authenticate(params)
         # extract email or username and the associated value
         field, value = params.to_h.find { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }
 
-        # return nil if field, value, or password is blank
-        return if field.blank? || value.blank? || params[:password].blank?
+        # return nil if field or password is blank
+        return if field.blank? || params[:password].blank?
 
         # attempt to find the user and authenticate using field, value, and password
         active.find_by(field => value)&.authenticated?(params[:password])
@@ -74,19 +75,17 @@ module MinimalistAuthentication
       !active?
     end
 
-    # Return self if password matches the hashed_password, otherwise returns false.
-    # If successful checks for an outdated password_hash and updates if necessary.
+    # Returns self if password matches the hashed_password, otherwise returns nil. Upon successful
+    # authentication the user's password_hash is updated if required.
     def authenticated?(password)
-      if password_object == password
-        update_hash!(password) if password_object.stale?
-        self
-      else
-        false
-      end
+      return unless password_object == password
+
+      update_hash!(password) if password_object.stale?
+      self
     end
 
     def logged_in
-      # use update_column to avoid updated_on trigger
+      # Use update_column to avoid updated_on trigger
       update_column(:last_logged_in_at, Time.current)
     end
 
