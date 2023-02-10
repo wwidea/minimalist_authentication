@@ -60,7 +60,7 @@ module MinimalistAuthentication
         return if field.blank? || value.blank? || params[:password].blank?
 
         # attempt to find the user and authenticate using field, value, and password
-        active.where(field => value).first&.authenticated?(params[:password])
+        active.find_by(field => value)&.authenticated?(params[:password])
       end
 
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
