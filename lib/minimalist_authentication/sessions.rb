@@ -34,7 +34,7 @@ module MinimalistAuthentication
     end
 
     def authenticated_user
-      @authenticated_user ||= MinimalistAuthentication.configuration.user_model.authenticate(user_params)
+      @authenticated_user ||= MinimalistAuthentication::Authenticator.authenticated_user(user_params)
     end
 
     def log_in_user
@@ -77,7 +77,7 @@ module MinimalistAuthentication
     end
 
     def identifier
-      user_params.values_at(*MinimalistAuthentication::User::LOGIN_FIELDS).compact.first
+      user_params.values_at(*MinimalistAuthentication::Authenticator::LOGIN_FIELDS).compact.first
     end
 
     def scrub_session!

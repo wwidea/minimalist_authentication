@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "minimalist_authentication/engine"
+require "minimalist_authentication/authenticator"
 require "minimalist_authentication/configuration"
 require "minimalist_authentication/user"
 require "minimalist_authentication/verifiable_token"

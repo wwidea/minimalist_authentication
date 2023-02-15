@@ -7,7 +7,6 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL  = "guest"
-    LOGIN_FIELDS      = %w[email username].freeze
     PASSWORD_MIN      = 8
     PASSWORD_MAX      = 40
 
@@ -45,23 +44,9 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      # Attempts to find and authenticate a user based on the provided params. Expects a params
-      # hash with email or username and password keys. Returns user upon successful authentication.
-      # Otherwise returns nil.
-      #
-      # Params examples:
-      # { email: 'user@example.com', password: 'abc123' }
-      # { username: 'user', password: 'abc123' }
-      # Returns user upon successful authentication.
       def authenticate(params)
-        # extract email or username and the associated value
-        field, value = params.to_h.find { |key, value| LOGIN_FIELDS.include?(key.to_s) && value.present? }
-
-        # return nil if field or password is blank
-        return if field.blank? || params[:password].blank?
-
-        # attempt to find the user and authenticate using field, value, and password
-        active.find_by(field => value)&.authenticated?(params[:password])
+        ActiveSupport::Deprecation.warn("Calling User::authenticate is deprecated. Use MinimalistAuthentication::Authenticator.authenticate_user instead")
+        MinimalistAuthentication::Authenticator.authenticated_user(params)
       end
 
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
@@ -75,13 +60,13 @@ module MinimalistAuthentication
       !active?
     end
 
-    # Returns self if password matches the hashed_password, otherwise returns nil. Upon successful
+    # Returns true if password matches the hashed_password, otherwise returns nil. Upon successful
     # authentication the user's password_hash is updated if required.
     def authenticated?(password)
       return unless password_object == password
 
       update_hash!(password) if password_object.stale?
-      self
+      true
     end
 
     def logged_in
