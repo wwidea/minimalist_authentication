@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   module Controller
     extend ActiveSupport::Concern
@@ -13,11 +15,12 @@ module MinimalistAuthentication
     private
 
     def current_user
-      @current_user ||= (get_user_from_session || MinimalistAuthentication.configuration.user_model.guest)
+      @current_user ||= (find_session_user || MinimalistAuthentication.configuration.user_model.guest)
     end
 
-    def get_user_from_session
+    def find_session_user
       return unless session_user_id
+
       MinimalistAuthentication.configuration.user_model.active.find_by(id: session_user_id)
     end
 
@@ -29,25 +32,25 @@ module MinimalistAuthentication
       authorized? || access_denied
     end
 
-    def authorized?(action = action_name, resource = controller_name)
+    def authorized?(_action = action_name, _resource = controller_name)
       logged_in?
     end
 
     def logged_in?
-      !current_user.is_guest?
+      !current_user.guest?
     end
 
     def access_denied
-      store_location if request.method.to_s.downcase == 'get' && !logged_in?
+      store_location if request.get? && !logged_in?
       redirect_to new_session_path
     end
 
     def store_location
-      session['return_to'] = request.fullpath
+      session["return_to"] = request.fullpath
     end
 
     def redirect_back_or_default(default)
-      redirect_to(session.delete('return_to') || default)
+      redirect_to(session.delete("return_to") || default)
     end
   end
 end

@@ -1,4 +1,6 @@
-require 'test_helper'
+# frozen_string_literal: true
+
+require "test_helper"
 
 class ConfigurationTest < ActiveSupport::TestCase
   def setup
@@ -9,17 +11,21 @@ class ConfigurationTest < ActiveSupport::TestCase
     MinimalistAuthentication.reset_configuration!
   end
 
-  test 'should set default user_model' do
+  test "should set default user_model" do
     assert_equal ::User, configuration.user_model
   end
 
-  test 'should set default session_key' do
+  test "should set default session_key" do
     assert_equal :user_id, configuration.session_key
   end
 
-  test 'should configure options' do
+  test "should set default email_prefix" do
+    assert_equal "[Dummy]", configuration.email_prefix
+  end
+
+  test "should configure options" do
     MinimalistAuthentication.configure do |configuration|
-      configuration.user_model_name = 'Object'
+      configuration.user_model_name = "Object"
       configuration.session_key     = :test_key
     end
 

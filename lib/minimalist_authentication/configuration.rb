@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   # store the configuration object
   def self.configuration
@@ -54,7 +56,7 @@ module MinimalistAuthentication
     attr_accessor :email_prefix
 
     def initialize
-      self.user_model_name          = '::User'
+      self.user_model_name          = "::User"
       self.session_key              = :user_id
       self.validate_email           = true
       self.validate_email_presence  = true
@@ -75,7 +77,7 @@ module MinimalistAuthentication
     private
 
     def default_email_prefix
-      "[#{Rails.application.engine_name.gsub(/_application\z/, '').titleize}]"
+      "[#{Rails.application.engine_name.delete_suffix('_application').titleize}]"
     end
   end
 end

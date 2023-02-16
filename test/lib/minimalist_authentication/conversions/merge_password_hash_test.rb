@@ -1,8 +1,10 @@
-require 'test_helper'
+# frozen_string_literal: true
+
+require "test_helper"
 
 class MergePasswordHashTest < ActiveSupport::TestCase
   def setup
-    password_hash = MinimalistAuthentication::Password.create('password')
+    password_hash = MinimalistAuthentication::Password.create("password")
 
     users(:legacy_user).update_columns(
       using_digest_version: 3,
@@ -12,14 +14,15 @@ class MergePasswordHashTest < ActiveSupport::TestCase
     )
   end
 
-  test 'should run merge password hash' do
+  test "should run merge password hash" do
     assert_difference "User.where(password_hash: nil).count", -1 do
       assert MinimalistAuthentication::Conversions::MergePasswordHash.run!
     end
   end
 
-  test 'should mmerge password hash' do
+  test "should mmerge password hash" do
     MinimalistAuthentication::Conversions::MergePasswordHash.new(users(:legacy_user)).update!
-    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]) == 'password'
+
+    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]).is_password?("password")
   end
 end

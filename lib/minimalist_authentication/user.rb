@@ -1,10 +1,12 @@
-require 'bcrypt'
+# frozen_string_literal: true
+
+require "bcrypt"
 
 module MinimalistAuthentication
   module User
     extend ActiveSupport::Concern
 
-    GUEST_USER_EMAIL  = 'guest'
+    GUEST_USER_EMAIL  = "guest"
     PASSWORD_MIN      = 8
     PASSWORD_MAX      = 40
 
@@ -42,24 +44,12 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      # Authenticates a user form the params provided. Expects a params hash with
-      # email or username and password keys.
-      # Params examples:
-      # { email: 'user@example.com', password: 'abc123' }
-      # { username: 'user', password: 'abc123' }
-      # Returns user upon successful authentication.
-      # Otherwise returns nil.
       def authenticate(params)
-        # extract email or username and the associated value
-        field, value = params.to_h.select { |key, value| %w(email username).include?(key.to_s) && value.present? }.first
-        # return nil if field, value, or password is blank
-        return if field.blank? || value.blank? || params[:password].blank?
-        # attempt to find the user using field and value
-        user = active.where(field => value).first
-        # check if a user was found and if they can be authenticated
-        return unless user && user.authenticated?(params[:password])
-        # return the authenticated user
-        return user
+        ActiveSupport::Deprecation.warn(<<-MSG.squish)
+          Calling #{MinimalistAuthentication.configuration.user_model_name}::authenticate is deprecated.
+          Use MinimalistAuthentication::Authenticator.authenticate_user instead.
+        MSG
+        MinimalistAuthentication::Authenticator.authenticated_user(params)
       end
 
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
@@ -68,36 +58,33 @@ module MinimalistAuthentication
       end
     end
 
-    # Returns true if the user is active.
-    def active?
-      active
-    end
-
     # Returns true if the user is not active.
     def inactive?
-      !active
+      !active?
     end
 
-    # Return true if password matches the hashed_password.
-    # If successful checks for an outdated password_hash and updates if
-    # necessary.
+    # Returns true if password matches the hashed_password, otherwise returns nil. Upon successful
+    # authentication the user's password_hash is updated if required.
     def authenticated?(password)
-      if password_object == password
-        update_hash!(password) if password_object.stale?
-        return true
-      end
+      return unless password_object == password
 
-      return false
+      update_hash!(password) if password_object.stale?
+      true
     end
 
     def logged_in
-      # use update_column to avoid updated_on trigger
+      # Use update_column to avoid updated_on trigger
       update_column(:last_logged_in_at, Time.current)
     end
 
     # Check if user is a guest based on their email attribute
-    def is_guest?
+    def guest?
       email == GUEST_USER_EMAIL
+    end
+
+    def is_guest? # rubocop:disable Naming/PredicateName
+      ActiveSupport::Deprecation.warn("Calling #is_guest? is deprecated. Use #guest? instead")
+      guest?
     end
 
     private
@@ -112,6 +99,7 @@ module MinimalistAuthentication
     # Hash password and store in hash_password unless password is blank.
     def hash_password
       return if password.blank?
+
       self.password_hash = Password.create(password)
     end
 

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class PasswordResetsController < ApplicationController
   skip_before_action :authorization_required
 
-  layout 'sessions'
+  layout "sessions"
 
   # Form for user to request a password reset
   def new
@@ -22,6 +24,7 @@ class PasswordResetsController < ApplicationController
 
   def user
     return unless URI::MailTo::EMAIL_REGEXP.match?(email)
+
     @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email: email)
   end
 

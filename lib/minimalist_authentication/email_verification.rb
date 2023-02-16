@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MinimalistAuthentication
   module EmailVerification
     extend ActiveSupport::Concern
@@ -5,7 +7,7 @@ module MinimalistAuthentication
     included do
       before_save :clear_email_verification, if: ->(user) { user.email_changed? }
 
-      scope :email_verified, -> { where('LENGTH(email) > 2').where.not(email_verified_at: nil) }
+      scope :email_verified, -> { where("LENGTH(email) > 2").where.not(email_verified_at: nil) }
     end
 
     def needs_email_set?
