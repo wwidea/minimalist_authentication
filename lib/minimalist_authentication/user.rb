@@ -47,7 +47,7 @@ module MinimalistAuthentication
       def authenticate(params)
         ActiveSupport::Deprecation.warn(<<-MSG.squish)
           Calling #{MinimalistAuthentication.configuration.user_model_name}::authenticate is deprecated.
-          Use MinimalistAuthentication::Authenticator.authenticate_user instead.
+          Use MinimalistAuthentication::Authenticator.authenticated_user instead.
         MSG
         MinimalistAuthentication::Authenticator.authenticated_user(params)
       end
