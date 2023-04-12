@@ -101,7 +101,6 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
-    language_server-protocol (3.17.0.3)
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -141,7 +140,6 @@ GEM
     parallel (1.22.1)
     parser (3.2.1.0)
       ast (~> 2.4.1)
-    prettier_print (1.2.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -207,14 +205,9 @@ GEM
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
-    ruby-lsp (0.4.0)
-      language_server-protocol (~> 3.17.0)
-      sorbet-runtime
-      syntax_tree (>= 6, < 7)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     shellany (0.0.1)
-    sorbet-runtime (0.5.10667)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -224,8 +217,6 @@ GEM
       sprockets (>= 3.0.0)
     sqlite3 (1.6.0)
       mini_portile2 (~> 2.8.0)
-    syntax_tree (6.0.0)
-      prettier_print (>= 1.2.0)
     thor (1.2.1)
     timeout (0.3.2)
     tzinfo (2.0.6)
@@ -249,7 +240,6 @@ DEPENDENCIES
   rubocop-packaging
   rubocop-performance
   rubocop-rails
-  ruby-lsp
   sprockets-rails
   sqlite3
 
