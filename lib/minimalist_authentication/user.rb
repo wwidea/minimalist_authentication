@@ -66,7 +66,7 @@ module MinimalistAuthentication
     # Returns true if password matches the hashed_password, otherwise returns nil. Upon successful
     # authentication the user's password_hash is updated if required.
     def authenticated?(password)
-      return unless password_object == password
+      return false unless password_object == password
 
       update_hash!(password) if password_object.stale?
       true
