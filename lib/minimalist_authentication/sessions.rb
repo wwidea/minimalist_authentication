@@ -24,7 +24,7 @@ module MinimalistAuthentication
 
     def destroy
       scrub_session!
-      redirect_to logout_redirect_to, notice: t(".notice")
+      redirect_to logout_redirect_to, notice: t(".notice"), status: :see_other
     end
 
     private
@@ -73,7 +73,7 @@ module MinimalistAuthentication
     def after_authentication_failure
       flash.now.alert = t(".alert", identifier: identifier)
       user
-      render :new
+      render :new, status: :unprocessable_entity
     end
 
     def identifier
