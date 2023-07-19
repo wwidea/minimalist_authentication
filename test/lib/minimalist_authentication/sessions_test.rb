@@ -49,7 +49,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     post session_path(user: { email: users(:active_user).email, password: "wrong_password" })
 
     assert_nil current_user
-    assert_response :success
+    assert_response :unprocessable_entity
   end
 
   test "should destroy session" do
