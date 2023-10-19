@@ -43,21 +43,21 @@ class ControllerTest < ActiveSupport::TestCase
   test "should store location" do
     store_location
 
-    assert_equal request.fullpath, session["return_to"]
+    assert_equal "/tests/new.html", session["return_to"]
   end
 
   test "should redirect to stored location" do
     store_location
     redirect_back_or_default("/")
 
-    assert_equal request.fullpath, redirect_to
+    assert_equal "/tests/new.html", redirect_to
   end
 
   test "should redirect to stored location only once" do
     store_location
     redirect_back_or_default("/")
 
-    assert_equal request.fullpath, redirect_to
+    assert_equal "/tests/new.html", redirect_to
     redirect_back_or_default("/")
 
     assert_equal "/", redirect_to
@@ -71,15 +71,6 @@ class ControllerTest < ActiveSupport::TestCase
 
   private
 
-  def redirect_to(path = nil)
-    @redirect_to = path if path
-    @redirect_to
-  end
-
-  def session
-    @session ||= {}
-  end
-
   def action_name
     nil
   end
@@ -92,15 +83,22 @@ class ControllerTest < ActiveSupport::TestCase
     "/session/new"
   end
 
-  def request
-    (Class.new do
-      def get?
-        true
-      end
+  def redirect_to(path = nil)
+    @redirect_to = path if path
+    @redirect_to
+  end
 
-      def fullpath
-        "http://www.example.com"
-      end
-    end).new
+  def request
+    mock.tap do |object|
+      object.stubs(get?: true, params: { controller: "tests", action: "new" })
+    end
+  end
+
+  def session
+    @session ||= {}
+  end
+
+  def url_for(options)
+    "/#{options[:controller]}/#{options[:action]}.#{options[:format]}"
   end
 end
