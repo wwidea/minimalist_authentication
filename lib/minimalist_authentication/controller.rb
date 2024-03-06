@@ -15,7 +15,7 @@ module MinimalistAuthentication
     private
 
     def current_user
-      @current_user ||= (find_session_user || MinimalistAuthentication.configuration.user_model.guest)
+      @current_user ||= find_session_user || MinimalistAuthentication.configuration.user_model.guest
     end
 
     def find_session_user
