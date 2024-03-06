@@ -5,7 +5,7 @@ module MinimalistAuthentication
     class MergePasswordHash
       class << self
         def run!
-          user_model.where(using_digest_version: 3, password_hash: nil).each do |user|
+          user_model.where(using_digest_version: 3, password_hash: nil).find_each do |user|
             new(user).update!
           end
         end
