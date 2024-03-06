@@ -57,8 +57,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     [
       users(:active_user),
       {
-        token: (token || users(:active_user).verification_token),
-        user:  { password: "abcd1234", password_confirmation: (confirmation || "abcd1234") }
+        token: token || users(:active_user).verification_token,
+        user:  { password: "abcd1234", password_confirmation: confirmation || "abcd1234" }
       }
     ]
   end

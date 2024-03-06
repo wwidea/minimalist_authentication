@@ -16,7 +16,7 @@ class MergePasswordHashTest < ActiveSupport::TestCase
 
   test "should run merge password hash" do
     assert_difference "User.where(password_hash: nil).count", -1 do
-      assert MinimalistAuthentication::Conversions::MergePasswordHash.run!
+      MinimalistAuthentication::Conversions::MergePasswordHash.run!
     end
   end
 
