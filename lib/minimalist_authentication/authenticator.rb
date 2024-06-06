@@ -21,7 +21,7 @@ module MinimalistAuthentication
       field = (hash.keys & LOGIN_FIELDS).first
 
       # Attempt to authenticate user
-      new(field: field, value: hash[field], password: hash["password"]).authenticated_user
+      new(field:, value: hash[field], password: hash["password"]).authenticated_user
     end
 
     def initialize(field:, value:, password:)

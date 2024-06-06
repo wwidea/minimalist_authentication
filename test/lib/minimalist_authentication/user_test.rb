@@ -117,6 +117,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def new_user(active: true, email: "test@example.com")
-    User.new(active: active, email: email, password: "password")
+    User.new(active:, email:, password: "password")
   end
 end
