@@ -25,7 +25,7 @@ class PasswordResetsController < ApplicationController
   def user
     return unless URI::MailTo::EMAIL_REGEXP.match?(email)
 
-    @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email: email)
+    @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email:)
   end
 
   def email
