@@ -8,7 +8,7 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.1
   Exclude:
     - test/dummy/config/environments/*
     - test/dummy/db/schema.rb
