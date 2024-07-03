@@ -103,7 +103,7 @@ module MinimalistAuthentication
       self.password_hash = Password.create(password)
     end
 
-    # Retuns a MinimalistAuthentication::Password object.
+    # Returns a MinimalistAuthentication::Password object.
     def password_object
       Password.new(password_hash)
     end
