@@ -7,7 +7,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     GUEST_USER_EMAIL  = "guest"
-    PASSWORD_MIN      = 8
+    PASSWORD_MIN      = 12
     PASSWORD_MAX      = 40
 
     included do
