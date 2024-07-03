@@ -89,9 +89,11 @@ module MinimalistAuthentication
 
     private
 
-    # Set self.password to password, hash, and save
+    # Set self.password to password, hash, and save if user is valid.
     def update_hash!(password)
       self.password = password
+      return unless valid?
+
       hash_password
       save
     end

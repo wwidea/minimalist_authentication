@@ -110,6 +110,15 @@ class UserTest < ActiveSupport::TestCase
     assert users(:legacy_user).authenticated?(PASSWORD)
   end
 
+  test "should skip update password_hash with increased cost when user is not valid" do
+    increase_password_hash_cost(times: 1)
+    users(:legacy_user).expects(:valid?).returns(false)
+
+    assert_no_difference "users(:legacy_user).send(:password_object).cost" do
+      assert users(:legacy_user).authenticated?(PASSWORD)
+    end
+  end
+
   private
 
   def increase_password_hash_cost(times:)
