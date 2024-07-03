@@ -6,9 +6,7 @@ module MinimalistAuthentication
   module User
     extend ActiveSupport::Concern
 
-    GUEST_USER_EMAIL  = "guest"
-    PASSWORD_MIN      = 12
-    PASSWORD_MAX      = 40
+    GUEST_USER_EMAIL = "guest"
 
     included do
       # Stores the plain text password.
@@ -33,10 +31,7 @@ module MinimalistAuthentication
       validates(
         :password,
         confirmation: true,
-        length:       {
-          minimum: ->(user) { user.password_minimum },
-          maximum: ->(user) { user.password_maximum }
-        },
+        length:       { minimum: :password_minimum, maximum: :password_maximum },
         presence:     true,
         if:           :validate_password?
       )
@@ -91,14 +86,10 @@ module MinimalistAuthentication
     end
 
     # Minimum password length
-    def password_minimum
-      PASSWORD_MIN
-    end
+    def password_minimum = 12
 
     # Maximum password length
-    def password_maximum
-      PASSWORD_MAX
-    end
+    def password_maximum = 40
 
     private
 
