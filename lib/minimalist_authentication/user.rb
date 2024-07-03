@@ -33,7 +33,10 @@ module MinimalistAuthentication
       validates(
         :password,
         confirmation: true,
-        length:       { within: PASSWORD_MIN..PASSWORD_MAX },
+        length:       {
+          minimum: ->(user) { user.password_minimum },
+          maximum: ->(user) { user.password_maximum }
+        },
         presence:     true,
         if:           :validate_password?
       )
@@ -85,6 +88,16 @@ module MinimalistAuthentication
     def is_guest? # rubocop:disable Naming/PredicateName
       ActiveSupport::Deprecation.warn("Calling #is_guest? is deprecated. Use #guest? instead")
       guest?
+    end
+
+    # Minimum password length
+    def password_minimum
+      PASSWORD_MIN
+    end
+
+    # Maximum password length
+    def password_maximum
+      PASSWORD_MAX
     end
 
     private
