@@ -38,7 +38,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     put user_password_path(*password_params(confirmation: "not_the_same"))
 
     assert_response :success
-    assert users(:active_user).reload.authenticated?("password"), "password should not be changed"
+    assert users(:active_user).reload.authenticated?(PASSWORD), "password should not be changed"
     assert_predicate users(:active_user).verification_token, :present?
   end
 
@@ -47,7 +47,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     put user_password_path(*password_params(token: "wrong_token"))
 
     assert_response :success
-    assert users(:active_user).reload.authenticated?("password"), "password should not be changed"
+    assert users(:active_user).reload.authenticated?(PASSWORD), "password should not be changed"
     assert_predicate users(:active_user).verification_token, :present?
   end
 

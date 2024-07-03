@@ -20,7 +20,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
-    assert_not User.new(password_hash: "password").authenticated?("password")
+    assert_not User.new(password_hash: PASSWORD).authenticated?(PASSWORD)
   end
 
   test "should create password_hash for new user" do
@@ -43,7 +43,7 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate User.guest, :guest?
   end
 
-  test "should not be able to moidfy guest user" do
+  test "should not be able to modify guest user" do
     assert_raise RuntimeError do
       User.guest.email = "test@testing.com"
     end
@@ -83,15 +83,15 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors.key?(:password)
   end
 
-  test "should allow an active user to have a dupliate email with an inactive user" do
+  test "should allow an active user to have a duplicate email with an inactive user" do
     assert_predicate new_user(active: true, email: users(:inactive_user).email), :valid?
   end
 
-  test "shold not allow an active user to have a duplicate email with another active user" do
+  test "should not allow an active user to have a duplicate email with another active user" do
     assert_not new_user(email: users(:active_user).email).valid?
   end
 
-  test "should allow an inactive user to have a dupliate email with another inactive user" do
+  test "should allow an inactive user to have a duplicate email with another inactive user" do
     assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
@@ -99,15 +99,15 @@ class UserTest < ActiveSupport::TestCase
     increase_password_hash_cost(times: 3)
 
     assert_difference "users(:legacy_user).send(:password_object).cost" do
-      assert users(:legacy_user).authenticated?("password")
+      assert users(:legacy_user).authenticated?(PASSWORD)
     end
   end
 
   test "should authenticate user during and after password_hash cost update" do
     increase_password_hash_cost(times: 4)
 
-    assert users(:legacy_user).authenticated?("password")
-    assert users(:legacy_user).authenticated?("password")
+    assert users(:legacy_user).authenticated?(PASSWORD)
+    assert users(:legacy_user).authenticated?(PASSWORD)
   end
 
   private
@@ -117,6 +117,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def new_user(active: true, email: "test@example.com")
-    User.new(active:, email:, password: "password")
+    User.new(active:, email:, password: PASSWORD)
   end
 end

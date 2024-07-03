@@ -17,15 +17,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create session" do
-    post session_path(user: { email: users(:active_user).email, password: "password" })
+    post session_path(user: { email: users(:active_user).email, password: PASSWORD })
 
     assert_equal users(:active_user), current_user
     assert_redirected_to root_path
   end
 
-  test "should create session and rediret to edit email" do
+  test "should create session and redirect to edit email" do
     users(:active_user).update_columns(email: nil)
-    post session_path, params: { user: { username: users(:active_user).username, password: "password" } }
+    post session_path, params: { user: { username: users(:active_user).username, password: PASSWORD } }
 
     assert_redirected_to edit_email_path
   end
