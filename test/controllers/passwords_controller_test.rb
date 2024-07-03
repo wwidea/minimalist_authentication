@@ -3,6 +3,8 @@
 require "test_helper"
 
 class PasswordsControllerTest < ActionDispatch::IntegrationTest
+  NEW_PASSWORD = "abcdef123456"
+
   test "should get edit for verified user" do
     users(:active_user).regenerate_verification_token
     get edit_user_password_path(users(:active_user), token: users(:active_user).verification_token)
@@ -10,7 +12,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should fail to get edit for unverifed user" do
+  test "should fail to get edit for unverified user" do
     users(:active_user).regenerate_verification_token
     get edit_user_password_path(users(:active_user), token: "does not match")
 
@@ -29,7 +31,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     put user_password_path(*password_params)
 
     assert_redirected_to new_session_path
-    assert users(:active_user).reload.authenticated?("abcd1234"), "password should be changed"
+    assert users(:active_user).reload.authenticated?(NEW_PASSWORD), "password should be changed"
     assert_predicate users(:active_user).verification_token, :blank?
   end
 
@@ -42,7 +44,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_predicate users(:active_user).verification_token, :present?
   end
 
-  test "should fail to update password for unverifed user" do
+  test "should fail to update password for unverified user" do
     users(:active_user).regenerate_verification_token
     put user_password_path(*password_params(token: "wrong_token"))
 
@@ -58,7 +60,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       users(:active_user),
       {
         token: token || users(:active_user).verification_token,
-        user:  { password: "abcd1234", password_confirmation: confirmation || "abcd1234" }
+        user:  { password: NEW_PASSWORD, password_confirmation: confirmation || NEW_PASSWORD }
       }
     ]
   end
