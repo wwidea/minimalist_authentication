@@ -84,7 +84,7 @@ fixture users.
 ```yaml
 example_user:
   email:          user@example.com
-  password_hash:  <%= MinimalistAuthentication::Password.create('password') %>
+  password_hash:  <%= MinimalistAuthentication::Password.create("test-password") %>
 ```
 
 
