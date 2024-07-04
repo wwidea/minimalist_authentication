@@ -10,22 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_31_172021) do
-
+ActiveRecord::Schema[7.1].define(version: 2021_08_31_172021) do
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: false
     t.string "email"
     t.string "crypted_password"
     t.string "salt"
-    t.datetime "last_logged_in_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "last_logged_in_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "username"
     t.string "password_hash"
     t.integer "using_digest_version"
     t.string "verification_token"
-    t.datetime "verification_token_generated_at"
-    t.datetime "email_verified_at"
+    t.datetime "verification_token_generated_at", precision: nil
+    t.datetime "email_verified_at", precision: nil
     t.index ["verification_token"], name: "index_users_on_verification_token", unique: true
   end
 
