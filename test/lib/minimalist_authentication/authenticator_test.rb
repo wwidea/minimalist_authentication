@@ -3,14 +3,14 @@
 require "test_helper"
 
 class AuthenticatorTest < ActiveSupport::TestCase
-  PARAMETERS = { field: "email", value: "active@example.com", password: "password" }.freeze
+  PARAMETERS = { field: "email", value: "active@example.com", password: PASSWORD }.freeze
 
   test "should authenticate user with email" do
-    assert_equal users(:active_user), authenticated_user(email: users(:active_user).email, password: "password")
+    assert_equal users(:active_user), authenticated_user(email: users(:active_user).email, password: PASSWORD)
   end
 
   test "should authenticate user with username" do
-    assert_equal users(:active_user), authenticated_user(username: users(:active_user).username, password: "password")
+    assert_equal users(:active_user), authenticated_user(username: users(:active_user).username, password: PASSWORD)
   end
 
   test "should fail to authenticate when params are empty" do
@@ -18,7 +18,7 @@ class AuthenticatorTest < ActiveSupport::TestCase
   end
 
   test "should fail to authenticate when email is blank" do
-    assert_not authenticated_user(email: "", password: "password")
+    assert_not authenticated_user(email: "", password: PASSWORD)
   end
 
   test "should fail to authenticate when password is blank" do
@@ -28,7 +28,7 @@ class AuthenticatorTest < ActiveSupport::TestCase
   test "should fail to authenticate when user is not active" do
     users(:active_user).update_column(:active, false)
 
-    assert_not authenticated_user(email: users(:active_user).email, password: "password")
+    assert_not authenticated_user(email: users(:active_user).email, password: PASSWORD)
   end
 
   test "should fail to authenticate for incorrect password" do

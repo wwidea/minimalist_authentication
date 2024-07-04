@@ -4,7 +4,7 @@ require "test_helper"
 
 class MergePasswordHashTest < ActiveSupport::TestCase
   def setup
-    password_hash = MinimalistAuthentication::Password.create("password")
+    password_hash = MinimalistAuthentication::Password.create(PASSWORD)
 
     users(:legacy_user).update_columns(
       using_digest_version: 3,
@@ -20,9 +20,9 @@ class MergePasswordHashTest < ActiveSupport::TestCase
     end
   end
 
-  test "should mmerge password hash" do
+  test "should merge password hash" do
     MinimalistAuthentication::Conversions::MergePasswordHash.new(users(:legacy_user)).update!
 
-    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]).is_password?("password")
+    assert BCrypt::Password.new(users(:legacy_user).reload[:password_hash]).is_password?(PASSWORD)
   end
 end

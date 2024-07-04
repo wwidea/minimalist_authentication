@@ -62,7 +62,7 @@ end
 ```
 
 ## Configuration
-Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in /Users/baldwina/git/brightways/config/initializers.
+Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in config/initializers.
 ```ruby
 MinimalistAuthentication.configure do |configuration|
   configuration.user_model_name           = 'CustomModelName'   # default is '::User'
@@ -84,7 +84,7 @@ fixture users.
 ```yaml
 example_user:
   email:          user@example.com
-  password_hash:  <%= MinimalistAuthentication::Password.create('password') %>
+  password_hash:  <%= MinimalistAuthentication::Password.create("test-password") %>
 ```
 
 

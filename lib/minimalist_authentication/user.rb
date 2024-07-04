@@ -6,9 +6,7 @@ module MinimalistAuthentication
   module User
     extend ActiveSupport::Concern
 
-    GUEST_USER_EMAIL  = "guest"
-    PASSWORD_MIN      = 8
-    PASSWORD_MAX      = 40
+    GUEST_USER_EMAIL = "guest"
 
     included do
       # Stores the plain text password.
@@ -33,7 +31,7 @@ module MinimalistAuthentication
       validates(
         :password,
         confirmation: true,
-        length:       { within: PASSWORD_MIN..PASSWORD_MAX },
+        length:       { minimum: :password_minimum, maximum: :password_maximum },
         presence:     true,
         if:           :validate_password?
       )
@@ -87,11 +85,19 @@ module MinimalistAuthentication
       guest?
     end
 
+    # Minimum password length
+    def password_minimum = 12
+
+    # Maximum password length
+    def password_maximum = 40
+
     private
 
-    # Set self.password to password, hash, and save
+    # Set self.password to password, hash, and save if user is valid.
     def update_hash!(password)
       self.password = password
+      return unless valid?
+
       hash_password
       save
     end
@@ -103,7 +109,7 @@ module MinimalistAuthentication
       self.password_hash = Password.create(password)
     end
 
-    # Retuns a MinimalistAuthentication::Password object.
+    # Returns a MinimalistAuthentication::Password object.
     def password_object
       Password.new(password_hash)
     end

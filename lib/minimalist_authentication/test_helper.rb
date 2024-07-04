@@ -2,7 +2,9 @@
 
 module MinimalistAuthentication
   module TestHelper
-    def login_as(user_fixture_name, password = "password")
+    PASSWORD = "test-password"
+
+    def login_as(user_fixture_name, password = PASSWORD)
       post session_path, params: { user: { email: users(user_fixture_name).email, password: } }
     end
 
