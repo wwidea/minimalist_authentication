@@ -15,7 +15,7 @@ module MinimalistAuthentication
       if matches_verification_token?(token)
         update(attributes) && clear_token
       else
-        errors.add(:base, "Verfication token check failed")
+        errors.add(:base, "Verification token check failed")
         false
       end
     end
