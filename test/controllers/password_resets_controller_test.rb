@@ -25,9 +25,19 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
-  test "should return bad_request when email paramater is not provided" do
-    post password_reset_path(user: { foo: "bar" })
+  test "should redirect to new session when email parameter is not provided" do
+    assert_no_difference "ActionMailer::Base.deliveries.size" do
+      post password_reset_path(user: { foo: "bar" })
+    end
 
-    assert_response :bad_request
+    assert_redirected_to new_session_path
+  end
+
+  test "should redirect to new session when users is missing" do
+    assert_no_difference "ActionMailer::Base.deliveries.size" do
+      post password_reset_path(foo: "bar")
+    end
+
+    assert_redirected_to new_session_path
   end
 end
