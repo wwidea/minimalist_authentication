@@ -29,6 +29,6 @@ class PasswordResetsController < ApplicationController
   end
 
   def email
-    params.require(:user).fetch(:email)
+    params.dig(:user, :email)
   end
 end
