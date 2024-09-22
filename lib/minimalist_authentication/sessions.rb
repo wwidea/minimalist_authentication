@@ -44,7 +44,7 @@ module MinimalistAuthentication
     end
 
     def user_params
-      @user_params ||= params.require(:user).permit(:email, :username, :password)
+      @user_params ||= params.fetch(:user, {}).permit(:email, :username, :password)
     end
 
     def set_or_verify_email
