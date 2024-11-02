@@ -40,12 +40,12 @@ class AuthenticatorTest < ActiveSupport::TestCase
   end
 
   test "should return nil for authenticated_user when authentication fails" do
-    assert_nil authenticator.new(**PARAMETERS.merge(password: "incorrect_password")).authenticated_user
+    assert_nil authenticator.new(**PARAMETERS, password: "incorrect_password").authenticated_user
   end
 
   test "should return false for valid when any parameter argument is blank" do
     PARAMETERS.each_key do |key|
-      assert_not authenticator.new(**PARAMETERS.merge(key => "")).valid?
+      assert_not authenticator.new(**PARAMETERS, key => "").valid?
     end
   end
 
