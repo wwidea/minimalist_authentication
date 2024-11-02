@@ -42,14 +42,6 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      def authenticate(params)
-        ActiveSupport::Deprecation.warn(<<-MSG.squish)
-          Calling #{MinimalistAuthentication.configuration.user_model_name}::authenticate is deprecated.
-          Use MinimalistAuthentication::Authenticator.authenticated_user instead.
-        MSG
-        MinimalistAuthentication::Authenticator.authenticated_user(params)
-      end
-
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
       def guest
         new(email: GUEST_USER_EMAIL).freeze
@@ -78,11 +70,6 @@ module MinimalistAuthentication
     # Check if user is a guest based on their email attribute
     def guest?
       email == GUEST_USER_EMAIL
-    end
-
-    def is_guest? # rubocop:disable Naming/PredicateName
-      ActiveSupport::Deprecation.warn("Calling #is_guest? is deprecated. Use #guest? instead")
-      guest?
     end
 
     # Minimum password length
