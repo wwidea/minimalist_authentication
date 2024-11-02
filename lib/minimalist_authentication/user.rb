@@ -80,11 +80,6 @@ module MinimalistAuthentication
       email == GUEST_USER_EMAIL
     end
 
-    def is_guest? # rubocop:disable Naming/PredicateName
-      ActiveSupport::Deprecation.warn("Calling #is_guest? is deprecated. Use #guest? instead")
-      guest?
-    end
-
     # Minimum password length
     def password_minimum = 12
 
