@@ -14,9 +14,6 @@ module MinimalistAuthentication
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
 
-      # Hashes and stores the password on save.
-      before_save :hash_password
-
       # Email validations
       validates(
         :email,
@@ -52,13 +49,11 @@ module MinimalistAuthentication
       !active?
     end
 
-    # Returns true if password matches the hashed_password, otherwise returns false. Upon successful
-    # authentication the user's password_digest is updated if required.
+    # Returns true if password matches the hashed_password, otherwise returns false.
     def authenticated?(password)
-      return false unless password_object == password
-
-      update_hash!(password) if password_object.stale?
-      true
+      authenticate(password)
+    rescue ::BCrypt::Errors::InvalidHash
+      false
     end
 
     def logged_in
@@ -78,27 +73,6 @@ module MinimalistAuthentication
     def password_maximum = 40
 
     private
-
-    # Set self.password to password, hash, and save if user is valid.
-    def update_hash!(password)
-      self.password = password
-      return unless valid?
-
-      hash_password
-      save
-    end
-
-    # Hash password and store in hash_password unless password is blank.
-    def hash_password
-      return if password.blank?
-
-      self.password_digest = Password.create(password)
-    end
-
-    # Returns a MinimalistAuthentication::Password object.
-    def password_object
-      Password.new(password_digest)
-    end
 
     # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**

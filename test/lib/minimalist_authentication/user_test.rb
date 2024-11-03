@@ -31,6 +31,14 @@ class UserTest < ActiveSupport::TestCase
     assert          user.authenticated?("testing")
   end
 
+  test "should not update password_digest when password is blank" do
+    digest = users(:active_user).password_digest
+    users(:active_user).password = ""
+
+    assert users(:active_user).save
+    assert_equal digest, users(:active_user).reload.password_digest
+  end
+
   test "should update last_logged_in_at without updating updated_at timestamp" do
     updated_at = 1.day.ago
     users(:active_user).update_column(:updated_at, updated_at)
@@ -95,35 +103,7 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
-  test "should update password_digest with increased cost" do
-    increase_password_digest_cost(times: 3)
-
-    assert_difference "users(:legacy_user).send(:password_object).cost" do
-      assert users(:legacy_user).authenticated?(PASSWORD)
-    end
-  end
-
-  test "should authenticate user during and after password_digest cost update" do
-    increase_password_digest_cost(times: 4)
-
-    assert users(:legacy_user).authenticated?(PASSWORD)
-    assert users(:legacy_user).authenticated?(PASSWORD)
-  end
-
-  test "should skip update password_digest with increased cost when user is not valid" do
-    increase_password_digest_cost(times: 1)
-    users(:legacy_user).expects(:valid?).returns(false)
-
-    assert_no_difference "users(:legacy_user).send(:password_object).cost" do
-      assert users(:legacy_user).authenticated?(PASSWORD)
-    end
-  end
-
   private
-
-  def increase_password_digest_cost(times:)
-    MinimalistAuthentication::Password.expects(:cost).returns(BCrypt::Engine::MIN_COST + 1).times(times)
-  end
 
   def new_user(active: true, email: "test@example.com")
     User.new(active:, email:, password: PASSWORD)
