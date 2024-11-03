@@ -65,7 +65,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(active: true)
 
     assert_not user.valid?
-    assert user.errors[:email]
+    assert_equal ["can't be blank"], user.errors[:email]
   end
 
   test "should fail validation for active user without password" do
@@ -91,16 +91,22 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors.key?(:password)
   end
 
-  test "should allow an active user to have a duplicate email with an inactive user" do
-    assert_predicate new_user(active: true, email: users(:inactive_user).email), :valid?
-  end
-
-  test "should not allow an active user to have a duplicate email with another active user" do
+  test "should not allow a user to have a duplicate email with another user" do
     assert_not new_user(email: users(:active_user).email).valid?
   end
 
-  test "should allow an inactive user to have a duplicate email with another inactive user" do
-    assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
+  test "should not allow a user to have a password that matches their email" do
+    user = new_user(password: "test@example.com")
+
+    assert_not user.valid?
+    assert_equal ["can not match email"], user.errors[:password]
+  end
+
+  test "should not allow a user to have a password that matches their username" do
+    user = new_user(username: PASSWORD)
+
+    assert_not user.valid?
+    assert_equal ["can not match username"], user.errors[:password]
   end
 
   test "should return true for password?" do
@@ -113,7 +119,7 @@ class UserTest < ActiveSupport::TestCase
 
   private
 
-  def new_user(active: true, email: "test@example.com")
-    User.new(active:, email:, password: PASSWORD)
+  def new_user(active: true, email: "test@example.com", password: PASSWORD, username: "test")
+    User.new(active:, email:, password:, username:)
   end
 end

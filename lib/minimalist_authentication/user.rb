@@ -18,7 +18,7 @@ module MinimalistAuthentication
       validates(
         :email,
         format:     { allow_blank: true, with: URI::MailTo::EMAIL_REGEXP },
-        uniqueness: { allow_blank: true, case_sensitive: false, scope: :active },
+        uniqueness: { allow_blank: true, case_sensitive: false },
         if:         :validate_email?
       )
       validates(:email, presence: true, if: :validate_email_presence?)
@@ -31,6 +31,7 @@ module MinimalistAuthentication
         presence:     true,
         if:           :validate_password?
       )
+      validate :password_exclusivity, if: :password?
 
       # Active scope
       scope :active,    ->(state = true)  { where(active: state) }
@@ -79,6 +80,13 @@ module MinimalistAuthentication
 
     private
 
+    # Ensure password does not match username or email.
+    def password_exclusivity
+      %w[username email].each do |field|
+        errors.add(:password, "can not match #{field}") if password.casecmp?(try(field))
+      end
+    end
+
     # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.
@@ -86,18 +94,18 @@ module MinimalistAuthentication
       active? && (password_digest.blank? || password? || password_required?)
     end
 
-    # Validate email for active users.
+    # Validate email for all users.
     # Applications can turn off email validation by setting the validate_email
     # configuration attribute to false.
     def validate_email?
-      MinimalistAuthentication.configuration.validate_email && active?
+      MinimalistAuthentication.configuration.validate_email
     end
 
     # Validate email presence for active users.
     # Applications can turn off email presence validation by setting
     # validate_email_presence configuration attribute to false.
     def validate_email_presence?
-      MinimalistAuthentication.configuration.validate_email_presence && validate_email?
+      MinimalistAuthentication.configuration.validate_email_presence && validate_email? && active?
     end
   end
 end
