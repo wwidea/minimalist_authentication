@@ -66,16 +66,16 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Checks for password presence
-    def password?
-      password.present?
-    end
-
     # Minimum password length
     def password_minimum = 12
 
     # Maximum password length
     def password_maximum = 40
+
+    # Checks for password presence
+    def password?
+      password.present?
+    end
 
     private
 
