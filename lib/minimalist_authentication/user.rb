@@ -9,6 +9,8 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = "guest"
 
     included do
+      has_secure_password validations: false
+
       # Stores the plain text password.
       attribute :password, :string
 
