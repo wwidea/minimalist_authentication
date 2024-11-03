@@ -56,14 +56,19 @@ module MinimalistAuthentication
       false
     end
 
+    # Check if user is a guest based on their email attribute
+    def guest?
+      email == GUEST_USER_EMAIL
+    end
+
     def logged_in
       # Use update_column to avoid updated_on trigger
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Check if user is a guest based on their email attribute
-    def guest?
-      email == GUEST_USER_EMAIL
+    # Checks for password presence
+    def password?
+      password.present?
     end
 
     # Minimum password length
@@ -78,7 +83,7 @@ module MinimalistAuthentication
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.
     def validate_password?
-      active? && (password_digest.blank? || password.present? || password_required?)
+      active? && (password_digest.blank? || password? || password_required?)
     end
 
     # Validate email for active users.

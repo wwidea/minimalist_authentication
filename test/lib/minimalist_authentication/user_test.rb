@@ -103,6 +103,14 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
+  test "should return true for password?" do
+    assert_predicate User.new(password: "testing"), :password?
+  end
+
+  test "should return false for password?" do
+    assert_not_predicate User.new(password: ""), :password?
+  end
+
   private
 
   def new_user(active: true, email: "test@example.com")
