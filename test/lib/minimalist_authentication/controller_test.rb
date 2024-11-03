@@ -46,29 +46,6 @@ class ControllerTest < ActiveSupport::TestCase
     assert_equal "/tests/new.html", session["return_to"]
   end
 
-  test "should redirect to stored location" do
-    store_location
-    redirect_back_or_default("/")
-
-    assert_equal "/tests/new.html", redirect_to
-  end
-
-  test "should redirect to stored location only once" do
-    store_location
-    redirect_back_or_default("/")
-
-    assert_equal "/tests/new.html", redirect_to
-    redirect_back_or_default("/")
-
-    assert_equal "/", redirect_to
-  end
-
-  test "should redirect to default" do
-    redirect_back_or_default("/")
-
-    assert_equal "/", redirect_to
-  end
-
   private
 
   def action_name

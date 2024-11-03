@@ -3,6 +3,7 @@
 module MinimalistAuthentication
   module TestHelper
     PASSWORD = "test-password"
+    PASSWORD_DIGEST = BCrypt::Password.create(PASSWORD, cost: BCrypt::Engine::MIN_COST)
 
     def login_as(user_fixture_name, password = PASSWORD)
       post session_path, params: { user: { email: users(user_fixture_name).email, password: } }

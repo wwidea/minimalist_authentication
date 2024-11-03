@@ -48,9 +48,5 @@ module MinimalistAuthentication
     def store_location
       session["return_to"] = url_for(request.params.merge(format: :html, only_path: true))
     end
-
-    def redirect_back_or_default(default)
-      redirect_to(session.delete("return_to") || default)
-    end
   end
 end

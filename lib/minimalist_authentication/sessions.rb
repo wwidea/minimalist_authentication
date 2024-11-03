@@ -5,6 +5,9 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
+      # URL to redirect to after successful login
+      attr_accessor :return_to
+
       skip_before_action  :authorization_required,    only: %i[new create]
       before_action       :redirect_logged_in_users,  only: :new
     end
@@ -23,7 +26,7 @@ module MinimalistAuthentication
     end
 
     def destroy
-      scrub_session!
+      reset_session
       redirect_to logout_redirect_to, notice: t(".notice"), status: :see_other
     end
 
@@ -38,7 +41,8 @@ module MinimalistAuthentication
     end
 
     def log_in_user
-      scrub_session!
+      self.return_to = session["return_to"]
+      reset_session
       authenticated_user.logged_in
       session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
     end
@@ -62,7 +66,7 @@ module MinimalistAuthentication
     end
 
     def after_authentication_success
-      redirect_back_or_default(login_redirect_to)
+      redirect_to return_to || login_redirect_to
     end
 
     def attempting_to_verify?
@@ -78,12 +82,6 @@ module MinimalistAuthentication
 
     def identifier
       user_params.values_at(*MinimalistAuthentication::Authenticator::LOGIN_FIELDS).compact.first
-    end
-
-    def scrub_session!
-      (session.keys - %w[session_id return_to]).each do |key|
-        session.delete(key)
-      end
     end
 
     def login_redirect_to

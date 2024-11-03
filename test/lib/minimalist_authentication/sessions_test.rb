@@ -23,6 +23,15 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
   end
 
+  test "should create session and redirect to return_to" do
+    get dashboard_path(format: :html, test: true)
+
+    assert_redirected_to new_session_path
+    post session_path, params: { user: { username: users(:active_user).username, password: PASSWORD } }
+
+    assert_redirected_to dashboard_path(format: :html, test: true)
+  end
+
   test "should create session and redirect to edit email" do
     users(:active_user).update_columns(email: nil)
     post session_path, params: { user: { username: users(:active_user).username, password: PASSWORD } }

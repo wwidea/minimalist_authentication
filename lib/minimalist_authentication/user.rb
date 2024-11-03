@@ -9,20 +9,16 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = "guest"
 
     included do
-      # Stores the plain text password.
-      attribute :password, :string
+      has_secure_password validations: false
 
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
-
-      # Hashes and stores the password on save.
-      before_save :hash_password
 
       # Email validations
       validates(
         :email,
         format:     { allow_blank: true, with: URI::MailTo::EMAIL_REGEXP },
-        uniqueness: { allow_blank: true, case_sensitive: false, scope: :active },
+        uniqueness: { allow_blank: true, case_sensitive: false },
         if:         :validate_email?
       )
       validates(:email, presence: true, if: :validate_email_presence?)
@@ -35,6 +31,7 @@ module MinimalistAuthentication
         presence:     true,
         if:           :validate_password?
       )
+      validate :password_exclusivity, if: :password?
 
       # Active scope
       scope :active,    ->(state = true)  { where(active: state) }
@@ -53,23 +50,21 @@ module MinimalistAuthentication
       !active?
     end
 
-    # Returns true if password matches the hashed_password, otherwise returns false. Upon successful
-    # authentication the user's password_hash is updated if required.
+    # Returns true if password matches the hashed_password, otherwise returns false.
     def authenticated?(password)
-      return false unless password_object == password
-
-      update_hash!(password) if password_object.stale?
-      true
-    end
-
-    def logged_in
-      # Use update_column to avoid updated_on trigger
-      update_column(:last_logged_in_at, Time.current)
+      authenticate(password)
+    rescue ::BCrypt::Errors::InvalidHash
+      false
     end
 
     # Check if user is a guest based on their email attribute
     def guest?
       email == GUEST_USER_EMAIL
+    end
+
+    def logged_in
+      # Use update_column to avoid updated_on trigger
+      update_column(:last_logged_in_at, Time.current)
     end
 
     # Minimum password length
@@ -78,48 +73,39 @@ module MinimalistAuthentication
     # Maximum password length
     def password_maximum = 40
 
+    # Checks for password presence
+    def password?
+      password.present?
+    end
+
     private
 
-    # Set self.password to password, hash, and save if user is valid.
-    def update_hash!(password)
-      self.password = password
-      return unless valid?
-
-      hash_password
-      save
-    end
-
-    # Hash password and store in hash_password unless password is blank.
-    def hash_password
-      return if password.blank?
-
-      self.password_hash = Password.create(password)
-    end
-
-    # Returns a MinimalistAuthentication::Password object.
-    def password_object
-      Password.new(password_hash)
+    # Ensure password does not match username or email.
+    def password_exclusivity
+      %w[username email].each do |field|
+        errors.add(:password, "can not match #{field}") if password.casecmp?(try(field))
+      end
     end
 
     # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.
     def validate_password?
-      active? && (password_hash.blank? || password? || password_required?)
+      active? && (password_digest.blank? || password? || password_required?)
     end
 
-    # Validate email for active users.
+    # Validate email for all users.
     # Applications can turn off email validation by setting the validate_email
     # configuration attribute to false.
     def validate_email?
-      MinimalistAuthentication.configuration.validate_email && active?
+      MinimalistAuthentication.configuration.validate_email
     end
 
     # Validate email presence for active users.
     # Applications can turn off email presence validation by setting
     # validate_email_presence configuration attribute to false.
     def validate_email_presence?
-      MinimalistAuthentication.configuration.validate_email_presence && validate_email?
+      MinimalistAuthentication.configuration.validate_email_presence && validate_email? && active?
     end
   end
 end

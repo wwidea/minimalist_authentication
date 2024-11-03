@@ -39,7 +39,7 @@ module MinimalistAuthentication
     # Defaults to true
     attr_accessor :request_email
 
-    # Vefify users email address at login.
+    # Verify users email address at login.
     # Defaults to true.
     attr_accessor :verify_email
 
