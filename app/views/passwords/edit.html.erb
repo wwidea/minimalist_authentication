@@ -1,5 +1,7 @@
 <h1>Edit Password</h1>
 
+<%= @user.errors.full_messages if @user.errors.any? %>
+
 <%= form_for @user, as: :user, url: user_password_path(@user, token: @token), html: { method: :put } do |form| %>
   <div>
     <%= form.label          :password %>
