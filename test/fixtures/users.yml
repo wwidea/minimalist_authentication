@@ -1,8 +1,6 @@
-<% password_digest = MinimalistAuthentication::Password.create(MinimalistAuthentication::TestHelper::PASSWORD) %>
-
 DEFAULTS: &user_defaults
   active:             true
-  password_digest:    <%= password_digest %>
+  password_digest:    <%= MinimalistAuthentication::TestHelper::PASSWORD_DIGEST %>
 
 active_user:
   <<: *user_defaults
