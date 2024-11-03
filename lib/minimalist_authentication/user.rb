@@ -54,7 +54,7 @@ module MinimalistAuthentication
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false. Upon successful
-    # authentication the user's password_hash is updated if required.
+    # authentication the user's password_digest is updated if required.
     def authenticated?(password)
       return false unless password_object == password
 
@@ -93,19 +93,19 @@ module MinimalistAuthentication
     def hash_password
       return if password.blank?
 
-      self.password_hash = Password.create(password)
+      self.password_digest = Password.create(password)
     end
 
     # Returns a MinimalistAuthentication::Password object.
     def password_object
-      Password.new(password_hash)
+      Password.new(password_digest)
     end
 
     # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.
     def validate_password?
-      active? && (password_hash.blank? || password? || password_required?)
+      active? && (password_digest.blank? || password? || password_required?)
     end
 
     # Validate email for active users.

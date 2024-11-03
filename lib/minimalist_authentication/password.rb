@@ -26,8 +26,8 @@ module MinimalistAuthentication
     attr_accessor :bcrypt_password
 
     # Returns a password object wrapping a valid BCrypt password or a NullPassword
-    def initialize(password_hash)
-      self.bcrypt_password = ::BCrypt::Password.new(password_hash)
+    def initialize(password_digest)
+      self.bcrypt_password = ::BCrypt::Password.new(password_digest)
     rescue ::BCrypt::Errors::InvalidHash
       self.bcrypt_password = NullPassword.new
     end
@@ -38,7 +38,7 @@ module MinimalistAuthentication
     # Temporary access to checksum and salt for backwards compatibility
     delegate :checksum, :salt,  to: :bcrypt_password
 
-    # Checks if the password_hash cost factor is less than the current cost.
+    # Checks if the password_digest cost factor is less than the current cost.
     def stale?
       cost < self.class.cost
     end

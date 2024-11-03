@@ -20,14 +20,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should gracefully fail to authenticate to an invalid password hash" do
-    assert_not User.new(password_hash: PASSWORD).authenticated?(PASSWORD)
+    assert_not User.new(password_digest: PASSWORD).authenticated?(PASSWORD)
   end
 
-  test "should create password_hash for new user" do
+  test "should create password_digest for new user" do
     user = User.new(email: "test-new@testing.com", password: "testing")
 
     assert          user.save
-    assert_not_nil  user.password_hash
+    assert_not_nil  user.password_digest
     assert          user.authenticated?("testing")
   end
 
@@ -95,23 +95,23 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate new_user(active: false, email: users(:inactive_user).email), :valid?
   end
 
-  test "should update password_hash with increased cost" do
-    increase_password_hash_cost(times: 3)
+  test "should update password_digest with increased cost" do
+    increase_password_digest_cost(times: 3)
 
     assert_difference "users(:legacy_user).send(:password_object).cost" do
       assert users(:legacy_user).authenticated?(PASSWORD)
     end
   end
 
-  test "should authenticate user during and after password_hash cost update" do
-    increase_password_hash_cost(times: 4)
+  test "should authenticate user during and after password_digest cost update" do
+    increase_password_digest_cost(times: 4)
 
     assert users(:legacy_user).authenticated?(PASSWORD)
     assert users(:legacy_user).authenticated?(PASSWORD)
   end
 
-  test "should skip update password_hash with increased cost when user is not valid" do
-    increase_password_hash_cost(times: 1)
+  test "should skip update password_digest with increased cost when user is not valid" do
+    increase_password_digest_cost(times: 1)
     users(:legacy_user).expects(:valid?).returns(false)
 
     assert_no_difference "users(:legacy_user).send(:password_object).cost" do
@@ -121,7 +121,7 @@ class UserTest < ActiveSupport::TestCase
 
   private
 
-  def increase_password_hash_cost(times:)
+  def increase_password_digest_cost(times:)
     MinimalistAuthentication::Password.expects(:cost).returns(BCrypt::Engine::MIN_COST + 1).times(times)
   end
 
