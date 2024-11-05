@@ -12,6 +12,6 @@ require "minimalist_authentication/test_helper"
 
 module MinimalistAuthentication
   def self.deprecator
-    @deprecator ||= ActiveSupport::Deprecation.new("3.0", name)
+    @deprecator ||= ActiveSupport::Deprecation.new("4.0", name)
   end
 end
