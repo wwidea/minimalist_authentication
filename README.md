@@ -73,7 +73,6 @@ MinimalistAuthentication.configure do |configuration|
   configuration.verify_email              = true                # default is true
   configuration.login_redirect_path       = :custom_path        # default is :root_path
   configuration.logout_redirect_path      = :custom_path        # default is :new_session_path
-  configuration.email_prefix              = '[Custom Prefix]'   # default is application name
 end
 ```
 

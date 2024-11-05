@@ -11,7 +11,7 @@ class EmailVerificationsController < ApplicationController
 
   def create
     current_user.regenerate_verification_token
-    MinimalistAuthenticationMailer.verify_email(current_user).deliver_now
+    MinimalistAuthenticationMailer.with(user: current_user).verify_email.deliver_now
 
     redirect_to dashboard_path, notice: t(".notice", email: current_user.email)
   end

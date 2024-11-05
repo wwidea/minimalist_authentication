@@ -9,3 +9,9 @@ require "minimalist_authentication/email_verification"
 require "minimalist_authentication/controller"
 require "minimalist_authentication/sessions"
 require "minimalist_authentication/test_helper"
+
+module MinimalistAuthentication
+  def self.deprecator
+    @deprecator ||= ActiveSupport::Deprecation.new("4.0", name)
+  end
+end
