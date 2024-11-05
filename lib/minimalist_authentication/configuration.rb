@@ -51,10 +51,6 @@ module MinimalistAuthentication
     # Defaults to :new_session_path
     attr_accessor :logout_redirect_path
 
-    # Email subject prefix for MinimalistAuthenticationMailer messages
-    # Defaults to application name
-    attr_accessor :email_prefix
-
     def initialize
       self.user_model_name          = "::User"
       self.session_key              = :user_id
@@ -64,7 +60,10 @@ module MinimalistAuthentication
       self.verify_email             = true
       self.login_redirect_path      = :root_path
       self.logout_redirect_path     = :new_session_path
-      self.email_prefix             = default_email_prefix
+    end
+
+    def email_prefix=(_)
+      MinimalistAuthentication.deprecator.warn("The #email_prefix configuration setting is no longer supported.")
     end
 
     # Returns the user_model class
@@ -72,12 +71,6 @@ module MinimalistAuthentication
     # the Spring application preloader gem.
     def user_model
       user_model_name.constantize
-    end
-
-    private
-
-    def default_email_prefix
-      "[#{Rails.application.engine_name.delete_suffix('_application').titleize}]"
     end
   end
 end
