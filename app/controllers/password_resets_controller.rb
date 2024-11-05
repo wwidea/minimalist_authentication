@@ -14,7 +14,7 @@ class PasswordResetsController < ApplicationController
   def create
     if user
       user.regenerate_verification_token
-      MinimalistAuthenticationMailer.update_password(user).deliver_now
+      MinimalistAuthenticationMailer.with(user:).update_password.deliver_now
     end
     # always display notice even if the user was not found to prevent leaking user emails
     redirect_to new_session_path, notice: "Password reset instructions were mailed to #{email}"
