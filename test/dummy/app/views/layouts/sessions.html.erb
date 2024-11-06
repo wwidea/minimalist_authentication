@@ -4,16 +4,16 @@
     <title>Dummy - Sessions</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
   </head>
 
   <body>
     <h3>Session:</h3>
-    <%= render 'layouts/hash', hash: session %>
+    <%= render "layouts/hash", hash: session %>
 
     <h3>Flash:</h3>
-    <%= render 'layouts/hash', hash: flash %>
+    <%= render "layouts/hash", hash: flash %>
 
     <h3>Login Shortcuts</h3>
     <ul>
@@ -22,16 +22,23 @@
       <% end %>
     </ul>
 
+    <h3>Mailer Previews</h3>
+    <p>
+      <%= link_to("Action Mailer Previews", "/rails/mailers") %>
+    </p>
+
     <h3>Password Resets</h3>
     <ul>
-      <% User.active.order(:email).where.not(verification_token: nil).each do |user| %>
-        <li><%= link_to(user.email, edit_user_password_path(user, token: user.verification_token)) %></li>
+      <% User.active.with_verified_email.order(:email).each do |user| %>
+        <li><%= link_to(user.email, edit_user_password_path(user, token: user.generate_token_for(:password_reset))) %></li>
       <% end %>
     </ul>
 
     <%= yield %>
 
-    <%= link_to 'Login', new_session_path %>
-    <%= link_to 'Logout', session_path, method: :delete %>
+    <p>
+      <%= link_to "Login", new_session_path %>
+      <%= link_to "Logout", session_path, method: :delete %>
+    </p>
   </body>
 </html>
