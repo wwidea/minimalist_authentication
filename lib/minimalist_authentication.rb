@@ -11,7 +11,11 @@ require "minimalist_authentication/sessions"
 require "minimalist_authentication/test_helper"
 
 module MinimalistAuthentication
-  def self.deprecator
-    @deprecator ||= ActiveSupport::Deprecation.new("4.0", name)
+  class << self
+    delegate :user_model, to: :configuration
+
+    def deprecator
+      @deprecator ||= ActiveSupport::Deprecation.new("4.0", name)
+    end
   end
 end
