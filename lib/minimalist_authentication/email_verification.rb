@@ -5,6 +5,10 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
+      generates_token_for :email_verification, expires_in: 1.hour do
+        email
+      end
+
       before_save :clear_email_verification, if: ->(user) { user.email_changed? }
 
       scope :email_verified, -> { where("LENGTH(email) > 2").where.not(email_verified_at: nil) }

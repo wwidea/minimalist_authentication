@@ -3,6 +3,15 @@
 require "test_helper"
 
 class EmailVerificationTest < ActiveSupport::TestCase
+  # email_verification token
+  test "should invalidate email verification token when email is changed" do
+    token = users(:active_user).generate_token_for(:email_verification)
+
+    assert_equal users(:active_user), User.find_by_token_for(:email_verification, token)
+    assert users(:active_user).update(email: "testing@example.com")
+    assert_not User.find_by_token_for(:password_reset, token)
+  end
+
   test "should verify users email address" do
     users(:active_user).regenerate_verification_token
     token = users(:active_user).verification_token
