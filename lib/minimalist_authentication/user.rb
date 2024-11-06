@@ -11,6 +11,10 @@ module MinimalistAuthentication
     included do
       has_secure_password validations: false
 
+      generates_token_for :password_reset, expires_in: 1.hour do
+        password_salt.last(10)
+      end
+
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
 
