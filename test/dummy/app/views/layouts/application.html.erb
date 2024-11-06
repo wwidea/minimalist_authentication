@@ -2,22 +2,14 @@
 <html>
   <head>
     <title>Dummy - Application</title>
-    <%= csrf_meta_tags %>
-
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
+    <%= render "head" %>
   </head>
 
   <body>
-    <h3>Session:</h3>
-    <%= render 'layouts/hash', hash: session %>
-
-    <h3>Flash:</h3>
-    <%= render 'layouts/hash', hash: flash %>
+    <%= render "session_and_flash" %>
 
     <%= yield %>
 
-    <%= link_to 'Login', new_session_path %>
-    <%= link_to 'Logout', session_path, method: :delete %>
+    <%= render "login_logout" %>
   </body>
 </html>
