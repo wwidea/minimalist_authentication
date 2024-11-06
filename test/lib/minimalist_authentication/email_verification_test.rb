@@ -12,6 +12,14 @@ class EmailVerificationTest < ActiveSupport::TestCase
     assert_not User.find_by_token_for(:password_reset, token)
   end
 
+  # clear_email_verification
+  test "should clear email verification when email is changed" do
+    assert_predicate users(:active_user).email_verified_at, :present?
+    users(:active_user).update(email: "testing@example.com")
+
+    assert_nil users(:active_user).reload.email_verified_at
+  end
+
   test "should verify users email address" do
     users(:active_user).regenerate_verification_token
     token = users(:active_user).verification_token
