@@ -11,7 +11,15 @@ module MinimalistAuthentication
 
       before_save :clear_email_verification, if: :email_changed?
 
-      scope :email_verified, -> { where("LENGTH(email) > 2").where.not(email_verified_at: nil) }
+      scope :with_verified_email, -> { where.not(email_verified_at: nil) }
+    end
+
+    module ClassMethods
+      def find_by_verified_email(email:)
+        return unless URI::MailTo::EMAIL_REGEXP.match?(email)
+
+        MinimalistAuthentication.user_model.active.with_verified_email.find_by(email:)
+      end
     end
 
     def needs_email_set?

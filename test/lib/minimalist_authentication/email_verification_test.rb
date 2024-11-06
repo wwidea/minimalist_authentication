@@ -20,6 +20,22 @@ class EmailVerificationTest < ActiveSupport::TestCase
     assert_nil users(:active_user).reload.email_verified_at
   end
 
+  # find_by_verified_email
+  test "should find user by verified email" do
+    assert_equal users(:active_user), User.find_by_verified_email(email: users(:active_user).email)
+  end
+
+  test "should not find user by unverified email" do
+    assert_nil User.find_by_verified_email(email: users(:legacy_user).email)
+  end
+
+  test "should return nil for blank email" do
+    User.expects(:find_by).never
+
+    assert_nil User.find_by_verified_email(email: "")
+  end
+
+  # verify_email
   test "should verify users email address" do
     users(:active_user).regenerate_verification_token
     token = users(:active_user).verification_token
