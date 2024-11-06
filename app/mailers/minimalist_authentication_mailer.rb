@@ -5,11 +5,11 @@ class MinimalistAuthenticationMailer < ApplicationMailer
   after_action :mail_user
 
   def verify_email
-    @verify_email_link = email_verification_url(token: @user.verification_token)
+    @verify_email_url = email_verification_url(token: @user.generate_token_for(:email_verification))
   end
 
   def update_password
-    @edit_password_link = edit_user_password_url(@user, token: @user.verification_token)
+    @edit_password_url = edit_user_password_url(@user, token: @user.generate_token_for(:password_reset))
   end
 
   private

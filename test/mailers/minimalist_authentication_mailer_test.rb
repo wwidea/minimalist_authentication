@@ -4,26 +4,32 @@ require "test_helper"
 
 class MinimalistAuthenticationMailerTest < ActionMailer::TestCase
   test "verify_email" do
-    users(:legacy_user).regenerate_verification_token
-    mail = mailer_with(users(:legacy_user)).verify_email
-
-    assert_equal "Email Address Verification",            mail.subject
-    assert_equal ["legacy@example.com"],                  mail.to
-    assert_match users(:legacy_user).verification_token,  mail.body.encoded
+    assert_email(user: users(:legacy_user), template: :verify_email)
   end
 
   test "update_password" do
-    users(:active_user).regenerate_verification_token
-    mail = mailer_with(users(:active_user)).update_password
-
-    assert_equal "Update Password",                       mail.subject
-    assert_equal ["active@example.com"],                  mail.to
-    assert_match users(:active_user).verification_token,  mail.body.encoded
+    assert_email(user: users(:active_user), template: :update_password)
   end
 
   private
 
+  def assert_email(user:, template:)
+    mailer_with(user).public_send(template).tap do |mail|
+      assert_equal subject(template), mail.subject
+      assert_equal [user.email], mail.to
+      assert_match opening(template), mail.body.encoded
+    end
+  end
+
   def mailer_with(user)
     MinimalistAuthenticationMailer.with(user: user)
+  end
+
+  def opening(template)
+    I18n.t("minimalist_authentication_mailer.#{template}.opening")
+  end
+
+  def subject(template)
+    I18n.t("minimalist_authentication_mailer.#{template}.subject")
   end
 end
