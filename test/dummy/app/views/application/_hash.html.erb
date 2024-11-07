@@ -1,6 +1,8 @@
-<dl>
+<table class="table">
   <% hash.each do |key, value| %>
-    <dt><%= key %></dt>
-    <dd><%= value %></dd>
+    <tr>
+      <td><%= key %></td>
+      <td><%= value %></td>
+    </tr>
   <% end %>
-</dl>
+</table>
