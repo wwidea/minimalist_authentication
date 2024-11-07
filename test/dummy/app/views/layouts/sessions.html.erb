@@ -8,22 +8,20 @@
   <body>
     <%= render "session_and_flash" %>
 
-    <h3>Login Shortcuts</h3>
-    <ul>
-      <% User.active.order(:email).each do |user| %>
-        <li><%= button_to(user.email, session_path(user: { email: user.email, password: MinimalistAuthentication::TestHelper::PASSWORD } )) %></li>
-      <% end %>
-    </ul>
-
     <h3>Mailer Previews</h3>
     <p>
       <%= link_to("Action Mailer Previews", "/rails/mailers") %>
     </p>
 
-    <h3>Password Resets</h3>
-    <ul>
-      <% User.active.with_verified_email.order(:email).each do |user| %>
-        <li><%= link_to(user.email, edit_user_password_path(user, token: user.generate_token_for(:password_reset))) %></li>
+    <h3>Users</h3>
+      <% User.order(:email).each do |user| %>
+        <div>
+          <div style="display: inline-flex;">
+            <%= button_to(user.email, session_path(user: { email: user.email, password: MinimalistAuthentication::TestHelper::PASSWORD } ), style: "width:200px;") %>
+            <%= button_to("Create Password Reset", password_reset_path(user: { email: user.email } ), style: "width:200px;") %>
+            <%= link_to("Edit Password", edit_user_password_path(user, token: user.generate_token_for(:password_reset))) if user.password_salt %>
+          </div>
+        </div>
       <% end %>
     </ul>
 
