@@ -25,14 +25,14 @@ class EmailVerificationTest < ActiveSupport::TestCase
     assert_equal users(:active_user), User.find_by_verified_email(email: users(:active_user).email)
   end
 
-  test "should not find user by unverified email" do
-    assert_nil User.find_by_verified_email(email: users(:legacy_user).email)
+  test "should not find inactive user by verified email" do
+    users(:active_user).update_column(:active, false)
+
+    assert_nil User.find_by_verified_email(email: users(:active_user).email)
   end
 
-  test "should return nil for blank email" do
-    User.expects(:find_by).never
-
-    assert_nil User.find_by_verified_email(email: "")
+  test "should not find user by unverified email" do
+    assert_nil User.find_by_verified_email(email: users(:legacy_user).email)
   end
 
   # verify_email

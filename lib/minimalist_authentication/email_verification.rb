@@ -16,8 +16,6 @@ module MinimalistAuthentication
 
     module ClassMethods
       def find_by_verified_email(email:)
-        return unless URI::MailTo::EMAIL_REGEXP.match?(email)
-
         MinimalistAuthentication.user_model.active.with_verified_email.find_by(email:)
       end
     end
