@@ -1,14 +1,14 @@
 <h1>Dashboard Show</h1>
 
 <p>
-  You are logged in as: <strong><%= current_user.email %></strong>
-  <%= link_to("Edit Email", edit_email_path) %>
+  You are logged in as: <strong><%= current_user.email %></strong><br>
+</p>
+
+<p>
+  Email verified: <strong><%= current_user.email_verified? %></strong><br>
+  <%= link_to("Edit Email", edit_email_path) %><br>
+  <%= link_to "New Email Verification", new_email_verification_path %><br>
+  <%= link_to "Show Email Verification", email_verification_path(token: current_user.generate_token_for(:email_verification)) %>
 </p>
 
 <p><%= current_user.inspect %></p>
-
-<h3>Email Verifications</h3>
-<ul>
-  <li><%= link_to "New", new_email_verification_path %></li>
-  <li><%= link_to "Show", email_verification_path(token: current_user.generate_token_for(:email_verification)) %></li>
-</ul>

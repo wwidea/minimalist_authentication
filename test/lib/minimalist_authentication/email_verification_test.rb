@@ -37,17 +37,21 @@ class EmailVerificationTest < ActiveSupport::TestCase
 
   # verify_email
   test "should verify users email address" do
-    users(:active_user).regenerate_verification_token
-    token = users(:active_user).verification_token
+    token = users(:legacy_user).generate_token_for(:email_verification)
 
-    assert users(:active_user).verify_email(token)
-    assert_predicate users(:active_user), :email_verified?
+    assert users(:legacy_user).verify_email(token)
+    assert_predicate users(:legacy_user), :email_verified?
   end
 
-  test "should fail to verify users email address" do
-    users(:legacy_user).regenerate_verification_token
-
+  test "should fail to verify users email address with invalid token" do
     assert_not users(:legacy_user).verify_email("does_not_match")
     assert_not users(:legacy_user).email_verified?
+  end
+
+  test "should fail to verify users email address with another users token" do
+    token = users(:active_user).generate_token_for(:email_verification)
+
+    assert_not users(:legacy_user).verify_email(token)
+    assert_not_predicate users(:legacy_user), :email_verified?
   end
 end

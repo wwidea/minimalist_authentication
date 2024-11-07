@@ -91,6 +91,11 @@ module MinimalistAuthentication
       end
     end
 
+    # Return true if the user matches the owner of the provided token.
+    def token_owner?(purpose, token)
+      self.class.find_by_token_for(purpose, token) == self
+    end
+
     # Require password for active users that either do no have a password hash
     # stored OR are attempting to set a new password. Set **password_required**
     # to true to force validations even when the password field is blank.

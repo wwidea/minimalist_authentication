@@ -16,8 +16,12 @@ module MinimalistAuthentication
 
     module ClassMethods
       def find_by_verified_email(email:)
-        MinimalistAuthentication.user_model.active.with_verified_email.find_by(email:)
+        active.with_verified_email.find_by(email:)
       end
+    end
+
+    def email_verified?
+      email.present? && email_verified_at.present?
     end
 
     def needs_email_set?
@@ -28,12 +32,8 @@ module MinimalistAuthentication
       email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
-    def email_verified?
-      email.present? && email_verified_at.present?
-    end
-
     def verify_email(token)
-      secure_update(token, email_verified_at: Time.zone.now)
+      touch(:email_verified_at) if token_owner?(:email_verification, token)
     end
 
     private
