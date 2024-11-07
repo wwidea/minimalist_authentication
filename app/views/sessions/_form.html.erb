@@ -1,11 +1,11 @@
-<%= form_for @user, url: session_path do |form| %>
+<%= form_with model: @user, url: session_path do |form| %>
   <div>
-    <%= form.label          :email %>
-    <%= form.text_field     :email %>
+    <%= form.label :email %>
+    <%= form.text_field :email %>
   </div>
   <div>
-    <%= form.label          :password %>
+    <%= form.label :password %>
     <%= form.password_field :password %>
   </div>
-  <%= form.submit         'Log in' %>
+  <%= form.submit "Log in" %>
 <% end %>

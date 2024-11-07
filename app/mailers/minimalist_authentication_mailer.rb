@@ -9,7 +9,7 @@ class MinimalistAuthenticationMailer < ApplicationMailer
   end
 
   def update_password
-    @edit_password_url = edit_user_password_url(@user, token: @user.generate_token_for(:password_reset))
+    @edit_password_url = edit_password_url(token: @user.generate_token_for(:password_reset))
   end
 
   private

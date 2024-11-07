@@ -19,7 +19,7 @@
           <div style="display: inline-flex;">
             <%= button_to(user.email, session_path(user: { email: user.email, password: MinimalistAuthentication::TestHelper::PASSWORD } ), style: "width:200px;") %>
             <%= button_to("Create Password Reset", password_reset_path(user: { email: user.email } ), style: "width:200px;") %>
-            <%= link_to("Edit Password", edit_user_password_path(user, token: user.generate_token_for(:password_reset))) if user.password_salt %>
+            <%= link_to("Edit Password", edit_password_path(token: user.generate_token_for(:password_reset))) if user.password_salt %>
           </div>
         </div>
       <% end %>

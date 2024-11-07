@@ -6,25 +6,25 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   NEW_PASSWORD = "abcdef123456"
 
   test "should get edit for verified user" do
-    get edit_user_password_path(user, token: password_reset_token)
+    get edit_password_path(token: password_reset_token)
 
     assert_response :success
   end
 
   test "should fail to get edit for unverified user" do
-    get edit_user_password_path(user, token: "does not match")
+    get edit_password_path(token: "does not match")
 
     assert_redirected_to new_session_path
   end
 
   test "should redirect to new_session_path when token is nil" do
-    get edit_user_password_path(user, token: nil)
+    get edit_password_path(token: nil)
 
     assert_redirected_to new_session_path
   end
 
   test "should update password for verified user" do
-    put user_password_path(*password_params)
+    put password_path(password_params)
 
     assert_redirected_to new_session_path
     assert user.reload.authenticated?(NEW_PASSWORD), "password should be changed"
@@ -32,14 +32,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should fail to update password for verified user when confirmation does not match" do
-    put user_password_path(*password_params(password_confirmation: "not_the_same"))
+    put password_path(password_params(password_confirmation: "not_the_same"))
 
     assert_response :success
     assert user.reload.authenticated?(PASSWORD), "password should be unchanged"
   end
 
   test "should fail to update password for unverified user" do
-    put user_password_path(*password_params(token: "wrong_token"))
+    put password_path(password_params(token: "wrong_token"))
 
     assert_redirected_to new_session_path
     assert user.reload.authenticated?(PASSWORD), "password should not be changed"
@@ -48,7 +48,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   private
 
   def password_params(token: password_reset_token, password_confirmation: NEW_PASSWORD)
-    [user, { token:, user: { password: NEW_PASSWORD, password_confirmation: } }]
+    { token:, user: { password: NEW_PASSWORD, password_confirmation: } }
   end
 
   def password_reset_token
