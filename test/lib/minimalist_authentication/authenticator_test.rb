@@ -3,8 +3,6 @@
 require "test_helper"
 
 class AuthenticatorTest < ActiveSupport::TestCase
-  PARAMETERS = { field: "email", value: "active@example.com", password: PASSWORD }.freeze
-
   test "should authenticate user with email" do
     assert_equal users(:active_user), authenticated_user(email: users(:active_user).email, password: PASSWORD)
   end
@@ -15,6 +13,10 @@ class AuthenticatorTest < ActiveSupport::TestCase
 
   test "should fail to authenticate when params are empty" do
     assert_not authenticated_user({})
+  end
+
+  test "should fail to authenticate when field is missing" do
+    assert_not authenticated_user(password: PASSWORD)
   end
 
   test "should fail to authenticate when email is blank" do
@@ -31,22 +33,16 @@ class AuthenticatorTest < ActiveSupport::TestCase
     assert_not authenticated_user(email: users(:active_user).email, password: PASSWORD)
   end
 
-  test "should fail to authenticate for incorrect password" do
+  test "should fail to authenticate with incorrect password" do
     assert_not authenticated_user(email: users(:active_user).email, password: "incorrect_password")
   end
 
   test "should return user for authenticated_user when authentication is successful" do
-    assert_equal users(:active_user), authenticator.new(**PARAMETERS).authenticated_user
+    assert_equal users(:active_user), authenticator.new(**parameters).authenticated_user
   end
 
   test "should return nil for authenticated_user when authentication fails" do
-    assert_nil authenticator.new(**PARAMETERS, password: "incorrect_password").authenticated_user
-  end
-
-  test "should return false for valid when any parameter argument is blank" do
-    PARAMETERS.each_key do |key|
-      assert_not authenticator.new(**PARAMETERS, key => "").valid?
-    end
+    assert_nil authenticator.new(**parameters(password: "incorrect_password")).authenticated_user
   end
 
   private
@@ -57,5 +53,9 @@ class AuthenticatorTest < ActiveSupport::TestCase
 
   def authenticator
     MinimalistAuthentication::Authenticator
+  end
+
+  def parameters(password: PASSWORD)
+    { field: "email", value: "active@example.com", password: }
   end
 end

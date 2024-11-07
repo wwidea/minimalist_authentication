@@ -13,15 +13,10 @@ module MinimalistAuthentication
     # Params examples:
     # { email: 'user@example.com', password: 'abc123' }
     # { username: 'user', password: 'abc123' }
-    # Returns user object upon successful authentication.
     def self.authenticated_user(params)
       hash = params.to_h.with_indifferent_access
-
-      # Extract login field from hash
-      field = (hash.keys & LOGIN_FIELDS).first
-
-      # Attempt to authenticate user
-      new(field:, value: hash[field], password: hash["password"]).authenticated_user
+      field, value = hash.find { |key, _| LOGIN_FIELDS.include?(key) }
+      new(field:, value:, password: hash["password"]).authenticated_user
     end
 
     def initialize(field:, value:, password:)
@@ -32,18 +27,18 @@ module MinimalistAuthentication
 
     # Returns user upon successful authentication, otherwise returns nil.
     def authenticated_user
-      user if valid? && user&.authenticated?(password)
+      authenticate_by(field => value, password:) if valid?
+    end
+
+    private
+
+    def authenticate_by(*args)
+      MinimalistAuthentication.configuration.user_model.active.authenticate_by(*args)
     end
 
     # Returns true if all the authentication attributes are present.
     def valid?
       [field, value, password].all?(&:present?)
-    end
-
-    private
-
-    def user
-      @user ||= MinimalistAuthentication.configuration.user_model.active.find_by(field => value)
     end
   end
 end
