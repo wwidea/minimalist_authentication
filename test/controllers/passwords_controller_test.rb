@@ -6,62 +6,56 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   NEW_PASSWORD = "abcdef123456"
 
   test "should get edit for verified user" do
-    users(:active_user).regenerate_verification_token
-    get edit_user_password_path(users(:active_user), token: users(:active_user).verification_token)
+    get edit_user_password_path(user, token: password_reset_token)
 
     assert_response :success
   end
 
   test "should fail to get edit for unverified user" do
-    users(:active_user).regenerate_verification_token
-    get edit_user_password_path(users(:active_user), token: "does not match")
+    get edit_user_password_path(user, token: "does not match")
 
     assert_redirected_to new_session_path
   end
 
   test "should redirect to new_session_path when token is nil" do
-    users(:active_user).regenerate_verification_token
-    get edit_user_password_path(users(:active_user), token: nil)
+    get edit_user_password_path(user, token: nil)
 
     assert_redirected_to new_session_path
   end
 
   test "should update password for verified user" do
-    users(:active_user).regenerate_verification_token
     put user_password_path(*password_params)
 
     assert_redirected_to new_session_path
-    assert users(:active_user).reload.authenticated?(NEW_PASSWORD), "password should be changed"
-    assert_predicate users(:active_user).verification_token, :blank?
+    assert user.reload.authenticated?(NEW_PASSWORD), "password should be changed"
+    assert_predicate user.verification_token, :blank?
   end
 
   test "should fail to update password for verified user when confirmation does not match" do
-    users(:active_user).regenerate_verification_token
-    put user_password_path(*password_params(confirmation: "not_the_same"))
+    put user_password_path(*password_params(password_confirmation: "not_the_same"))
 
     assert_response :success
-    assert users(:active_user).reload.authenticated?(PASSWORD), "password should not be changed"
-    assert_predicate users(:active_user).verification_token, :present?
+    assert user.reload.authenticated?(PASSWORD), "password should be unchanged"
   end
 
   test "should fail to update password for unverified user" do
-    users(:active_user).regenerate_verification_token
     put user_password_path(*password_params(token: "wrong_token"))
 
-    assert_response :success
-    assert users(:active_user).reload.authenticated?(PASSWORD), "password should not be changed"
-    assert_predicate users(:active_user).verification_token, :present?
+    assert_redirected_to new_session_path
+    assert user.reload.authenticated?(PASSWORD), "password should not be changed"
   end
 
   private
 
-  def password_params(token: nil, confirmation: nil)
-    [
-      users(:active_user),
-      {
-        token: token || users(:active_user).verification_token,
-        user:  { password: NEW_PASSWORD, password_confirmation: confirmation || NEW_PASSWORD }
-      }
-    ]
+  def password_params(token: password_reset_token, password_confirmation: NEW_PASSWORD)
+    [user, { token:, user: { password: NEW_PASSWORD, password_confirmation: } }]
+  end
+
+  def password_reset_token
+    user.generate_token_for(:password_reset)
+  end
+
+  def user
+    users(:active_user)
   end
 end
