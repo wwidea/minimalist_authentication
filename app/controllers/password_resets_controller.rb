@@ -5,30 +5,39 @@ class PasswordResetsController < ApplicationController
 
   layout "sessions"
 
-  # Form for user to request a password reset
+  # Renders form for user to request a password reset
   def new
-    @user = MinimalistAuthentication.configuration.user_model.new
+    # new.html.erb
   end
 
   # Send a password update link to users with a verified email
   def create
-    if user
-      user.regenerate_verification_token
-      MinimalistAuthenticationMailer.with(user:).update_password.deliver_now
+    if email_valid?
+      send_update_password_email if user
+
+      # Always display notice to prevent leaking user emails
+      redirect_to new_session_path, notice: t(".notice", email:)
+    else
+      flash.now.alert = t(".alert")
+      render :new, status: :unprocessable_entity
     end
-    # always display notice even if the user was not found to prevent leaking user emails
-    redirect_to new_session_path, notice: "Password reset instructions were mailed to #{email}"
   end
 
   private
 
-  def user
-    return unless URI::MailTo::EMAIL_REGEXP.match?(email)
-
-    @user ||= MinimalistAuthentication.configuration.user_model.active.email_verified.find_by(email:)
-  end
-
   def email
     params.dig(:user, :email)
+  end
+
+  def send_update_password_email
+    MinimalistAuthenticationMailer.with(user:).update_password.deliver_now
+  end
+
+  def user
+    @user ||= MinimalistAuthentication.user_model.find_by_verified_email(email:)
+  end
+
+  def email_valid?
+    URI::MailTo::EMAIL_REGEXP.match?(email)
   end
 end
