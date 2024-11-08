@@ -37,7 +37,7 @@ module MinimalistAuthentication
     end
 
     def authenticated_user
-      @authenticated_user ||= MinimalistAuthentication::Authenticator.authenticated_user(user_params)
+      @authenticated_user ||= MinimalistAuthentication::Authenticator.authenticate(user_params)
     end
 
     def log_in_user
