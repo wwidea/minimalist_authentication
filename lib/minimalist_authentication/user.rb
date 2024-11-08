@@ -9,7 +9,7 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = "guest"
 
     included do
-      has_secure_password validations: false
+      has_secure_password
 
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
@@ -24,13 +24,10 @@ module MinimalistAuthentication
       validates(:email, presence: true, if: :validate_email_presence?)
 
       # Password validations
-      validates(
-        :password,
-        confirmation: true,
-        length:       { minimum: :password_minimum, maximum: :password_maximum },
-        presence:     true,
-        if:           :validate_password?
-      )
+      # Adds validations for minimum password length and exclusivity.
+      # has_secure_password adds validations for presence, maximum length, confirmation,
+      # and password_challenge.
+      validates :password, length: { minimum: :password_minimum }, if: :validate_password?
       validate :password_exclusivity, if: :password?
 
       # Active scope
@@ -68,6 +65,11 @@ module MinimalistAuthentication
       active?
     end
 
+    # Remove the has_secure_password password blank error if password is not required.
+    def errors
+      super.tap { |errors| errors.delete(:password, :blank) unless validate_password? }
+    end
+
     # Returns true if the user is not active.
     def inactive?
       MinimalistAuthentication.deprecator.warn("Calling #inactive? is deprecated.")
@@ -94,9 +96,6 @@ module MinimalistAuthentication
 
     # Minimum password length
     def password_minimum = 12
-
-    # Maximum password length
-    def password_maximum = 40
 
     # Checks for password presence
     def password?
