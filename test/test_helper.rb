@@ -21,5 +21,7 @@ end
 module ActiveSupport
   class TestCase
     include MinimalistAuthentication::TestHelper
+
+    delegate :identify, to: ActiveRecord::FixtureSet
   end
 end

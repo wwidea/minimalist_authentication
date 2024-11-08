@@ -39,10 +39,25 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
+      def find_enabled(id)
+        find_by(id:)&.enabled if id.present?
+      end
+
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
       def guest
         new(email: GUEST_USER_EMAIL).freeze
       end
+    end
+
+    # Called after a user is authenticated to determine if the user object should be returned.
+    def enabled
+      self if enabled?
+    end
+
+    # Returns true if the user is enabled.
+    # Override this method in your user model to implement custom logic that determines if a user is eligible to log in.
+    def enabled?
+      active?
     end
 
     # Returns true if the user is not active.
@@ -52,9 +67,10 @@ module MinimalistAuthentication
 
     # Returns true if password matches the hashed_password, otherwise returns false.
     def authenticated?(password)
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #authenticated? is deprecated. Use #authenticate instead.
+      MSG
       authenticate(password)
-    rescue ::BCrypt::Errors::InvalidHash
-      false
     end
 
     # Check if user is a guest based on their email attribute
@@ -62,8 +78,8 @@ module MinimalistAuthentication
       email == GUEST_USER_EMAIL
     end
 
+    # Sets #last_logged_in_at to the current time without updating the updated_at timestamp.
     def logged_in
-      # Use update_column to avoid updated_on trigger
       update_column(:last_logged_in_at, Time.current)
     end
 
