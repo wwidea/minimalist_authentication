@@ -61,11 +61,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:active_user, :legacy_user).sort, User.active.sort
   end
 
-  # inactive scope
-  test "should return inactive users" do
-    assert_equal [users(:inactive_user).email], User.inactive.map(&:email)
-  end
-
   # find_enabled
   test "should return enabled user for find_enabled" do
     assert_equal users(:active_user), User.find_enabled(identify(:active_user))
@@ -116,15 +111,6 @@ class UserTest < ActiveSupport::TestCase
 
   test "should return false for enabled?" do
     assert_not users(:inactive_user).enabled?
-  end
-
-  # inactive?
-  test "should return true for inactive?" do
-    assert_predicate User.new, :inactive?
-  end
-
-  test "should return false for inactive?" do
-    assert_not User.new(active: true).inactive?
   end
 
   # logged_in

@@ -34,13 +34,21 @@ module MinimalistAuthentication
       validate :password_exclusivity, if: :password?
 
       # Active scope
-      scope :active,    ->(state = true)  { where(active: state) }
-      scope :inactive,  ->                { active(false) }
+      scope :active, ->(state = true) { where(active: state) }
     end
 
     module ClassMethods
+      # Finds a user by their id and returns the user if they are enabled.
+      # Returns nil if the user is not found or not enabled.
       def find_enabled(id)
         find_by(id:)&.enabled if id.present?
+      end
+
+      def inactive
+        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+          Calling #inactive is deprecated. Use #active(false) instead.
+        MSG
+        active(false)
       end
 
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
@@ -62,6 +70,7 @@ module MinimalistAuthentication
 
     # Returns true if the user is not active.
     def inactive?
+      MinimalistAuthentication.deprecator.warn("Calling #inactive? is deprecated.")
       !active?
     end
 
