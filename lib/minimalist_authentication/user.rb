@@ -9,7 +9,7 @@ module MinimalistAuthentication
     GUEST_USER_EMAIL = "guest"
 
     included do
-      has_secure_password validations: false
+      has_secure_password
 
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
@@ -24,37 +24,64 @@ module MinimalistAuthentication
       validates(:email, presence: true, if: :validate_email_presence?)
 
       # Password validations
-      validates(
-        :password,
-        confirmation: true,
-        length:       { minimum: :password_minimum, maximum: :password_maximum },
-        presence:     true,
-        if:           :validate_password?
-      )
+      # Adds validations for minimum password length and exclusivity.
+      # has_secure_password adds validations for presence, maximum length, confirmation,
+      # and password_challenge.
+      validates :password, length: { minimum: :password_minimum }, if: :validate_password?
       validate :password_exclusivity, if: :password?
 
       # Active scope
-      scope :active,    ->(state = true)  { where(active: state) }
-      scope :inactive,  ->                { active(false) }
+      scope :active, ->(state = true) { where(active: state) }
     end
 
     module ClassMethods
+      # Finds a user by their id and returns the user if they are enabled.
+      # Returns nil if the user is not found or not enabled.
+      def find_enabled(id)
+        find_by(id:)&.enabled if id.present?
+      end
+
+      def inactive
+        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+          Calling #inactive is deprecated. Use #active(false) instead.
+        MSG
+        active(false)
+      end
+
       # Returns a frozen user with the email set to GUEST_USER_EMAIL.
       def guest
         new(email: GUEST_USER_EMAIL).freeze
       end
     end
 
+    # Called after a user is authenticated to determine if the user object should be returned.
+    def enabled
+      self if enabled?
+    end
+
+    # Returns true if the user is enabled.
+    # Override this method in your user model to implement custom logic that determines if a user is eligible to log in.
+    def enabled?
+      active?
+    end
+
+    # Remove the has_secure_password password blank error if password is not required.
+    def errors
+      super.tap { |errors| errors.delete(:password, :blank) unless validate_password? }
+    end
+
     # Returns true if the user is not active.
     def inactive?
+      MinimalistAuthentication.deprecator.warn("Calling #inactive? is deprecated.")
       !active?
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false.
     def authenticated?(password)
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #authenticated? is deprecated. Use #authenticate instead.
+      MSG
       authenticate(password)
-    rescue ::BCrypt::Errors::InvalidHash
-      false
     end
 
     # Check if user is a guest based on their email attribute
@@ -62,16 +89,13 @@ module MinimalistAuthentication
       email == GUEST_USER_EMAIL
     end
 
+    # Sets #last_logged_in_at to the current time without updating the updated_at timestamp.
     def logged_in
-      # Use update_column to avoid updated_on trigger
       update_column(:last_logged_in_at, Time.current)
     end
 
     # Minimum password length
     def password_minimum = 12
-
-    # Maximum password length
-    def password_maximum = 40
 
     # Checks for password presence
     def password?
