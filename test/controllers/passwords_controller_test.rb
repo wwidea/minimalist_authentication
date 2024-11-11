@@ -27,7 +27,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     put password_path(password_params)
 
     assert_redirected_to new_session_path
-    assert user.reload.authenticated?(NEW_PASSWORD), "password should be changed"
+    assert user.reload.authenticate(NEW_PASSWORD), "password should be changed"
     assert_predicate user.verification_token, :blank?
   end
 
@@ -35,14 +35,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     put password_path(password_params(password_confirmation: "not_the_same"))
 
     assert_response :success
-    assert user.reload.authenticated?(PASSWORD), "password should be unchanged"
+    assert user.reload.authenticate(PASSWORD), "password should be unchanged"
   end
 
   test "should fail to update password for unverified user" do
     put password_path(password_params(token: "wrong_token"))
 
     assert_redirected_to new_session_path
-    assert user.reload.authenticated?(PASSWORD), "password should not be changed"
+    assert user.reload.authenticate(PASSWORD), "password should not be changed"
   end
 
   private
