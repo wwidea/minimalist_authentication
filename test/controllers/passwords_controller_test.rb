@@ -28,7 +28,6 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_session_path
     assert user.reload.authenticate(NEW_PASSWORD), "password should be changed"
-    assert_predicate user.verification_token, :blank?
   end
 
   test "should fail to update password for verified user when confirmation does not match" do

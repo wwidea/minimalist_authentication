@@ -1,15 +1,15 @@
 # MinimalistAuthentication
-A Rails authentication gem that takes a minimalist approach. It is designed to be simple to understand, use, and modify for your application.
+A Rails authentication gem that takes a minimalist approach. It is designed to be simple to understand, use, and customize for your application.
 
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'minimalist_authentication'
+gem "minimalist_authentication"
 ```
 
-And then execute:
+And then run:
 ```bash
 $ bundle
 ```
@@ -61,18 +61,29 @@ class ActiveSupport::TestCase
 end
 ```
 
+
 ## Configuration
 Customize the configuration with an initializer. Create a **minimalist_authentication.rb** file in config/initializers.
 ```ruby
 MinimalistAuthentication.configure do |configuration|
-  configuration.user_model_name           = 'CustomModelName'   # default is '::User'
-  configuration.session_key               = :custom_session_key # default is :user_id
-  configuration.validate_email            = true                # default is true
-  configuration.validate_email_presence   = true                # default is true
-  configuration.request_email             = true                # default is true
-  configuration.verify_email              = true                # default is true
   configuration.login_redirect_path       = :custom_path        # default is :root_path
   configuration.logout_redirect_path      = :custom_path        # default is :new_session_path
+  configuration.request_email             = true                # default is true
+  configuration.session_key               = :custom_session_key # default is :user_id
+  configuration.user_model_name           = "CustomModelName"   # default is "::User"
+  configuration.validate_email            = true                # default is true
+  configuration.validate_email_presence   = true                # default is true
+  configuration.verify_email              = true                # default is true
+end
+```
+
+### Example with a Person Model
+```ruby
+MinimalistAuthentication.configure do |configuration|
+  configuration.login_redirect_path     = :dashboard_path
+  configuration.session_key             = :person_id
+  configuration.user_model_name         = "Person"
+  configuration.validate_email_presence = false
 end
 ```
 
@@ -86,31 +97,11 @@ example_user:
 ```
 
 
-## Verification Tokens
-Verification token support is provided by the **MinimalistAuthentication::VerifiableToken**
-module. Include the module in your user class and add the verification token columns
-to the database.
-
-Include MinimalistAuthentication::VerifiableToken in your user model (app/models/user.rb)
-```ruby
-class User < ApplicationRecord
-  include MinimalistAuthentication::User
-  include MinimalistAuthentication::VerifiableToken
-end
-```
-
-Add the **verification_token** and **verification_token_generated_at** columns:
-Create a user model with **email** for an identifier:
-```bash
-bin/rails generate migration AddVerificationTokenToUsers verification_token:string:uniq verification_token_generated_at:datetime
-```
-
-### Email Verification
+## Email Verification
 Include MinimalistAuthentication::EmailVerification in your user model (app/models/user.rb)
 ```ruby
 class User < ApplicationRecord
   include MinimalistAuthentication::User
-  include MinimalistAuthentication::VerifiableToken
   include MinimalistAuthentication::EmailVerification
 end
 ```
@@ -121,12 +112,38 @@ bin/rails generate migration AddEmailVerifiedAtToUsers email_verified_at:datetim
 ```
 
 
+## Verification Tokens
+Verification token support is provided by the ```ActiveRecord::TokenFor#generate_token_for``` method. MinimalistAuthentication includes token definitions for **password_reset** and **email_verification**. These tokens are utilized by the **update_password** and **verify_email** email messages respectively, to allow users to update their passwords and verify their email addresses.
+
+### Update Password
+The **update_password** token expires in 1 hour and is invalidated when the user's password is changed.
+
+#### Example
+```ruby
+token = user.generate_token_for(:password_reset)
+User.find_by_token_for(:password_reset, token) # => user
+user.update!(password: "new password")
+User.find_by_token_for(:password_reset, token) # => nil
+```
+
+### Email Verification
+The **email_verification** token expires in 1 hour and is invalidated when the user's email is changed.
+
+#### Example
+```ruby
+token = user.generate_token_for(:email_verification)
+User.find_by_token_for(:email_verification, token) # => user
+user.update!(email: "new_email@example.com")
+User.find_by_token_for(:email_verification, token) # => nil
+```
+
+
 ## Conversions
 
 ### Upgrading to Version 2.0
 Pre 2.0 versions of MinimalistAuthentication supported multiple hash algorithms
 and stored the hashed password and salt as separate fields in the database
-(crypted_password and salt). The current version of MinimalistAuthentication
+(crypted_password and salt). The 2.0 version of MinimalistAuthentication
 uses BCrypt to hash passwords and stores the result in the **password_hash** field.
 
 To convert from a pre 2.0 version add the **password_hash** to your user model
@@ -161,6 +178,10 @@ end
 ```ruby
 alias_attribute :password_digest, :password_hash
 ```
+
+### Upgrading to Version 3.2
+The **verification_token** and **verification_token_generated_at** database columns are no longer used and can be safely removed from your user model.
+
 
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT)..
