@@ -11,6 +11,12 @@ module MinimalistAuthentication
       MSG
     end
 
+    def matches_verification_token?(_token)
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #matches_verification_token? is deprecated.
+      MSG
+    end
+
     def regenerate_verification_token
       MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
         Calling #regenerate_verification_token is deprecated and no longer generates tokens.
