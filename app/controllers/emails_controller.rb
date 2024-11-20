@@ -7,7 +7,7 @@ class EmailsController < ApplicationController
     if current_user.update(user_params)
       redirect_to update_redirect_path, notice: t(".notice")
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

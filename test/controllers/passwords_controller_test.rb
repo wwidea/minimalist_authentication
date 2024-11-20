@@ -33,7 +33,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "should fail to update password for verified user when confirmation does not match" do
     put password_path(password_params(password_confirmation: "not_the_same"))
 
-    assert_response :success
+    assert_response :unprocessable_entity
     assert user.reload.authenticate(PASSWORD), "password should be unchanged"
   end
 

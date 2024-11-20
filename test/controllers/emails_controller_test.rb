@@ -30,6 +30,6 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
     login_as :active_user
     put email_path(user: { email: "testing-invalid" })
 
-    assert_response :success
+    assert_response :unprocessable_entity
   end
 end
