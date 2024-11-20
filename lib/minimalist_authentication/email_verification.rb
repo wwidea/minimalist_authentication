@@ -15,6 +15,14 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
+      def email_verified
+        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+          Calling #email_verified is deprecated.
+          Call #with_verified_email instead.
+        MSG
+        with_verified_email
+      end
+
       def find_by_verified_email(email:)
         active.with_verified_email.find_by(email:)
       end
