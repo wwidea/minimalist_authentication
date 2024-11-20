@@ -1,13 +1,13 @@
-<h1>Request Password Reset</h1>
+<h1><%= t(".title") %></h1>
 
 <p>
-  Enter your email address we'll send you a link to reset your password.
+  <%= t(".instructions") %>
 </p>
 
 <%= form_with scope: :user, url: password_reset_path do |form| %>
   <div>
-    <%= form.label      :email %>
+    <%= form.label :email %>
     <%= form.text_field :email %>
   </div>
-  <%= form.submit "Reset Password" %>
+  <%= form.submit t(".submit") %>
 <% end %>

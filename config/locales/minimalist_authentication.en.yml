@@ -1,15 +1,26 @@
 en:
-  # Controllers
   email_verifications:
     create:
       notice: Verification email sent to %{email}, follow the instructions to complete verification. Thank you!
   emails:
     update:
       notice: Email successfully updated
+  minimalist_authentication_mailer:
+    update_password:
+      opening: Please click the link below to update your password.
+      subject: Update Password
+    verify_email:
+      closing: If you did not request email verification you can safely ignore this message.
+      opening: Please click the link below to complete your email verification.
+      subject: Email Address Verification
   password_resets:
+    new:
+      instructions: Enter your verified email address, and we'll send you a link to reset your password.
+      submit: Send Reset Link
+      title: Reset Your Password
     create:
       alert: Please provide a valid email address.
-      notice: Password reset instructions have been sent to %{email} if it is associated with an active account.
+      notice: We've sent password reset instructions to %{email}. If you don't receive the email within a few minutes, please check your spam folder.
   passwords:
     invalid_token:
       alert: Your password reset link has expired. Please request a new one to continue.
@@ -20,13 +31,3 @@ en:
       alert: Couldn't log you in as %{identifier}
     destroy:
       notice: You have been logged out.
-
-  # Mailers
-  minimalist_authentication_mailer:
-    update_password:
-      opening: Please click the link below to update your password.
-      subject: Update Password
-    verify_email:
-      closing: If you did not request email verification you can safely ignore this message.
-      opening: Please click the link below to complete your email verification.
-      subject: Email Address Verification
