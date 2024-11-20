@@ -24,21 +24,21 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update password for verified user" do
-    put password_path(password_params)
+    patch password_path(password_params)
 
     assert_redirected_to new_session_path
     assert user.reload.authenticate(NEW_PASSWORD), "password should be changed"
   end
 
   test "should fail to update password for verified user when confirmation does not match" do
-    put password_path(password_params(password_confirmation: "not_the_same"))
+    patch password_path(password_params(password_confirmation: "not_the_same"))
 
     assert_response :unprocessable_entity
     assert user.reload.authenticate(PASSWORD), "password should be unchanged"
   end
 
   test "should fail to update password for unverified user" do
-    put password_path(password_params(token: "wrong_token"))
+    patch password_path(password_params(token: "wrong_token"))
 
     assert_redirected_to new_session_path
     assert user.reload.authenticate(PASSWORD), "password should not be changed"
