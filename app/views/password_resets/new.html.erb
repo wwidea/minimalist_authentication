@@ -6,8 +6,7 @@
 
 <%= form_with scope: :user, url: password_reset_path do |form| %>
   <div>
-    <%= form.label :email %>
-    <%= form.text_field :email %>
+    <%= form.text_field :email, placeholder: t(".placeholder") %>
   </div>
   <%= form.submit t(".submit") %>
 <% end %>
