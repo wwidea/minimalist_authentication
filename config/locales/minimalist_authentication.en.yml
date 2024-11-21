@@ -15,8 +15,9 @@ en:
       subject: Email Address Verification
   password_resets:
     new:
+      email:
+        placeholder: Enter your email address
       instructions: Enter your verified email address, and we'll send you a link to reset your password.
-      placeholder: Enter your email address
       submit: Send Reset Link
       title: Reset Your Password
     create:

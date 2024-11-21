@@ -7,11 +7,11 @@
 <%= form_with model: @user, url: password_path(token: @token) do |form| %>
   <div>
     <%= form.label :password %>
-    <%= new_password_field(form) %>
+    <%= ma_new_password_field(form) %>
   </div>
   <div>
     <%= form.label :password_confirmation %>
-    <%= confirm_password_field(form) %>
+    <%= ma_confirm_password_field(form) %>
   </div>
   <%= form.submit t(".submit") %>
 <% end %>
