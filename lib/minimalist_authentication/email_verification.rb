@@ -46,16 +46,16 @@ module MinimalistAuthentication
 
     private
 
-    def request_email_enabled?
-      MinimalistAuthentication.configuration.request_email
+    def clear_email_verification
+      self.email_verified_at = nil
     end
 
     def email_verification_enabled?
       MinimalistAuthentication.configuration.verify_email
     end
 
-    def clear_email_verification
-      self.email_verified_at = nil
+    def request_email_enabled?
+      MinimalistAuthentication.configuration.request_email
     end
   end
 end
