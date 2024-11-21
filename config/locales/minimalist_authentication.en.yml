@@ -39,3 +39,5 @@ en:
       alert: Couldn't log you in as %{identifier}
     destroy:
       notice: You have been logged out.
+    new:
+      forgot_password: Forgot password?
