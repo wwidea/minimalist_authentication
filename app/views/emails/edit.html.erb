@@ -2,11 +2,11 @@
 
 <h2>Please update your email address</h2>
 
-<%= form_for(current_user, as: :user, url: email_path) do |form| %>
+<%= form_with(model: current_user, url: email_path) do |form| %>
   <%= form.text_field :email %>
-  <%= form.submit 'Update' %>
+  <%= form.submit "Update" %>
 <% end %>
 
 <p>Providing your email will allow you to receive confidential messages and reset your password.</p>
 
-<%= link_to('Skip Email Update', dashboard_path) %>
+<%= link_to("Skip Email Update", dashboard_path) %>

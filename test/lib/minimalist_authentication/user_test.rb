@@ -3,6 +3,15 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
+  # password_reset token
+  test "should invalidate password_reset token when password is changed" do
+    token = users(:active_user).generate_token_for(:password_reset)
+
+    assert_equal users(:active_user), User.find_by_token_for(:password_reset, token)
+    assert users(:active_user).update(password: "new_password")
+    assert_not User.find_by_token_for(:password_reset, token)
+  end
+
   # validations
   test "should allow inactive user to pass validation without an email or password" do
     assert_predicate User.new, :valid?

@@ -1,15 +1,17 @@
-<h1>Edit Password</h1>
+<h1><%= t(".title") %></h1>
+
+<p><%= t(".instructions") %></p>
 
 <%= @user.errors.full_messages if @user.errors.any? %>
 
-<%= form_for @user, as: :user, url: user_password_path(@user, token: @token), html: { method: :put } do |form| %>
+<%= form_with model: @user, url: password_path(token: @token) do |form| %>
   <div>
-    <%= form.label          :password %>
-    <%= form.password_field :password %>
+    <%= form.label :password %>
+    <%= ma_new_password_field(form) %>
   </div>
   <div>
-    <%= form.label          :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
+    <%= form.label :password_confirmation %>
+    <%= ma_confirm_password_field(form) %>
   </div>
-  <%= form.submit 'Update Password' %>
+  <%= form.submit t(".submit") %>
 <% end %>

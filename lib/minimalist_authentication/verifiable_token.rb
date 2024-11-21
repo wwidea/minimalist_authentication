@@ -4,51 +4,33 @@ module MinimalistAuthentication
   module VerifiableToken
     extend ActiveSupport::Concern
 
-    TOKEN_EXPIRATION_HOURS = 6
+    included do
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        MinimalistAuthentication::VerifiableToken is no longer required.
+        You can safely remove the include from your user model.
+      MSG
+    end
 
-    # generate secure verification_token and record generation time
+    def matches_verification_token?(_token)
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #matches_verification_token? is deprecated.
+      MSG
+    end
+
     def regenerate_verification_token
-      update_token
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #regenerate_verification_token is deprecated and no longer generates tokens.
+        Call #generate_token_for with an argument of :password_reset or
+        :email_verification instead.
+      MSG
     end
 
-    def secure_update(token, attributes)
-      if matches_verification_token?(token)
-        update(attributes) && clear_token
-      else
-        errors.add(:base, "Verification token check failed")
-        false
-      end
-    end
-
-    def matches_verification_token?(token)
-      token.present? && verification_token_valid? && secure_match?(token)
-    end
-
-    def verification_token_valid?
-      return false if verification_token.blank? || verification_token_generated_at.blank?
-
-      verification_token_generated_at > TOKEN_EXPIRATION_HOURS.hours.ago
-    end
-
-    private
-
-    def clear_token
-      update_token(token: nil, time: nil)
-    end
-
-    def update_token(token: self.class.generate_unique_secure_token, time: Time.now.utc)
-      update!(
-        verification_token:              token,
-        verification_token_generated_at: time
-      )
-    end
-
-    # Compare the tokens in a time-constant manner, to mitigate timing attacks.
-    def secure_match?(token)
-      ActiveSupport::SecurityUtils.secure_compare(
-        ::Digest::SHA256.hexdigest(token),
-        ::Digest::SHA256.hexdigest(verification_token)
-      )
+    def verification_token
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #verification_token is deprecated and no longer returns a valid token.
+        Call #generate_token_for with an argument of :password_reset or
+        :email_verification instead.
+      MSG
     end
   end
 end

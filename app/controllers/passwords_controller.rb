@@ -3,34 +3,39 @@
 class PasswordsController < ApplicationController
   skip_before_action :authorization_required
 
+  before_action :validate_token, only: %i[edit update]
+
   layout "sessions"
 
   # From for user to update password
   def edit
-    redirect_to(new_session_path) unless user.matches_verification_token?(token)
-    # render passwords/edit.html.erb
+    # edit.html.erb
   end
 
   # Update user's password
   def update
-    if user.secure_update(token, password_params.merge(password_required: true))
+    if user.update(password_params.merge(password_required: true))
       redirect_to new_session_path, notice: t(".notice")
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   private
 
-  def user
-    @user ||= MinimalistAuthentication.configuration.user_model.find(params[:user_id])
+  def password_params
+    params.require(:user).permit(:password, :password_confirmation)
   end
 
   def token
     @token ||= params[:token]
   end
 
-  def password_params
-    params.require(:user).permit(:password, :password_confirmation)
+  def user
+    @user ||= MinimalistAuthentication.user_model.active.find_by_token_for(:password_reset, token)
+  end
+
+  def validate_token
+    redirect_to(new_session_path, alert: t(".invalid_token")) unless user
   end
 end

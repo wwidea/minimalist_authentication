@@ -3,12 +3,12 @@
 require "test_helper"
 
 class ControllerTest < ActiveSupport::TestCase
-  def self.helper_method(*args)
-    # stub so MinimalistAuthentication::Controller include will work
-  end
-
-  def self.before_action(*args)
-    # stub so MinimalistAuthentication::Controller include will work
+  class << self
+    # Stub included block methods
+    def stub(*) = nil
+    alias before_action stub
+    alias helper stub
+    alias helper_method stub
   end
 
   include MinimalistAuthentication::Controller

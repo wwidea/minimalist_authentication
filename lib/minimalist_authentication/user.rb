@@ -11,6 +11,10 @@ module MinimalistAuthentication
     included do
       has_secure_password
 
+      generates_token_for :password_reset, expires_in: 1.hour do
+        password_salt.last(10)
+      end
+
       # Force validations for a blank password.
       attribute :password_required, :boolean, default: false
 
@@ -32,6 +36,8 @@ module MinimalistAuthentication
 
       # Active scope
       scope :active, ->(state = true) { where(active: state) }
+
+      delegate :password_minimum, to: :class
     end
 
     module ClassMethods
@@ -52,6 +58,9 @@ module MinimalistAuthentication
       def guest
         new(email: GUEST_USER_EMAIL).freeze
       end
+
+      # Minimum password length
+      def password_minimum = 12
     end
 
     # Called after a user is authenticated to determine if the user object should be returned.
@@ -94,9 +103,6 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Minimum password length
-    def password_minimum = 12
-
     # Checks for password presence
     def password?
       password.present?
@@ -109,6 +115,11 @@ module MinimalistAuthentication
       %w[username email].each do |field|
         errors.add(:password, "can not match #{field}") if password.casecmp?(try(field))
       end
+    end
+
+    # Return true if the user matches the owner of the provided token.
+    def token_owner?(purpose, token)
+      self.class.find_by_token_for(purpose, token) == self
     end
 
     # Require password for active users that either do no have a password hash

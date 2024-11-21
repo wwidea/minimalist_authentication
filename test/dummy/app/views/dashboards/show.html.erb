@@ -1,13 +1,14 @@
-<h3>Email Verifications</h3>
-<ul>
-  <% User.active.order(:email).where.not(verification_token: nil).each do |user| %>
-    <li><%= link_to(user.email, email_verification_path(token: user.verification_token)) %></li>
-  <% end %>
-</ul>
-
 <h1>Dashboard Show</h1>
 
-<p>You are logged in as: <strong><%= current_user.email %></strong></p>
-<p><%= current_user.inspect %></p>
+<p>
+  You are logged in as: <strong><%= current_user.email %></strong><br>
+</p>
 
-<%= link_to 'Verify Email', new_email_verification_path %>
+<p>
+  Email verified: <strong><%= current_user.email_verified? %></strong><br>
+  <%= link_to("Edit Email", edit_email_path) %><br>
+  <%= link_to "New Email Verification", new_email_verification_path %><br>
+  <%= link_to "Show Email Verification", email_verification_path(token: current_user.generate_token_for(:email_verification)) %>
+</p>
+
+<p><%= current_user.inspect %></p>

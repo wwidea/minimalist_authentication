@@ -5,9 +5,31 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      before_save :clear_email_verification, if: ->(user) { user.email_changed? }
+      generates_token_for :email_verification, expires_in: 1.hour do
+        email
+      end
 
-      scope :email_verified, -> { where("LENGTH(email) > 2").where.not(email_verified_at: nil) }
+      before_save :clear_email_verification, if: :email_changed?
+
+      scope :with_verified_email, -> { where.not(email_verified_at: nil) }
+    end
+
+    module ClassMethods
+      def email_verified
+        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+          Calling #email_verified is deprecated.
+          Call #with_verified_email instead.
+        MSG
+        with_verified_email
+      end
+
+      def find_by_verified_email(email:)
+        active.with_verified_email.find_by(email:)
+      end
+    end
+
+    def email_verified?
+      email.present? && email_verified_at.present?
     end
 
     def needs_email_set?
@@ -18,26 +40,22 @@ module MinimalistAuthentication
       email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
-    def email_verified?
-      email.present? && email_verified_at.present?
-    end
-
     def verify_email(token)
-      secure_update(token, email_verified_at: Time.zone.now)
+      touch(:email_verified_at) if token_owner?(:email_verification, token)
     end
 
     private
 
-    def request_email_enabled?
-      MinimalistAuthentication.configuration.request_email
+    def clear_email_verification
+      self.email_verified_at = nil
     end
 
     def email_verification_enabled?
       MinimalistAuthentication.configuration.verify_email
     end
 
-    def clear_email_verification
-      self.email_verified_at = nil
+    def request_email_enabled?
+      MinimalistAuthentication.configuration.request_email
     end
   end
 end

@@ -62,15 +62,19 @@ module MinimalistAuthentication
       self.logout_redirect_path     = :new_session_path
     end
 
+    # Clear the user_model class
+    def clear_user_model
+      @user_model = nil
+    end
+
+    # Display deprecation warning for email_prefix
     def email_prefix=(_)
       MinimalistAuthentication.deprecator.warn("The #email_prefix configuration setting is no longer supported.")
     end
 
     # Returns the user_model class
-    # Calling constantize on a string makes this work correctly with
-    # the Spring application preloader gem.
     def user_model
-      user_model_name.constantize
+      @user_model ||= user_model_name.constantize
     end
   end
 end
