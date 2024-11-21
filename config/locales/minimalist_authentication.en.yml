@@ -23,6 +23,14 @@ en:
       alert: Please provide a valid email address.
       notice: We've sent password reset instructions to %{email}. If you don't receive the email within a few minutes, please check your spam folder.
   passwords:
+    edit:
+      instructions: Please enter your new password.
+      password:
+        placeholder: New password
+      password_confirmation:
+        placeholder: Confirm password
+      submit: Reset Password
+      title: Reset Password
     invalid_token: Your password reset link has expired. Please request a new one to continue.
     update:
       notice: Password successfully updated

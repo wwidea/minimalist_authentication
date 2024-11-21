@@ -36,6 +36,8 @@ module MinimalistAuthentication
 
       # Active scope
       scope :active, ->(state = true) { where(active: state) }
+
+      delegate :password_minimum, to: :class
     end
 
     module ClassMethods
@@ -56,6 +58,9 @@ module MinimalistAuthentication
       def guest
         new(email: GUEST_USER_EMAIL).freeze
       end
+
+      # Minimum password length
+      def password_minimum = 12
     end
 
     # Called after a user is authenticated to determine if the user object should be returned.
@@ -97,9 +102,6 @@ module MinimalistAuthentication
     def logged_in
       update_column(:last_logged_in_at, Time.current)
     end
-
-    # Minimum password length
-    def password_minimum = 12
 
     # Checks for password presence
     def password?
