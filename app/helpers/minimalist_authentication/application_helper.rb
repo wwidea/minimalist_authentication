@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module MinimalistAuthentication
-  module FormFieldsHelper
+  module ApplicationHelper
     def ma_confirm_password_field(form, options = {})
       form.password_field(
         :password_confirmation,
@@ -24,6 +24,10 @@ module MinimalistAuthentication
           required:     true
         )
       )
+    end
+
+    def ma_forgot_password_link
+      link_to(t(".forgot_password"), new_password_reset_path)
     end
 
     def ma_new_password_field(form, options = {})

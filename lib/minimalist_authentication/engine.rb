@@ -2,9 +2,10 @@
 
 module MinimalistAuthentication
   class Engine < ::Rails::Engine
+    isolate_namespace MinimalistAuthentication
+
     config.to_prepare do
       MinimalistAuthentication.configuration.clear_user_model
-      ::ApplicationController.helper(FormFieldsHelper)
     end
   end
 end

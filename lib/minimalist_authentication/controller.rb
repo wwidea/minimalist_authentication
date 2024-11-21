@@ -9,6 +9,8 @@ module MinimalistAuthentication
       # use skip_before_action to open up specific actions
       before_action :authorization_required
 
+      helper MinimalistAuthentication::ApplicationHelper
+
       helper_method :current_user, :logged_in?, :authorized?
     end
 

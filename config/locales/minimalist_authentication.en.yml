@@ -42,3 +42,5 @@ en:
       notice: You have been logged out.
     new:
       forgot_password: Forgot password?
+      title: Sign In
+      submit: Sign In

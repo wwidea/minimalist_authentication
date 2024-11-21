@@ -3,7 +3,7 @@
 require "test_helper"
 
 module MinimalistAuthentication
-  class FormFieldsHelperTest < ActionView::TestCase
+  class ApplicationHelperTest < ActionView::TestCase
     test "should return ma_confirm_password_field" do
       @virtual_path = "passwords.edit"
 
