@@ -20,6 +20,12 @@ module MinimalistAuthentication
       end
     end
 
+    test "should return ma_forgot_password_link" do
+      @virtual_path = "sessions.new"
+
+      assert_includes ma_forgot_password_link, t(".forgot_password")
+    end
+
     test "should return ma_new_password_field" do
       @virtual_path = "passwords.edit"
 
