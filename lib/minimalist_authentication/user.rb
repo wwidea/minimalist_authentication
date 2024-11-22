@@ -30,8 +30,12 @@ module MinimalistAuthentication
       # Password validations
       # Adds validations for minimum password length and exclusivity.
       # has_secure_password includes validations for presence, maximum length, confirmation, and password_challenge.
-      validates :password, length: { minimum: :password_minimum }, allow_blank: true
-      validate :password_exclusivity, if: :password?
+      validates(
+        :password,
+        password_exclusivity: true,
+        length:               { minimum: :password_minimum },
+        allow_blank:          true
+      )
 
       # Active scope
       scope :active, ->(state = true) { where(active: state) }
@@ -101,19 +105,7 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Checks for password presence
-    def password?
-      password.present?
-    end
-
     private
-
-    # Ensure password does not match username or email.
-    def password_exclusivity
-      %w[username email].each do |field|
-        errors.add(:password, "can not match #{field}") if password.casecmp?(try(field))
-      end
-    end
 
     # Return true if the user matches the owner of the provided token.
     def token_owner?(purpose, token)

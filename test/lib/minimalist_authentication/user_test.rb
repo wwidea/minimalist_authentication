@@ -156,15 +156,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal digest, users(:active_user).reload.password_digest
   end
 
-  # password?
-  test "should return true for password?" do
-    assert_predicate User.new(password: "testing"), :password?
-  end
-
-  test "should return false for password?" do
-    assert_not_predicate User.new(password: ""), :password?
-  end
-
   private
 
   def new_user(active: true, email: "test@example.com", password: PASSWORD, username: "test")
