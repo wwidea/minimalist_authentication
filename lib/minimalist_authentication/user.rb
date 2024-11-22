@@ -29,9 +29,8 @@ module MinimalistAuthentication
 
       # Password validations
       # Adds validations for minimum password length and exclusivity.
-      # has_secure_password adds validations for presence, maximum length, confirmation,
-      # and password_challenge.
-      validates :password, length: { minimum: :password_minimum }, if: :validate_password?
+      # has_secure_password includes validations for presence, maximum length, confirmation, and password_challenge.
+      validates :password, length: { minimum: :password_minimum }, allow_blank: true
       validate :password_exclusivity, if: :password?
 
       # Active scope
@@ -74,15 +73,9 @@ module MinimalistAuthentication
       active?
     end
 
-    # Remove the has_secure_password password blank error if password is not required.
+    # Remove the has_secure_password password blank error if user is inactive.
     def errors
-      super.tap { |errors| errors.delete(:password, :blank) unless validate_password? }
-    end
-
-    # Returns true if the user is not active.
-    def inactive?
-      MinimalistAuthentication.deprecator.warn("Calling #inactive? is deprecated.")
-      !active?
+      super.tap { |errors| errors.delete(:password, :blank) if inactive? }
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false.
@@ -96,6 +89,11 @@ module MinimalistAuthentication
     # Check if user is a guest based on their email attribute
     def guest?
       email == GUEST_USER_EMAIL
+    end
+
+    # Returns true if the user is not active.
+    def inactive?
+      !active?
     end
 
     # Sets #last_logged_in_at to the current time without updating the updated_at timestamp.
@@ -120,13 +118,6 @@ module MinimalistAuthentication
     # Return true if the user matches the owner of the provided token.
     def token_owner?(purpose, token)
       self.class.find_by_token_for(purpose, token) == self
-    end
-
-    # Require password for active users that either do no have a password hash
-    # stored OR are attempting to set a new password. Set **password_required**
-    # to true to force validations even when the password field is blank.
-    def validate_password?
-      active? && (password_digest.blank? || password? || password_required?)
     end
 
     # Validate email for all users.
