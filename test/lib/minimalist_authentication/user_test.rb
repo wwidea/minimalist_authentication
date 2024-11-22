@@ -20,14 +20,14 @@ class UserTest < ActiveSupport::TestCase
   test "should fail validation for active user without email" do
     user = User.new(active: true)
 
-    assert_not user.valid?
+    assert_predicate user, :invalid?
     assert_equal ["can't be blank"], user.errors[:email]
   end
 
   test "should fail validation for active user without password" do
     user = User.new(active: true)
 
-    assert_not user.valid?
+    assert_predicate user, :invalid?
     assert user.errors.key?(:password)
   end
 
@@ -38,30 +38,28 @@ class UserTest < ActiveSupport::TestCase
     assert_predicate user, :valid?
   end
 
-  test "should fail validation for a user with blank password and password_required true" do
-    user = users(:active_user)
-    user.password_required = true
-    user.password = ""
+  test "should require a password for a new active user" do
+    user = User.new(active: true, password: "")
 
-    assert_not user.valid?
-    assert user.errors.key?(:password)
+    assert_predicate user, :invalid?
+    assert_equal ["can't be blank"], user.errors[:password]
   end
 
   test "should not allow a user to have a duplicate email with another user" do
-    assert_not new_user(email: users(:active_user).email).valid?
+    assert_predicate new_user(email: users(:active_user).email), :invalid?
   end
 
   test "should not allow a user to have a password that matches their email" do
     user = new_user(password: "test@example.com")
 
-    assert_not user.valid?
+    assert_predicate user, :invalid?
     assert_equal ["can not match email"], user.errors[:password]
   end
 
   test "should not allow a user to have a password that matches their username" do
     user = new_user(username: PASSWORD)
 
-    assert_not user.valid?
+    assert_predicate user, :invalid?
     assert_equal ["can not match username"], user.errors[:password]
   end
 
@@ -122,6 +120,16 @@ class UserTest < ActiveSupport::TestCase
     assert_not users(:inactive_user).enabled?
   end
 
+  # inactive?
+  test "should return true for inactive?" do
+    assert_predicate User.new(active: false), :inactive?
+  end
+
+  # inactive?
+  test "should return false for inactive?" do
+    assert_not_predicate User.new(active: true), :inactive?
+  end
+
   # logged_in
   test "should update last_logged_in_at without updating updated_at timestamp" do
     updated_at = 1.day.ago
@@ -133,11 +141,11 @@ class UserTest < ActiveSupport::TestCase
 
   # password
   test "should create password_digest for new user" do
-    user = User.new(email: "test-new@testing.com", password: "testing")
+    user = User.new(email: "test-new@testing.com", password: PASSWORD)
 
     assert          user.save
     assert_not_nil  user.password_digest
-    assert          user.authenticate("testing")
+    assert          user.authenticate(PASSWORD)
   end
 
   test "should not update password_digest when password is blank" do
@@ -146,15 +154,6 @@ class UserTest < ActiveSupport::TestCase
 
     assert users(:active_user).save
     assert_equal digest, users(:active_user).reload.password_digest
-  end
-
-  # password?
-  test "should return true for password?" do
-    assert_predicate User.new(password: "testing"), :password?
-  end
-
-  test "should return false for password?" do
-    assert_not_predicate User.new(password: ""), :password?
   end
 
   private

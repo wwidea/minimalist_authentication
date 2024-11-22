@@ -15,9 +15,6 @@ module MinimalistAuthentication
         password_salt.last(10)
       end
 
-      # Force validations for a blank password.
-      attribute :password_required, :boolean, default: false
-
       # Email validations
       validates(
         :email,
@@ -29,10 +26,13 @@ module MinimalistAuthentication
 
       # Password validations
       # Adds validations for minimum password length and exclusivity.
-      # has_secure_password adds validations for presence, maximum length, confirmation,
-      # and password_challenge.
-      validates :password, length: { minimum: :password_minimum }, if: :validate_password?
-      validate :password_exclusivity, if: :password?
+      # has_secure_password includes validations for presence, maximum length, confirmation, and password_challenge.
+      validates(
+        :password,
+        password_exclusivity: true,
+        length:               { minimum: :password_minimum },
+        allow_blank:          true
+      )
 
       # Active scope
       scope :active, ->(state = true) { where(active: state) }
@@ -74,15 +74,9 @@ module MinimalistAuthentication
       active?
     end
 
-    # Remove the has_secure_password password blank error if password is not required.
+    # Remove the has_secure_password password blank error if user is inactive.
     def errors
-      super.tap { |errors| errors.delete(:password, :blank) unless validate_password? }
-    end
-
-    # Returns true if the user is not active.
-    def inactive?
-      MinimalistAuthentication.deprecator.warn("Calling #inactive? is deprecated.")
-      !active?
+      super.tap { |errors| errors.delete(:password, :blank) if inactive? }
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false.
@@ -98,35 +92,21 @@ module MinimalistAuthentication
       email == GUEST_USER_EMAIL
     end
 
+    # Returns true if the user is not active.
+    def inactive?
+      !active?
+    end
+
     # Sets #last_logged_in_at to the current time without updating the updated_at timestamp.
     def logged_in
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Checks for password presence
-    def password?
-      password.present?
-    end
-
     private
-
-    # Ensure password does not match username or email.
-    def password_exclusivity
-      %w[username email].each do |field|
-        errors.add(:password, "can not match #{field}") if password.casecmp?(try(field))
-      end
-    end
 
     # Return true if the user matches the owner of the provided token.
     def token_owner?(purpose, token)
       self.class.find_by_token_for(purpose, token) == self
-    end
-
-    # Require password for active users that either do no have a password hash
-    # stored OR are attempting to set a new password. Set **password_required**
-    # to true to force validations even when the password field is blank.
-    def validate_password?
-      active? && (password_digest.blank? || password? || password_required?)
     end
 
     # Validate email for all users.
