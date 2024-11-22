@@ -15,9 +15,6 @@ module MinimalistAuthentication
         password_salt.last(10)
       end
 
-      # Force validations for a blank password.
-      attribute :password_required, :boolean, default: false
-
       # Email validations
       validates(
         :email,
