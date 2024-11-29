@@ -16,11 +16,11 @@ module MinimalistAuthentication
     private
 
     def load_user_from_session
-      MinimalistAuthentication.configuration.user_model.find(session_user_id) if session_user_id
+      MinimalistAuthentication.user_model.find(session_user_id) if session_user_id
     end
 
     def session_user_id
-      @request.session[MinimalistAuthentication.configuration.session_key]
+      @request.session[MinimalistAuthentication.session_key]
     end
   end
 end
