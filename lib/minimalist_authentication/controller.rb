@@ -5,7 +5,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      # Loads the user from the session and assigns it to Current.user
+      # Loads the user object from the session and assigns it to Current.user
       before_action :load_current_user
 
       # Requires an authorized user for all actions
