@@ -48,14 +48,14 @@ module MinimalistAuthentication
       Current.user.present?
     end
 
+    def store_location
+      session["return_to"] = url_for(request.params.merge(format: :html, only_path: true))
+    end
+
     def update_current_user(user)
       reset_session
       session[MinimalistAuthentication.session_key] = user.id
       Current.user = user
-    end
-
-    def store_location
-      session["return_to"] = url_for(request.params.merge(format: :html, only_path: true))
     end
   end
 end

@@ -74,18 +74,18 @@ class ControllerTest < ActiveSupport::TestCase
     assert_not_predicate self, :logged_in?
   end
 
+  test "should store current url in the session for store_location" do
+    store_location
+
+    assert_equal "/tests/new.html", session["return_to"]
+  end
+
   test "should reset session and set current user for update_current_user" do
     session[:foo] = "bar"
     update_current_user(users(:active_user))
 
     assert_equal({ user_id: users(:active_user).id }, session)
     assert_equal users(:active_user), Current.user
-  end
-
-  test "should store current url in the session for store_location" do
-    store_location
-
-    assert_equal "/tests/new.html", session["return_to"]
   end
 
   private
