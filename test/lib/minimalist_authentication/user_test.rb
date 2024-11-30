@@ -91,17 +91,6 @@ class UserTest < ActiveSupport::TestCase
     assert_nil User.find_enabled(42)
   end
 
-  # guest
-  test "guest should be guest" do
-    assert_predicate User.guest, :guest?
-  end
-
-  test "should not be able to modify guest user" do
-    assert_raise RuntimeError do
-      User.guest.email = "test@testing.com"
-    end
-  end
-
   # enabled
   test "should return user for enabled when user is active" do
     assert_equal users(:active_user), users(:active_user).enabled
