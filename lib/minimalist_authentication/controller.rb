@@ -17,6 +17,30 @@ module MinimalistAuthentication
       helper_method :current_user, :logged_in?, :authorized?
     end
 
+    # Returns true if the user is logged in
+    # Override this method in your controller to customize authorization
+    def authorized?(_action = action_name, _resource = controller_name)
+      logged_in?
+    end
+
+    # Returns the current user from the client application Current class
+    def current_user
+      ::Current.user
+    end
+
+    # Returns true if a current user is present, otherwise returns false
+    def logged_in?
+      current_user.present?
+    end
+
+    # Logs in a user by setting the session key and updating the Current user
+    # Should only be called after a successful authentication
+    def update_current_user(user)
+      reset_session
+      session[MinimalistAuthentication.session_key] = user.id
+      ::Current.user = user
+    end
+
     private
 
     def access_denied
@@ -28,14 +52,6 @@ module MinimalistAuthentication
       authorized? || access_denied
     end
 
-    def authorized?(_action = action_name, _resource = controller_name)
-      logged_in?
-    end
-
-    def current_user
-      Current.user
-    end
-
     def find_session_user
       MinimalistAuthentication.user_model.find_enabled(session[MinimalistAuthentication.session_key])
     end
@@ -44,18 +60,8 @@ module MinimalistAuthentication
       Current.user = find_session_user
     end
 
-    def logged_in?
-      Current.user.present?
-    end
-
     def store_location
       session["return_to"] = url_for(request.params.merge(format: :html, only_path: true))
-    end
-
-    def update_current_user(user)
-      reset_session
-      session[MinimalistAuthentication.session_key] = user.id
-      Current.user = user
     end
   end
 end
