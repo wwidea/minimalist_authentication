@@ -13,37 +13,79 @@ class ControllerTest < ActiveSupport::TestCase
 
   include MinimalistAuthentication::Controller
 
-  test "should return guest for current_user" do
-    assert_equal "guest", current_user.email
+  test "should call store_location and redirect_to new_session_path for access_denied" do
+    expects(:store_location).returns(true)
+    access_denied
+
+    assert_equal new_session_path, redirect_to
   end
 
-  test "should return logged_in user for current_user" do
-    session[:user_id] = users(:active_user).id
-
-    assert_equal users(:active_user), current_user
-  end
-
-  test "should not return inactive logged_in user for current_user" do
-    users(:active_user).update_column(:active, false)
-    session[:user_id] = users(:active_user).id
-
-    assert_predicate current_user, :guest?
-  end
-
-  test "should pass authorization" do
-    session[:user_id] = users(:active_user).id
+  test "should return true for authorization_required when user is logged in" do
+    expects(:logged_in?).returns(true)
 
     assert authorization_required
   end
 
-  test "should fail authorization" do
-    assert_equal new_session_path, authorization_required
+  test "should call access_denied when user is not authorized" do
+    expects(:access_denied).returns("access_denied")
+
+    assert_equal "access_denied", authorization_required
   end
 
-  test "should store location" do
+  test "should return session user for current_user" do
+    session[MinimalistAuthentication.session_key] = users(:active_user).id
+    load_current_user
+
+    assert_equal users(:active_user), current_user
+  end
+
+  test "should return nil for current_user when session_key is missing" do
+    load_current_user
+
+    assert_nil current_user
+  end
+
+  test "should return nil for current_user when session user is not active" do
+    users(:active_user).update_column(:active, false)
+    session[:user_id] = users(:active_user).id
+
+    assert_nil current_user
+  end
+
+  test "should set current user from session for load_current_user" do
+    session[MinimalistAuthentication.session_key] = users(:active_user).id
+
+    assert_equal users(:active_user), load_current_user
+    assert_equal users(:active_user), Current.user
+  end
+
+  test "should set current user to nil for load_current_user when session key is missing" do
+    assert_nil load_current_user
+    assert_nil Current.user
+  end
+
+  test "should return true for logged_in? when current user is present" do
+    Current.user = users(:active_user)
+
+    assert_predicate self, :logged_in?
+  end
+
+  test "should return false for logged_in? when current user is nil" do
+    assert_not_predicate self, :logged_in?
+  end
+
+  test "should store current url in the session for store_location" do
     store_location
 
     assert_equal "/tests/new.html", session["return_to"]
+  end
+
+  test "should reset session and set current user for update_current_user" do
+    session[:foo] = "bar"
+    update_current_user(users(:active_user))
+
+    assert_equal({ user_id: users(:active_user).id }, session)
+    assert_equal users(:active_user), Current.user
   end
 
   private
@@ -63,6 +105,10 @@ class ControllerTest < ActiveSupport::TestCase
   def redirect_to(path = nil)
     @redirect_to = path if path
     @redirect_to
+  end
+
+  def reset_session
+    @session = nil
   end
 
   def request

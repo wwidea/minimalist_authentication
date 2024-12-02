@@ -26,6 +26,13 @@ bin/rails generate model user active:boolean username:string password_digest:str
 
 
 ## Example
+Create a Current class that inherits from ActiveSupport::CurrentAttributes with a user attribute (app/models/current.rb)
+```ruby
+class Current < ActiveSupport::CurrentAttributes
+  attribute :user
+end
+```
+
 Include MinimalistAuthentication::User in your user model (app/models/user.rb)
 ```ruby
 class User < ApplicationRecord

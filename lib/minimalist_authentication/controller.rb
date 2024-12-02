@@ -5,8 +5,11 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      # Lock down everything by default
-      # use skip_before_action to open up specific actions
+      # Loads the user object from the session and assigns it to Current.user
+      before_action :load_current_user
+
+      # Requires an authorized user for all actions
+      # Use skip_before_action to allow access to specific actions
       before_action :authorization_required
 
       helper MinimalistAuthentication::ApplicationHelper
@@ -14,35 +17,47 @@ module MinimalistAuthentication
       helper_method :current_user, :logged_in?, :authorized?
     end
 
+    # Returns true if the user is logged in
+    # Override this method in your controller to customize authorization
+    def authorized?(_action = action_name, _resource = controller_name)
+      logged_in?
+    end
+
+    # Returns the current user from the client application Current class
+    def current_user
+      ::Current.user
+    end
+
+    # Returns true if a current user is present, otherwise returns false
+    def logged_in?
+      current_user.present?
+    end
+
+    # Logs in a user by setting the session key and updating the Current user
+    # Should only be called after a successful authentication
+    def update_current_user(user)
+      reset_session
+      session[MinimalistAuthentication.session_key] = user.id
+      ::Current.user = user
+    end
+
     private
 
-    def current_user
-      @current_user ||= find_session_user || MinimalistAuthentication.configuration.user_model.guest
-    end
-
-    def find_session_user
-      MinimalistAuthentication.configuration.user_model.find_enabled(session_user_id)
-    end
-
-    def session_user_id
-      session[MinimalistAuthentication.configuration.session_key]
+    def access_denied
+      store_location if request.get? && !logged_in?
+      redirect_to new_session_path
     end
 
     def authorization_required
       authorized? || access_denied
     end
 
-    def authorized?(_action = action_name, _resource = controller_name)
-      logged_in?
+    def find_session_user
+      MinimalistAuthentication.user_model.find_enabled(session[MinimalistAuthentication.session_key])
     end
 
-    def logged_in?
-      !current_user.guest?
-    end
-
-    def access_denied
-      store_location if request.get? && !logged_in?
-      redirect_to new_session_path
+    def load_current_user
+      Current.user = find_session_user
     end
 
     def store_location

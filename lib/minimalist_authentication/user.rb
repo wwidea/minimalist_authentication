@@ -6,8 +6,6 @@ module MinimalistAuthentication
   module User
     extend ActiveSupport::Concern
 
-    GUEST_USER_EMAIL = "guest"
-
     included do
       has_secure_password
 
@@ -54,11 +52,6 @@ module MinimalistAuthentication
         active(false)
       end
 
-      # Returns a frozen user with the email set to GUEST_USER_EMAIL.
-      def guest
-        new(email: GUEST_USER_EMAIL).freeze
-      end
-
       # Minimum password length
       def password_minimum = 12
     end
@@ -87,9 +80,14 @@ module MinimalistAuthentication
       authenticate(password)
     end
 
-    # Check if user is a guest based on their email attribute
+    # Deprecated method to check if the user is a guest. Returns false because the guest user has been removed.
     def guest?
-      email == GUEST_USER_EMAIL
+      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        Calling #guest? is deprecated. Use #MinimalistAuthentication::Controller#logged_in? to
+        check for the presence of a current_user instead.
+      MSG
+
+      false
     end
 
     # Returns true if the user is not active.

@@ -42,9 +42,8 @@ module MinimalistAuthentication
 
     def log_in_user
       self.return_to = session["return_to"]
-      reset_session
+      update_current_user(authenticated_user)
       authenticated_user.logged_in
-      session[MinimalistAuthentication.configuration.session_key] = authenticated_user.id
     end
 
     def user_params
