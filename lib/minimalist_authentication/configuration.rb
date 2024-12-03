@@ -17,12 +17,37 @@ module MinimalistAuthentication
   end
 
   class Configuration
+    # The duration for which the account_activation token is valid.
+    # Defaults to 1.day
+    attr_accessor :account_activation_duration
+
+    # The duration for which the email_verification token is valid.
+    # Defaults to 1.hour
+    attr_accessor :email_verification_duration
+
+    # Where to route users after a successful login.
+    # Defaults to :root_path
+    attr_accessor :login_redirect_path
+
+    # Where to route users after logging out.
+    # Defaults to :new_session_path
+    attr_accessor :logout_redirect_path
+
+    # The duration for which the password_reset token is valid.
+    # Defaults to 1.hour
+    attr_accessor :password_reset_duration
+
+    # Check for users email at login and request if blank. Only useful if using
+    # username to login and users might not have an email set.
+    # Defaults to true
+    attr_accessor :request_email
+
     # The session_key used to store the current_user id.
     # Defaults to :user_id
     attr_accessor :session_key
 
     # The application user class name
-    # Defaults to '::User'
+    # Defaults to "::User"
     attr_accessor :user_model_name
 
     # Toggle all email validations.
@@ -34,32 +59,22 @@ module MinimalistAuthentication
     # Note: validate_email_presence is only checked if validate_email is true.
     attr_accessor :validate_email_presence
 
-    # Check for users email at login and request if blank. Only useful if using
-    # username to login and users might not have an email set.
-    # Defaults to true
-    attr_accessor :request_email
-
     # Verify users email address at login.
     # Defaults to true.
     attr_accessor :verify_email
 
-    # Where to route users after a successful login.
-    # Defaults to :root_path
-    attr_accessor :login_redirect_path
-
-    # Where to route users after logging out.
-    # Defaults to :new_session_path
-    attr_accessor :logout_redirect_path
-
     def initialize
-      self.user_model_name          = "::User"
-      self.session_key              = :user_id
-      self.validate_email           = true
-      self.validate_email_presence  = true
-      self.request_email            = true
-      self.verify_email             = true
-      self.login_redirect_path      = :root_path
-      self.logout_redirect_path     = :new_session_path
+      @account_activation_duration  = 1.day
+      @email_verification_duration  = 1.hour
+      @login_redirect_path          = :root_path
+      @logout_redirect_path         = :new_session_path
+      @password_reset_duration      = 1.hour
+      @request_email                = true
+      @session_key                  = :user_id
+      @user_model_name              = "::User"
+      @validate_email               = true
+      @validate_email_presence      = true
+      @verify_email                 = true
     end
 
     # Clear the user_model class
