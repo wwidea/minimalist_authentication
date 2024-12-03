@@ -15,3 +15,7 @@ legacy_user:
 inactive_user:
   active:             false
   email:              inactive@example.com
+
+new_user:
+  active:             true
+  email:              new@example.com
