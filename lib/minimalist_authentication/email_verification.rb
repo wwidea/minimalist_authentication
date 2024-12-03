@@ -5,7 +5,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      generates_token_for :email_verification, expires_in: 1.hour do
+      generates_token_for :email_verification, expires_in: MinimalistAuthentication.configuration.email_verification_duration do
         email
       end
 

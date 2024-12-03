@@ -9,7 +9,11 @@ module MinimalistAuthentication
     included do
       has_secure_password
 
-      generates_token_for :password_reset, expires_in: 1.hour do
+      generates_token_for :account_activation, expires_in: MinimalistAuthentication.configuration.account_activation_duration do
+        password_salt&.last(10)
+      end
+
+      generates_token_for :password_reset, expires_in: MinimalistAuthentication.configuration.password_reset_duration do
         password_salt.last(10)
       end
 

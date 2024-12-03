@@ -3,6 +3,15 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
+  # account_activation token
+  test "should invalidate account_activation token when password is created" do
+    token = users(:new_user).generate_token_for(:account_activation)
+
+    assert_equal users(:new_user), User.find_by_token_for(:account_activation, token)
+    assert users(:new_user).update(password: "new_password")
+    assert_not User.find_by_token_for(:account_activation, token)
+  end
+
   # password_reset token
   test "should invalidate password_reset token when password is changed" do
     token = users(:active_user).generate_token_for(:password_reset)
@@ -65,7 +74,7 @@ class UserTest < ActiveSupport::TestCase
 
   # active scope
   test "should return active users" do
-    assert_equal users(:active_user, :legacy_user).sort, User.active.sort
+    assert_equal users(:active_user, :legacy_user, :new_user).sort, User.active.sort
   end
 
   # find_enabled
