@@ -5,6 +5,8 @@ en:
   emails:
     update:
       notice: Email successfully updated
+  limit_creations:
+    alert: Please try again later.
   minimalist_authentication_mailer:
     update_password:
       opening: Please click the link below to update your password.

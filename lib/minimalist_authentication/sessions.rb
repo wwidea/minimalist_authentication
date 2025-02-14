@@ -10,6 +10,8 @@ module MinimalistAuthentication
 
       skip_before_action  :authorization_required,    only: %i[new create]
       before_action       :redirect_logged_in_users,  only: :new
+
+      limit_creations
     end
 
     def new
