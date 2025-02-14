@@ -5,6 +5,8 @@ class PasswordResetsController < ApplicationController
 
   layout "sessions"
 
+  limit_creations
+
   # Renders form for user to request a password reset
   def new
     # new.html.erb
