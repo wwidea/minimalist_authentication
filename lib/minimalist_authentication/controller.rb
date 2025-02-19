@@ -18,12 +18,14 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      def limit_creations
+      def limit_creations(**)
         rate_limit(
           to:     10,
           within: 3.minutes,
           only:   :create,
-          with:   -> { redirect_to new_session_path, alert: t("limit_creations.alert") }
+          with:   -> { redirect_to new_session_path, alert: t("limit_creations.alert") },
+          name:   "ma-limit-creations",
+          **
         )
       end
     end
