@@ -2,11 +2,9 @@
 
 plugins:
   - rubocop-minitest
+  - rubocop-packaging
   - rubocop-performance
   - rubocop-rails
-
-require:
-  - rubocop-packaging
 
 AllCops:
   NewCops: enable
