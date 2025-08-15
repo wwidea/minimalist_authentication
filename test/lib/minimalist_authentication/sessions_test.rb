@@ -58,14 +58,14 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     post session_path(user: { email: users(:active_user).email, password: "wrong_password" })
 
     assert_nil current_user
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should fail to create session when user param is missing" do
     post session_path(foo: "bar")
 
     assert_nil current_user
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should destroy session" do

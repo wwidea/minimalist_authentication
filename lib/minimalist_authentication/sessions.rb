@@ -82,7 +82,7 @@ module MinimalistAuthentication
     def after_authentication_failure
       flash.now.alert = t(".alert", identifier:)
       user
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
 
     def identifier
