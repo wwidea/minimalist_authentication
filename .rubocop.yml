@@ -36,6 +36,9 @@ Packaging/BundlerSetupInTests:
 
 
 # Rails
+Rails/Output:
+  Enabled: false
+
 Rails/SkipsModelValidations:
   Enabled: false
 
