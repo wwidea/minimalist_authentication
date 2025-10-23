@@ -27,16 +27,10 @@ module MinimalistAuthentication
 
     def destroy
       reset_session
-      clear_site_data
       redirect_to logout_redirect_to, notice: t(".notice"), status: :see_other
     end
 
     private
-
-    # Sets a “Clear-Site-Data” header to clear the browser cache.
-    def clear_site_data
-      response.headers["Clear-Site-Data"] = '"cache","storage"'
-    end
 
     def user
       @user ||= MinimalistAuthentication.configuration.user_model.new
