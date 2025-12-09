@@ -1,6 +1,6 @@
 # https://github.com/rubocop-hq/rubocop/blob/master/config/default.yml
 
-require:
+plugins:
   - rubocop-minitest
   - rubocop-packaging
   - rubocop-performance
@@ -39,7 +39,14 @@ Packaging/BundlerSetupInTests:
 
 
 # Rails
+Rails/Output:
+  Enabled: false
+
 Rails/SkipsModelValidations:
+  Enabled: false
+
+# The expect method requires Rails 8
+Rails/StrongParametersExpect:
   Enabled: false
 
 

@@ -17,7 +17,7 @@ class PasswordsController < ApplicationController
     if user.update(password_params)
       redirect_to new_session_path, notice: t(".notice")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

@@ -19,7 +19,7 @@ class PasswordResetsController < ApplicationController
       redirect_to new_session_path, notice: t(".notice", email:)
     else
       flash.now.alert = t(".alert")
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

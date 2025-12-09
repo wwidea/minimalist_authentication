@@ -21,11 +21,11 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
 
   test "should fail to create password reset email when email parameter is not provided" do
     assert_no_emails { post password_reset_path(user: { foo: "bar" }) }
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should fail to create password reset email when users is missing" do
     assert_no_emails { post password_reset_path(foo: "bar") }
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end

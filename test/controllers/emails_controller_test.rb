@@ -30,6 +30,6 @@ class EmailsControllerTest < ActionDispatch::IntegrationTest
   test "should fail to update email" do
     patch email_path(user: { email: "testing-invalid" })
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 end
