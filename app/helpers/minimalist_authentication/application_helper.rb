@@ -8,7 +8,7 @@ module MinimalistAuthentication
         options.reverse_merge(
           autocomplete: "new-password",
           minlength:    MinimalistAuthentication.user_model.password_minimum,
-          placeholder:  t(".password_confirmation.placeholder"),
+          placeholder:  true,
           required:     true
         )
       )
@@ -36,7 +36,7 @@ module MinimalistAuthentication
         options.reverse_merge(
           autocomplete: "new-password",
           minlength:    MinimalistAuthentication.user_model.password_minimum,
-          placeholder:  t(".password.placeholder"),
+          placeholder:  true,
           required:     true
         )
       )

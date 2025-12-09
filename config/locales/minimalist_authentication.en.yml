@@ -26,10 +26,6 @@ en:
   passwords:
     edit:
       instructions: Please enter your new password.
-      password:
-        placeholder: New password
-      password_confirmation:
-        placeholder: Confirm password
       submit: Reset Password
       title: Reset Password
     invalid_token: Your password reset link has expired. Please request a new one to continue.
