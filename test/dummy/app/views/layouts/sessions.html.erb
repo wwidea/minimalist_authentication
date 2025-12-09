@@ -14,16 +14,20 @@
     </p>
 
     <h3>Users</h3>
-      <% User.order(:email).each do |user| %>
-        <div>
-          <div style="display: inline-flex;">
-            <%= button_to(user.email, session_path(user: { email: user.email, password: MinimalistAuthentication::TestHelper::PASSWORD } ), style: "width:200px;") %>
-            <%= button_to("Create Password Reset", password_reset_path(user: { email: user.email } ), style: "width:200px;") %>
-            <%= link_to("Edit Password", edit_password_path(token: user.generate_token_for(:password_reset))) if user.password_salt %>
-          </div>
-        </div>
-      <% end %>
-    </ul>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Active</th>
+          <th>Verified</th>
+          <th>Password</th>
+          <th colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render User.order(:email) %>
+      </tbody>
+    </table>
 
     <%= yield %>
 
