@@ -2,9 +2,9 @@
 
 class PasswordsController < ApplicationController
   ACTION_TOKEN_PURPOSES = ActiveSupport::HashWithIndifferentAccess.new(
-    new: :account_activation,
+    new:    :account_activation,
     create: :account_activation,
-    edit: :password_reset,
+    edit:   :password_reset,
     update: :password_reset
   ).freeze
 
