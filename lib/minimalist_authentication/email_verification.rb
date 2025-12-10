@@ -40,8 +40,12 @@ module MinimalistAuthentication
       email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
-    def verify_email(token)
-      touch(:email_verified_at) if token_owner?(:email_verification, token)
+    def verify_email
+      touch(:email_verified_at)
+    end
+
+    def verify_email_with(token)
+      verify_email if token_owner?(:email_verification, token)
     end
 
     private
