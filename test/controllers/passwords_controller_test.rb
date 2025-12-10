@@ -5,56 +5,94 @@ require "test_helper"
 class PasswordsControllerTest < ActionDispatch::IntegrationTest
   NEW_PASSWORD = "abcdef123456"
 
-  test "should get edit for verified user" do
-    get edit_password_path(token: password_reset_token)
-
+  test "new with valid token" do
+    get new_password_path(token: account_activation_token)
     assert_response :success
   end
 
-  test "should fail to get edit for unverified user" do
-    get edit_password_path(token: "does not match")
-
+  test "new with invalid token" do
+    get new_password_path(token: password_reset_token)
     assert_redirected_to new_session_path
   end
 
-  test "should redirect to new_session_path when token is nil" do
+  test "create with valid token" do
+    post password_path(params(token: account_activation_token))
+    assert_redirected_to new_session_path
+    assert_password_changed new_user
+    assert_predicate new_user, :email_verified?
+  end
+
+  test "create with invalid token" do
+    post password_path(params(token: password_reset_token))
+    assert_redirected_to new_session_path
+    assert_not_predicate new_user.reload, :password_digest?
+    assert_not_predicate new_user, :email_verified?
+  end
+
+  test "edit with valid token" do
+    get edit_password_path(token: password_reset_token)
+    assert_response :success
+  end
+
+  test "edit with invalid token" do
+    get edit_password_path(token: account_activation_token)
+    assert_redirected_to new_session_path
+  end
+
+  test "edit with nil token" do
     get edit_password_path(token: nil)
-
     assert_redirected_to new_session_path
   end
 
-  test "should update password for verified user" do
-    patch password_path(password_params)
-
+  test "update with valid token" do
+    patch password_path(params)
     assert_redirected_to new_session_path
-    assert user.reload.authenticate(NEW_PASSWORD), "password should be changed"
+    assert_password_changed active_user
   end
 
-  test "should fail to update password for verified user when confirmation does not match" do
-    patch password_path(password_params(password_confirmation: "not_the_same"))
+  test "update with invalid token" do
+    patch password_path(params(token: "wrong_token"))
+    assert_redirected_to new_session_path
+    assert_password_not_changed active_user
+  end
 
+  test "update with mismatched password confirmation" do
+    patch password_path(params(password_confirmation: "not_the_same"))
     assert_response :unprocessable_content
-    assert user.reload.authenticate(PASSWORD), "password should be unchanged"
-  end
-
-  test "should fail to update password for unverified user" do
-    patch password_path(password_params(token: "wrong_token"))
-
-    assert_redirected_to new_session_path
-    assert user.reload.authenticate(PASSWORD), "password should not be changed"
+    assert_password_not_changed active_user
   end
 
   private
 
-  def password_params(token: password_reset_token, password_confirmation: NEW_PASSWORD)
+  def account_activation_token
+    new_user.generate_token_for(:account_activation)
+  end
+
+  def active_user
+    users(:active_user)
+  end
+
+  def assert_password(user, password, message)
+    assert user.reload.authenticate(password), message
+  end
+
+  def assert_password_changed(user)
+    assert_password(user, NEW_PASSWORD, "password should be changed")
+  end
+
+  def assert_password_not_changed(user)
+    assert_password(user, PASSWORD, "password should not be changed")
+  end
+
+  def params(token: password_reset_token, password_confirmation: NEW_PASSWORD)
     { token:, user: { password: NEW_PASSWORD, password_confirmation: } }
   end
 
   def password_reset_token
-    user.generate_token_for(:password_reset)
+    active_user.generate_token_for(:password_reset)
   end
 
-  def user
-    users(:active_user)
+  def new_user
+    users(:new_user)
   end
 end

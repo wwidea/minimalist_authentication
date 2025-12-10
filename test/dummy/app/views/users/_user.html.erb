@@ -4,6 +4,12 @@
     <td class="text-center"><%= "✓" if user.public_send(predicate) %></td>
   <% end %>
   <td>
+    <%= link_to(
+      "Activate",
+      new_password_path(token: user.generate_token_for(:account_activation))
+    ) %>
+  </td>
+  <td>
     <%= button_to(
       "Sign In",
       session_path(user: {

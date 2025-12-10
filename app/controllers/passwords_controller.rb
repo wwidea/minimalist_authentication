@@ -1,13 +1,35 @@
 # frozen_string_literal: true
 
 class PasswordsController < ApplicationController
-  skip_before_action :authorization_required
+  ACTION_TOKEN_PURPOSES = ActiveSupport::HashWithIndifferentAccess.new(
+    new: :account_activation,
+    create: :account_activation,
+    edit: :password_reset,
+    update: :password_reset
+  ).freeze
 
-  before_action :validate_token, only: %i[edit update]
+  attr_reader :user
+
+  skip_before_action :authorization_required
+  before_action :authenticate_with_token
 
   layout "sessions"
 
-  # From for user to update password
+  # Form for user to set password
+  def new
+    # new.html.erb
+  end
+
+  def create
+    if user.update(password_params)
+      user.try(:verify_email)
+      redirect_to new_session_path, notice: t(".notice")
+    else
+      render :new, status: :unprocessable_content
+    end
+  end
+
+  # Form for user to update password
   def edit
     # edit.html.erb
   end
@@ -23,19 +45,17 @@ class PasswordsController < ApplicationController
 
   private
 
+  def authenticate_with_token
+    @token = params[:token]
+    @user = MinimalistAuthentication.user_model.active.find_by_token_for(purpose, @token)
+    redirect_to(new_session_path, alert: t(".invalid_token")) unless @user
+  end
+
   def password_params
     params.require(:user).permit(:password, :password_confirmation)
   end
 
-  def token
-    @token ||= params[:token]
-  end
-
-  def user
-    @user ||= MinimalistAuthentication.user_model.active.find_by_token_for(:password_reset, token)
-  end
-
-  def validate_token
-    redirect_to(new_session_path, alert: t(".invalid_token")) unless user
+  def purpose
+    ACTION_TOKEN_PURPOSES[action_name]
   end
 end
