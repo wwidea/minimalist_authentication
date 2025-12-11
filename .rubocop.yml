@@ -35,6 +35,9 @@ Metrics/MethodLength:
 Minitest/EmptyLineBeforeAssertionMethods:
   Enabled: false
 
+Minitest/SkipWithoutReason:
+  Enabled: false
+
 
 # Packaging
 Packaging/BundlerSetupInTests:
