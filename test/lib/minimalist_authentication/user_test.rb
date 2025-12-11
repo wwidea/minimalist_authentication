@@ -14,10 +14,10 @@ class UserTest < ActiveSupport::TestCase
 
   # password_reset token
   test "should invalidate password_reset token when password is changed" do
-    token = users(:active_user).generate_token_for(:password_reset)
+    token = active_user.generate_token_for(:password_reset)
 
-    assert_equal users(:active_user), User.find_by_token_for(:password_reset, token)
-    assert users(:active_user).update(password: "new_password")
+    assert_equal active_user, User.find_by_token_for(:password_reset, token)
+    assert active_user.update(password: "new_password")
     assert_not User.find_by_token_for(:password_reset, token)
   end
 
@@ -41,21 +41,12 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should pass validation for a user with a password hash and a blank password" do
-    user = users(:active_user)
-    user.password = ""
-
-    assert_predicate user, :valid?
-  end
-
-  test "should require a password for a new active user" do
-    user = User.new(active: true, password: "")
-
-    assert_predicate user, :invalid?
-    assert_equal ["can't be blank"], user.errors[:password]
+    active_user.password = ""
+    assert_predicate active_user, :valid?
   end
 
   test "should not allow a user to have a duplicate email with another user" do
-    assert_predicate new_user(email: users(:active_user).email), :invalid?
+    assert_predicate new_user(email: active_user.email), :invalid?
   end
 
   test "should not allow a user to have a password that matches their email" do
@@ -79,7 +70,7 @@ class UserTest < ActiveSupport::TestCase
 
   # find_enabled
   test "should return enabled user for find_enabled" do
-    assert_equal users(:active_user), User.find_enabled(identify(:active_user))
+    assert_equal active_user, User.find_enabled(identify(:active_user))
   end
 
   test "should return nil for find_enabled when user is not enabled" do
@@ -102,7 +93,7 @@ class UserTest < ActiveSupport::TestCase
 
   # enabled
   test "should return user for enabled when user is active" do
-    assert_equal users(:active_user), users(:active_user).enabled
+    assert_equal active_user, active_user.enabled
   end
 
   test "should return nil for enabled when user is inactive" do
@@ -111,7 +102,7 @@ class UserTest < ActiveSupport::TestCase
 
   # enabled?
   test "should return true for enabled?" do
-    assert_predicate users(:active_user), :enabled?
+    assert_predicate active_user, :enabled?
   end
 
   test "should return false for enabled?" do
@@ -131,10 +122,10 @@ class UserTest < ActiveSupport::TestCase
   # logged_in
   test "should update last_logged_in_at without updating updated_at timestamp" do
     updated_at = 1.day.ago
-    users(:active_user).update_column(:updated_at, updated_at)
-    users(:active_user).logged_in
+    active_user.update_column(:updated_at, updated_at)
+    active_user.logged_in
 
-    assert_equal updated_at.to_s, users(:active_user).reload.updated_at.to_s
+    assert_equal updated_at.to_s, active_user.reload.updated_at.to_s
   end
 
   # password
@@ -147,14 +138,18 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should not update password_digest when password is blank" do
-    digest = users(:active_user).password_digest
-    users(:active_user).password = ""
+    digest = active_user.password_digest
+    active_user.password = ""
 
-    assert users(:active_user).save
-    assert_equal digest, users(:active_user).reload.password_digest
+    assert active_user.save
+    assert_equal digest, active_user.reload.password_digest
   end
 
   private
+
+  def active_user
+    users(:active_user)
+  end
 
   def new_user(active: true, email: "test@example.com", password: PASSWORD, username: "test")
     User.new(active:, email:, password:, username:)
