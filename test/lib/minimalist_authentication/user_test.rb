@@ -22,27 +22,24 @@ class UserTest < ActiveSupport::TestCase
   end
 
   # validations
-  test "should allow inactive user to pass validation without an email or password" do
-    assert_predicate User.new, :valid?
+  test "validation for inactive user with empty attributes" do
+    assert_predicate User.new(active: false), :valid?
   end
 
-  test "should fail validation for active user without email" do
-    user = User.new(active: true)
-
-    assert_predicate user, :invalid?
-    assert_equal ["can't be blank"], user.errors[:email]
+  test "validation for active user without email" do
+    assert validated_user(active: true).errors.added?(:email, :blank)
   end
 
-  test "should fail validation for active user without password" do
-    user = User.new(active: true)
-
-    assert_predicate user, :invalid?
-    assert user.errors.key?(:password)
+  test "validation for active user without password" do
+    assert_not validated_user(active: true).errors.include?(:password)
   end
 
-  test "should pass validation for a user with a password hash and a blank password" do
-    active_user.password = ""
-    assert_predicate active_user, :valid?
+  test "validation for active user with blank password" do
+    assert validated_user(active: true, password: "").errors.added?(:password, :blank)
+  end
+
+  test "validation for inactive user with blank password" do
+    assert_not validated_user(active: false, password: "").errors.include?(:password)
   end
 
   test "should not allow a user to have a duplicate email with another user" do
@@ -153,5 +150,9 @@ class UserTest < ActiveSupport::TestCase
 
   def new_user(active: true, email: "test@example.com", password: PASSWORD, username: "test")
     User.new(active:, email:, password:, username:)
+  end
+
+  def validated_user(**)
+    User.new(**, &:validate)
   end
 end

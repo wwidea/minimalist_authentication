@@ -9,6 +9,15 @@ module MinimalistAuthentication
     included do
       has_secure_password
 
+      # Track password update.
+      # Allows password presence validation to be skipped when password is not being set.
+      attribute :password_updated, :boolean, default: false
+
+      define_method(:password=) do |value|
+        self.password_updated = true
+        super(value)
+      end
+
       generates_token_for :account_activation, expires_in: MinimalistAuthentication.configuration.account_activation_duration do
         password_salt&.last(10)
       end
@@ -71,9 +80,9 @@ module MinimalistAuthentication
       active?
     end
 
-    # Remove the has_secure_password password blank error if user is inactive.
+    # Remove the has_secure_password password blank error when password is not required.
     def errors
-      super.tap { |errors| errors.delete(:password, :blank) if inactive? }
+      super.tap { |errors| errors.delete(:password, :blank) unless password_required? }
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false.
@@ -105,6 +114,11 @@ module MinimalistAuthentication
     end
 
     private
+
+    # Return true if password is required for validation.
+    def password_required?
+      active? && password_updated?
+    end
 
     # Return true if the user matches the owner of the provided token.
     def token_owner?(purpose, token)
