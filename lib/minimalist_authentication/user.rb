@@ -7,7 +7,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      has_secure_password
+      has_secure_password reset_token: { expires_in: password_reset_duration }
 
       # Track password update.
       # Allows password presence validation to be skipped when password is not being set.
@@ -18,12 +18,8 @@ module MinimalistAuthentication
         super(value)
       end
 
-      generates_token_for :account_activation, expires_in: MinimalistAuthentication.configuration.account_activation_duration do
+      generates_token_for :account_activation, expires_in: account_activation_duration do
         password_salt&.last(10)
-      end
-
-      generates_token_for :password_reset, expires_in: MinimalistAuthentication.configuration.password_reset_duration do
-        password_salt.last(10)
       end
 
       # Email validations
@@ -52,6 +48,8 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
+      delegate :account_activation_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
+
       # Finds a user by their id and returns the user if they are enabled.
       # Returns nil if the user is not found or not enabled.
       def find_enabled(id)
