@@ -9,8 +9,7 @@ module MinimalistAuthentication
     included do
       has_secure_password reset_token: { expires_in: password_reset_duration }
 
-      # Track password update.
-      # Allows password presence validation to be skipped when password is not being set.
+      # Tracks whether password was explicitly set. Used to conditionally require password presence.
       attribute :password_updated, :boolean, default: false
 
       define_method(:password=) do |value|
@@ -113,7 +112,7 @@ module MinimalistAuthentication
 
     private
 
-    # Return true if password is required for validation.
+    # Password presence is required for active users who are updating their password.
     def password_required?
       active? && password_updated?
     end
