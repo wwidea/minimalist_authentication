@@ -28,11 +28,11 @@ en:
       instructions: Please enter your new password.
       submit: Reset Password
       title: Reset Password
-    invalid_token: Your password reset link has expired. Please request a new one to continue.
+    invalid_token: Your link has expired or is invalid. Please request a new one to continue.
     new:
-      instructions: Please enter your password.
-      submit: Set Password
-      title: Set Password
+      instructions: Choose a secure password to complete your account setup.
+      submit: Save Password
+      title: Complete Your Account Setup
     notice: Password successfully updated
   sessions:
     create:
