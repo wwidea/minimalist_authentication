@@ -3,13 +3,13 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  # account_activation token
-  test "should invalidate account_activation token when password is created" do
-    token = users(:new_user).generate_token_for(:account_activation)
+  # account_setup token
+  test "should invalidate account_setup token when password is created" do
+    token = users(:new_user).generate_token_for(:account_setup)
 
-    assert_equal users(:new_user), User.find_by_token_for(:account_activation, token)
+    assert_equal users(:new_user), User.find_by_token_for(:account_setup, token)
     assert users(:new_user).update(password: "new_password")
-    assert_not User.find_by_token_for(:account_activation, token)
+    assert_not User.find_by_token_for(:account_setup, token)
   end
 
   # password_reset token

@@ -5,8 +5,8 @@
   <% end %>
   <td>
     <%= link_to(
-      "Activate",
-      new_password_path(token: user.generate_token_for(:account_activation))
+      "Setup",
+      new_password_path(token: user.generate_token_for(:account_setup))
     ) %>
   </td>
   <td>
@@ -28,7 +28,7 @@
   <%= link_to(
     "Edit Password",
     edit_password_path(token: user.generate_token_for(:password_reset))
-  ) if user.password_digest? %>
+  ) %>
   </td>
 </tr>
 

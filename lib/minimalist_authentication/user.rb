@@ -17,7 +17,7 @@ module MinimalistAuthentication
         super(value)
       end
 
-      generates_token_for :account_activation, expires_in: account_activation_duration do
+      generates_token_for :account_setup, expires_in: account_setup_duration do
         password_salt&.last(10)
       end
 
@@ -47,7 +47,7 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
-      delegate :account_activation_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
+      delegate :account_setup_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
 
       # Finds a user by their id and returns the user if they are enabled.
       # Returns nil if the user is not found or not enabled.

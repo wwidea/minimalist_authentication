@@ -6,7 +6,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   NEW_PASSWORD = "abcdef123456"
 
   test "new with valid token" do
-    get new_password_path(token: account_activation_token)
+    get new_password_path(token: account_setup_token)
     assert_response :success
   end
 
@@ -16,7 +16,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create with valid token" do
-    post password_path(params(token: account_activation_token))
+    post password_path(params(token: account_setup_token))
     assert_redirected_to new_session_path
     assert_password_changed new_user
     assert_predicate new_user, :email_verified?
@@ -35,7 +35,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit with invalid token" do
-    get edit_password_path(token: account_activation_token)
+    get edit_password_path(token: account_setup_token)
     assert_redirected_to new_session_path
   end
 
@@ -64,8 +64,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def account_activation_token
-    new_user.generate_token_for(:account_activation)
+  def account_setup_token
+    new_user.generate_token_for(:account_setup)
   end
 
   def active_user
