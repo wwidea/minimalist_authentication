@@ -14,7 +14,7 @@ module MinimalistAuthentication
 
       helper MinimalistAuthentication::ApplicationHelper
 
-      helper_method :current_user, :logged_in?, :authorized?
+      helper_method :authorized?, :current_user, :logged_in?, :login_redirect_to
     end
 
     # Returns true if the user is logged in
@@ -31,6 +31,11 @@ module MinimalistAuthentication
     # Returns true if a current user is present, otherwise returns false
     def logged_in?
       current_user.present?
+    end
+
+    # Retunrs the path to redirect to after login
+    def login_redirect_to
+      public_send(MinimalistAuthentication.configuration.login_redirect_path)
     end
 
     # Logs in a user by setting the session key and updating the Current user

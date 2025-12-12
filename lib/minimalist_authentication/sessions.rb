@@ -83,10 +83,6 @@ module MinimalistAuthentication
       user_params.values_at(*MinimalistAuthentication::Authenticator::LOGIN_FIELDS).compact.first
     end
 
-    def login_redirect_to
-      send(MinimalistAuthentication.configuration.login_redirect_path)
-    end
-
     def logout_redirect_to
       send(MinimalistAuthentication.configuration.logout_redirect_path)
     end
