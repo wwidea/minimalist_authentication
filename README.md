@@ -136,13 +136,26 @@ bin/rails generate migration AddEmailVerifiedAtToUsers email_verified_at:datetim
 ## Verification Tokens
 
 Verification token support is provided by the `ActiveRecord::TokenFor#generate_token_for` method.
-MinimalistAuthentication includes token definitions for **password_reset** and **email_verification**.
-These tokens are utilized by the **update_password** and **verify_email** email messages respectively,
-to allow users to update their passwords and verify their email addresses.
+MinimalistAuthentication includes token definitions for **account_setup**, **password_reset**, and **email_verification**.
 
-### Update Password
+### Account Setup
 
-The **update_password** token expires in 1 hour and is invalidated when the user's password is changed.
+The **account_setup** token is used for new users to set their initial password.
+The token expires in 1 day and is invalidated when the user's password is changed.
+
+#### Example
+
+```ruby
+token = user.generate_token_for(:account_setup)
+User.find_by_token_for(:account_setup, token) # => user
+user.update!(password: "new password")
+User.find_by_token_for(:account_setup, token) # => nil
+```
+
+### Password Reset
+
+The **password_reset** token is used for existing users to reset their password.
+The token expires in 1 hour and is invalidated when the user's password is changed.
 
 #### Example
 
