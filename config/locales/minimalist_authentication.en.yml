@@ -2,7 +2,16 @@ en:
   email_verifications:
     create:
       notice: Verification email sent to %{email}, follow the instructions to complete verification. Thank you!
+    new:
+      button: Send Verification Email
+      message: Verifying your email will allow you to receive confidential messages.
+      title: Please verify your email address
   emails:
+    edit:
+      instructions: Please update your email address
+      message: Providing your email will allow you to receive confidential messages and reset your password.
+      submit: Update
+      title: Email Update
     update:
       notice: Email successfully updated
   minimalist_authentication_mailer:
