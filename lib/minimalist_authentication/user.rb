@@ -110,6 +110,11 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
+    # Overridden by EmailVerification to verify email after update.
+    def verified_update(*)
+      update(*)
+    end
+
     private
 
     # Password presence is required for active users who are updating their password.

@@ -3,8 +3,6 @@
 require "test_helper"
 
 class PasswordsControllerTest < ActionDispatch::IntegrationTest
-  NEW_PASSWORD = "abcdef123456"
-
   test "new with valid token" do
     get new_password_path(token: account_setup_token)
     assert_response :success

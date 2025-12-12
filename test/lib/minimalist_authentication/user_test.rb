@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
     token = users(:new_user).generate_token_for(:account_setup)
 
     assert_equal users(:new_user), User.find_by_token_for(:account_setup, token)
-    assert users(:new_user).update(password: "new_password")
+    assert users(:new_user).update(password: NEW_PASSWORD)
     assert_not User.find_by_token_for(:account_setup, token)
   end
 
@@ -17,7 +17,7 @@ class UserTest < ActiveSupport::TestCase
     token = active_user.generate_token_for(:password_reset)
 
     assert_equal active_user, User.find_by_token_for(:password_reset, token)
-    assert active_user.update(password: "new_password")
+    assert active_user.update(password: NEW_PASSWORD)
     assert_not User.find_by_token_for(:password_reset, token)
   end
 

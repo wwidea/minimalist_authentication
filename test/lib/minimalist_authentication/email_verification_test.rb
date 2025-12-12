@@ -35,6 +35,13 @@ class EmailVerificationTest < ActiveSupport::TestCase
     assert_nil User.find_by_verified_email(email: users(:legacy_user).email)
   end
 
+  # verified_update
+  test "verified_update with new password" do
+    assert users(:new_user).verified_update(password: NEW_PASSWORD)
+    assert users(:new_user).authenticate(NEW_PASSWORD)
+    assert_predicate users(:new_user), :email_verified?
+  end
+
   # verify_email_with
   test "should verify users email address" do
     token = users(:legacy_user).generate_token_for(:email_verification)

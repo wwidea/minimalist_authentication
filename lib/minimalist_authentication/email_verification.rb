@@ -42,8 +42,8 @@ module MinimalistAuthentication
       email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
-    def verify_email
-      touch(:email_verified_at)
+    def verified_update(attributes)
+      super(attributes.merge(email_verified_at: Time.current))
     end
 
     def verify_email_with(token)
@@ -62,6 +62,10 @@ module MinimalistAuthentication
 
     def request_email_enabled?
       MinimalistAuthentication.configuration.request_email
+    end
+
+    def verify_email
+      touch(:email_verified_at)
     end
   end
 end

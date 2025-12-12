@@ -15,32 +15,24 @@ class PasswordsController < ApplicationController
 
   layout "sessions"
 
-  # Form for user to set password
+  # Set password form
   def new
     # new.html.erb
   end
 
+  # Sets user password
   def create
-    if user.update(password_params)
-      user.try(:verify_email)
-      redirect_to new_session_path, notice: t(".notice")
-    else
-      render :new, status: :unprocessable_content
-    end
+    update_password(:new)
   end
 
-  # Form for user to update password
+  # Update password form
   def edit
     # edit.html.erb
   end
 
-  # Update user's password
+  # Resets user password
   def update
-    if user.update(password_params)
-      redirect_to new_session_path, notice: t(".notice")
-    else
-      render :edit, status: :unprocessable_content
-    end
+    update_password(:new)
   end
 
   private
@@ -57,5 +49,13 @@ class PasswordsController < ApplicationController
 
   def purpose
     ACTION_TOKEN_PURPOSES[action_name]
+  end
+
+  def update_password(template)
+    if user.verified_update(password_params)
+      redirect_to new_session_path, notice: t(".notice")
+    else
+      render template, status: :unprocessable_content
+    end
   end
 end
