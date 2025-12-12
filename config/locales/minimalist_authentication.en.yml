@@ -35,12 +35,12 @@ en:
   passwords:
     edit:
       instructions: Please enter your new password.
-      submit: Reset Password
       title: Reset Password
+    form:
+      submit: Save Password
     invalid_token: Your link has expired or is invalid. Please request a new one to continue.
     new:
       instructions: Choose a secure password to complete your account setup.
-      submit: Save Password
       title: Complete Your Account Setup
     notice: Password successfully updated
   sessions:
