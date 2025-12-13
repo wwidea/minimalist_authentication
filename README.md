@@ -84,14 +84,17 @@ Customize the configuration with an initializer. Create a **minimalist_authentic
 
 ```ruby
 MinimalistAuthentication.configure do |configuration|
-  configuration.login_redirect_path       = :custom_path        # default is :root_path
-  configuration.logout_redirect_path      = :custom_path        # default is :new_session_path
-  configuration.request_email             = true                # default is true
-  configuration.session_key               = :custom_session_key # default is :user_id
-  configuration.user_model_name           = "CustomModelName"   # default is "::User"
-  configuration.validate_email            = true                # default is true
-  configuration.validate_email_presence   = true                # default is true
-  configuration.verify_email              = true                # default is true
+  configuration.account_setup_duration      = 3.days              # default: 1.day
+  configuration.email_verification_duration = 30.minutes          # default: 1.hour
+  configuration.login_redirect_path         = :custom_path        # default: :root_path
+  configuration.logout_redirect_path        = :custom_path        # default: :new_session_path
+  configuration.password_reset_duration     = 30.minutes          # default: 1.hour
+  configuration.request_email               = true                # default: true
+  configuration.session_key                 = :custom_session_key # default: :user_id
+  configuration.user_model_name             = "CustomModelName"   # default: "::User"
+  configuration.validate_email              = true                # default: true
+  configuration.validate_email_presence     = true                # default: true
+  configuration.verify_email                = true                # default: true
 end
 ```
 
