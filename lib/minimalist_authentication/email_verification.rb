@@ -5,7 +5,7 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      generates_token_for :email_verification, expires_in: 1.hour do
+      generates_token_for :email_verification, expires_in: email_verification_duration do
         email
       end
 
@@ -15,6 +15,8 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
+      delegate :email_verification_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
+
       def email_verified
         MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
           Calling #email_verified is deprecated.
@@ -40,8 +42,12 @@ module MinimalistAuthentication
       email_verification_enabled? && email.present? && email_verified_at.blank?
     end
 
-    def verify_email(token)
-      touch(:email_verified_at) if token_owner?(:email_verification, token)
+    def verified_update(attributes)
+      super(attributes.merge(email_verified_at: Time.current))
+    end
+
+    def verify_email_with(token)
+      verify_email if token_owner?(:email_verification, token)
     end
 
     private
@@ -56,6 +62,10 @@ module MinimalistAuthentication
 
     def request_email_enabled?
       MinimalistAuthentication.configuration.request_email
+    end
+
+    def verify_email
+      touch(:email_verified_at)
     end
   end
 end

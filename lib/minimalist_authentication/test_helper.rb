@@ -2,6 +2,7 @@
 
 module MinimalistAuthentication
   module TestHelper
+    NEW_PASSWORD = "abcdef123456"
     PASSWORD = "test-password"
     PASSWORD_DIGEST = BCrypt::Password.create(PASSWORD, cost: BCrypt::Engine::MIN_COST)
 

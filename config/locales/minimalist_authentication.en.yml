@@ -2,7 +2,16 @@ en:
   email_verifications:
     create:
       notice: Verification email sent to %{email}, follow the instructions to complete verification. Thank you!
+    new:
+      button: Send Verification Email
+      message: Verifying your email will allow you to receive confidential messages.
+      title: Please verify your email address
   emails:
+    edit:
+      instructions: Please update your email address
+      message: Providing your email will allow you to receive confidential messages and reset your password.
+      submit: Update
+      title: Email Update
     update:
       notice: Email successfully updated
   minimalist_authentication_mailer:
@@ -26,15 +35,14 @@ en:
   passwords:
     edit:
       instructions: Please enter your new password.
-      password:
-        placeholder: New password
-      password_confirmation:
-        placeholder: Confirm password
-      submit: Reset Password
       title: Reset Password
-    invalid_token: Your password reset link has expired. Please request a new one to continue.
-    update:
-      notice: Password successfully updated
+    form:
+      submit: Save Password
+    invalid_token: Your link has expired or is invalid. Please request a new one to continue.
+    new:
+      instructions: Choose a secure password to complete your account setup.
+      title: Complete Your Account Setup
+    notice: Password successfully updated
   sessions:
     create:
       alert: Couldn't log you in as %{identifier}

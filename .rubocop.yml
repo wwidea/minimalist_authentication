@@ -8,7 +8,7 @@ plugins:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.2
   Exclude:
     - test/dummy/config/environments/*
     - test/dummy/db/schema.rb
@@ -17,8 +17,7 @@ AllCops:
 
 # Layout
 Layout/HashAlignment:
-  EnforcedHashRocketStyle: table
-  EnforcedColonStyle: table
+  Enabled: false
 
 Layout/LineLength:
   Max: 200
@@ -28,6 +27,17 @@ Layout/LineLength:
 Metrics/ClassLength:
   Max: 150
 
+Metrics/MethodLength:
+  Max: 15
+
+
+# Minitest
+Minitest/EmptyLineBeforeAssertionMethods:
+  Enabled: false
+
+Minitest/SkipWithoutReason:
+  Enabled: false
+
 
 # Packaging
 Packaging/BundlerSetupInTests:
@@ -36,6 +46,9 @@ Packaging/BundlerSetupInTests:
 
 
 # Rails
+Rails/ActionOrder:
+  Enabled: false
+
 Rails/Output:
   Enabled: false
 

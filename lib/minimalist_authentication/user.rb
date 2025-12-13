@@ -7,10 +7,18 @@ module MinimalistAuthentication
     extend ActiveSupport::Concern
 
     included do
-      has_secure_password
+      has_secure_password reset_token: { expires_in: password_reset_duration }
 
-      generates_token_for :password_reset, expires_in: 1.hour do
-        password_salt.last(10)
+      # Tracks if password was explicitly set. Used to conditionally require password presence.
+      attribute :password_updated, :boolean, default: false
+
+      define_method(:password=) do |value|
+        self.password_updated = true
+        super(value)
+      end
+
+      generates_token_for :account_setup, expires_in: account_setup_duration do
+        password_salt&.last(10)
       end
 
       # Email validations
@@ -39,6 +47,8 @@ module MinimalistAuthentication
     end
 
     module ClassMethods
+      delegate :account_setup_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
+
       # Finds a user by their id and returns the user if they are enabled.
       # Returns nil if the user is not found or not enabled.
       def find_enabled(id)
@@ -67,9 +77,9 @@ module MinimalistAuthentication
       active?
     end
 
-    # Remove the has_secure_password password blank error if user is inactive.
+    # Remove the has_secure_password password blank error when password is not required.
     def errors
-      super.tap { |errors| errors.delete(:password, :blank) if inactive? }
+      super.tap { |errors| errors.delete(:password, :blank) unless password_required? }
     end
 
     # Returns true if password matches the hashed_password, otherwise returns false.
@@ -100,7 +110,17 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
+    # Overridden by EmailVerification to verify email upon update.
+    def verified_update(*)
+      update(*)
+    end
+
     private
+
+    # Password presence is required for active users who are updating their password.
+    def password_required?
+      active? && password_updated?
+    end
 
     # Return true if the user matches the owner of the provided token.
     def token_owner?(purpose, token)

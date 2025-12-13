@@ -3,7 +3,7 @@
 class EmailVerificationsController < ApplicationController
   # Verifies the email of the current_user using the provided token
   def show
-    current_user.verify_email(params[:token])
+    current_user.verify_email_with(params[:token])
   end
 
   # Form for current_user to request an email verification email

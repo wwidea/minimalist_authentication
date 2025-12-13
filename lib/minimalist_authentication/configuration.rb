@@ -17,50 +17,42 @@ module MinimalistAuthentication
   end
 
   class Configuration
-    # The session_key used to store the current_user id.
-    # Defaults to :user_id
-    attr_accessor :session_key
+    include ActiveModel::Attributes
 
-    # The application user class name
-    # Defaults to '::User'
-    attr_accessor :user_model_name
+    # The duration for which the account_setup token is valid.
+    attribute :account_setup_duration, default: 1.day
 
-    # Toggle all email validations.
-    # Defaults to true.
-    attr_accessor :validate_email
+    # The duration for which the email_verification token is valid.
+    attribute :email_verification_duration, default: 1.hour
 
-    # Toggle email presence validation.
-    # Defaults to true.
-    # Note: validate_email_presence is only checked if validate_email is true.
-    attr_accessor :validate_email_presence
+    # Where to route users after a successful login.
+    attribute :login_redirect_path, default: :root_path
+
+    # Where to route users after logging out.
+    attribute :logout_redirect_path, default: :new_session_path
+
+    # The duration for which the password_reset token is valid.
+    attribute :password_reset_duration, default: 1.hour
 
     # Check for users email at login and request if blank. Only useful if using
     # username to login and users might not have an email set.
-    # Defaults to true
-    attr_accessor :request_email
+    attribute :request_email, :boolean, default: true
+
+    # The session_key used to store the current_user id.
+    attribute :session_key, default: :user_id
+
+    # The application user class name
+    attribute :user_model_name, :string, default: "::User"
+
+    # Toggle all email validations.
+    attribute :validate_email, :boolean, default: true
+
+    # Toggle email presence validation.
+    # Note: validate_email_presence is only checked if validate_email is true.
+    attribute :validate_email_presence, :boolean, default: true
 
     # Verify users email address at login.
-    # Defaults to true.
-    attr_accessor :verify_email
-
-    # Where to route users after a successful login.
-    # Defaults to :root_path
-    attr_accessor :login_redirect_path
-
-    # Where to route users after logging out.
-    # Defaults to :new_session_path
-    attr_accessor :logout_redirect_path
-
-    def initialize
-      self.user_model_name          = "::User"
-      self.session_key              = :user_id
-      self.validate_email           = true
-      self.validate_email_presence  = true
-      self.request_email            = true
-      self.verify_email             = true
-      self.login_redirect_path      = :root_path
-      self.logout_redirect_path     = :new_session_path
-    end
+    attribute :verify_email, :boolean, default: true
 
     # Clear the user_model class
     def clear_user_model
