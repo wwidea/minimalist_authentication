@@ -9,7 +9,7 @@ module MinimalistAuthentication
     included do
       has_secure_password reset_token: { expires_in: password_reset_duration }
 
-      # Tracks whether password was explicitly set. Used to conditionally require password presence.
+      # Tracks if password was explicitly set. Used to conditionally require password presence.
       attribute :password_updated, :boolean, default: false
 
       define_method(:password=) do |value|
