@@ -110,7 +110,7 @@ module MinimalistAuthentication
       update_column(:last_logged_in_at, Time.current)
     end
 
-    # Overridden by EmailVerification to verify email after update.
+    # Overridden by EmailVerification to verify email upon update.
     def verified_update(*)
       update(*)
     end
