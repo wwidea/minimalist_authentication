@@ -2,13 +2,17 @@
 
 module MinimalistAuthentication
   module ApplicationHelper
+    def ma_change_email_link
+      link_to("Change", edit_email_path)
+    end
+
     def ma_confirm_password_field(form, options = {})
       form.password_field(
         :password_confirmation,
         options.reverse_merge(
           autocomplete: "new-password",
           minlength:    MinimalistAuthentication.user_model.password_minimum,
-          placeholder:  t(".password_confirmation.placeholder"),
+          placeholder:  true,
           required:     true
         )
       )
@@ -36,7 +40,7 @@ module MinimalistAuthentication
         options.reverse_merge(
           autocomplete: "new-password",
           minlength:    MinimalistAuthentication.user_model.password_minimum,
-          placeholder:  t(".password.placeholder"),
+          placeholder:  true,
           required:     true
         )
       )
@@ -51,6 +55,10 @@ module MinimalistAuthentication
           required:     true
         )
       )
+    end
+
+    def ma_skip_link
+      link_to("Skip", login_redirect_to)
     end
 
     def ma_username_field(form, options = {})

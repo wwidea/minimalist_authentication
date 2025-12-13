@@ -1,12 +1,12 @@
-<h1>Email Update</h1>
+<h1><%= t(".title") %></h1>
 
-<h2>Please update your email address</h2>
+<h2><%= t(".instructions") %></h2>
 
 <%= form_with(model: current_user, url: email_path) do |form| %>
   <%= form.text_field :email %>
-  <%= form.submit "Update" %>
+  <%= form.submit t(".submit") %>
 <% end %>
 
-<p>Providing your email will allow you to receive confidential messages and reset your password.</p>
+<p><%= t(".message") %></p>
 
-<%= link_to("Skip Email Update", dashboard_path) %>
+<%= ma_skip_link %>

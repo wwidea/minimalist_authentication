@@ -1,14 +1,12 @@
-<h2>Please verify your email address</h2>
+<h2><%= t(".title") %></h2>
 
 <p>
   <strong><%= current_user.email %></strong>
-  <em><%= link_to('change', edit_email_path) %></em>
+  <em><%= ma_change_email_link %></em>
 </p>
 
-<%= form_tag email_verification_path do |form| %>
-  <%= submit_tag 'Send Verification Email' %>
-<% end %>
+<%= button_to t(".button"), email_verification_path %>
 
-<p>Verifying your email will allow you to receive confidential messages and reset your password.</p>
+<p><%= t(".message") %></p>
 
-<%= link_to('Skip Email Verification', dashboard_path) %>
+<%= ma_skip_link %>

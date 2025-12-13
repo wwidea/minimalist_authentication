@@ -1,0 +1,34 @@
+<tr>
+  <td><%= user.email %></td>
+  <% %w[active? email_verified? password_digest?].each do |predicate| %>
+    <td class="text-center"><%= "✓" if user.public_send(predicate) %></td>
+  <% end %>
+  <td>
+    <%= link_to(
+      "Setup",
+      new_password_path(token: user.generate_token_for(:account_setup))
+    ) %>
+  </td>
+  <td>
+    <%= button_to(
+      "Sign In",
+      session_path(user: {
+        email: user.email,
+        password: MinimalistAuthentication::TestHelper::PASSWORD }
+      )
+    ) %>
+  </td>
+  <td>
+    <%= button_to(
+      "Reset Password",
+      password_reset_path(user: { email: user.email } )
+    ) %>
+  </td>
+  <td>
+  <%= link_to(
+    "Edit Password",
+    edit_password_path(token: user.generate_token_for(:password_reset))
+  ) %>
+  </td>
+</tr>
+

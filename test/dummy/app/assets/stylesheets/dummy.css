@@ -11,5 +11,8 @@ div.field_with_errors input {
 .table td {
   border: 1px solid black;
   padding: 8px;
-  text-align: left;
+}
+
+.text-center {
+  text-align: center;
 }

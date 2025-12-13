@@ -15,13 +15,13 @@ class PasswordResetsController < ApplicationController
   # Send a password update link to users with a verified email
   def create
     if email_valid?
-      send_update_password_email if user
+      send_update_password_email(user)
 
       # Always display notice to prevent leaking user emails
       redirect_to new_session_path, notice: t(".notice", email:)
     else
       flash.now.alert = t(".alert")
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -31,12 +31,12 @@ class PasswordResetsController < ApplicationController
     params.dig(:user, :email)
   end
 
-  def send_update_password_email
-    MinimalistAuthenticationMailer.with(user:).update_password.deliver_now
+  def send_update_password_email(user)
+    MinimalistAuthenticationMailer.with(user:).update_password.deliver_now if user
   end
 
   def user
-    @user ||= MinimalistAuthentication.user_model.find_by_verified_email(email:)
+    MinimalistAuthentication.user_model.active.find_by(email:)
   end
 
   def email_valid?

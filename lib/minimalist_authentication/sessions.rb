@@ -29,16 +29,10 @@ module MinimalistAuthentication
 
     def destroy
       reset_session
-      clear_site_data
       redirect_to logout_redirect_to, notice: t(".notice"), status: :see_other
     end
 
     private
-
-    # Sets a “Clear-Site-Data” header to clear the browser cache.
-    def clear_site_data
-      response.headers["Clear-Site-Data"] = '"cache","storage"'
-    end
 
     def user
       @user ||= MinimalistAuthentication.configuration.user_model.new
@@ -84,15 +78,11 @@ module MinimalistAuthentication
     def after_authentication_failure
       flash.now.alert = t(".alert", identifier:)
       user
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
 
     def identifier
       user_params.values_at(*MinimalistAuthentication::Authenticator::LOGIN_FIELDS).compact.first
-    end
-
-    def login_redirect_to
-      send(MinimalistAuthentication.configuration.login_redirect_path)
     end
 
     def logout_redirect_to
