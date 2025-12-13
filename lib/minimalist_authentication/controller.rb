@@ -33,7 +33,7 @@ module MinimalistAuthentication
       current_user.present?
     end
 
-    # Retunrs the path to redirect to after login
+    # Returns the path to redirect to after login
     def login_redirect_to
       public_send(MinimalistAuthentication.configuration.login_redirect_path)
     end
