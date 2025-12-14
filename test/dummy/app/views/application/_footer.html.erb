@@ -1,11 +1,11 @@
 <h3>Flash</h3>
-<%= render "hash", hash: flash %>
+<%= render("hash", hash: flash) %>
 
 <h3>Cache</h3>
-<%= render "hash", hash: Rails.cache.instance_variable_get(:@data) || {} %>
+<%= render("hash", hash: (Rails.cache.instance_variable_get(:@data) || {}).transform_values(&:value)) %>
 
 <h3>Session</h3>
-<%= render "hash", hash: session %>
+<%= render("hash", hash: session) %>
 
 <h3>Mailer Previews</h3>
 <p>
