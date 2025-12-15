@@ -24,7 +24,6 @@ module MinimalistAuthentication
           within: 3.minutes,
           only:   :create,
           with:   -> { redirect_to new_session_path, alert: t("limit_creations.alert") },
-          name:   "ma-limit-creations",
           **
         )
       end
