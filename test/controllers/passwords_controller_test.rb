@@ -8,6 +8,11 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new for inactive user with valid token" do
+    get new_password_path(token: account_setup_token(user: users(:inactive_user)))
+    assert_redirected_to new_session_path
+  end
+
   test "new with invalid token" do
     get new_password_path(token: password_reset_token)
     assert_redirected_to new_session_path
@@ -62,8 +67,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def account_setup_token
-    new_user.generate_token_for(:account_setup)
+  def account_setup_token(user: new_user)
+    user.generate_token_for(:account_setup)
   end
 
   def active_user

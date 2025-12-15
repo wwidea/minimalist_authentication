@@ -40,7 +40,7 @@ class PasswordsController < ApplicationController
   def authenticate_with_token
     @token = params[:token]
     @user = MinimalistAuthentication.user_model.active.find_by_token_for!(purpose, @token)
-  rescue ActiveSupport::MessageVerifier::InvalidSignature
+  rescue ActiveRecord::RecordNotFound, ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to(new_session_path, alert: t(".invalid_token"))
   end
 
