@@ -17,6 +17,18 @@ module MinimalistAuthentication
       helper_method :authorized?, :current_user, :logged_in?, :login_redirect_to
     end
 
+    module ClassMethods
+      def limit_creations(**)
+        rate_limit(
+          to:     10,
+          within: 3.minutes,
+          only:   :create,
+          with:   -> { redirect_to new_session_path, alert: t("limit_creations.alert") },
+          **
+        )
+      end
+    end
+
     # Returns true if the user is logged in
     # Override this method in your controller to customize authorization
     def authorized?(_action = action_name, _resource = controller_name)

@@ -10,6 +10,10 @@ module MinimalistAuthentication
 
       skip_before_action  :authorization_required,    only: %i[new create]
       before_action       :redirect_logged_in_users,  only: :new
+
+      # Limit create requests by ip address and user identifier
+      limit_creations(to: 50)
+      limit_creations(by: -> { identifier&.downcase })
     end
 
     def new
@@ -80,7 +84,7 @@ module MinimalistAuthentication
     end
 
     def identifier
-      user_params.values_at(*MinimalistAuthentication::Authenticator::LOGIN_FIELDS).compact.first
+      user_params[:email] || user_params[:username]
     end
 
     def logout_redirect_to

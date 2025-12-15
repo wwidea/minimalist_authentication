@@ -6,12 +6,6 @@
   </head>
 
   <body>
-    <%= render "session_and_flash" %>
-
-    <h3>Mailer Previews</h3>
-    <p>
-      <%= link_to("Action Mailer Previews", "/rails/mailers") %>
-    </p>
 
     <h3>Users</h3>
     <table class="table">
@@ -32,5 +26,6 @@
     <%= yield %>
 
     <%= render "sign_in_out" %>
+    <%= render "footer" %>
   </body>
 </html>
