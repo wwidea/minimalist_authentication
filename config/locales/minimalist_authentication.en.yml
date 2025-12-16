@@ -28,7 +28,7 @@ en:
     new:
       email:
         placeholder: Enter your email address
-      instructions: Enter your verified email address, and we'll send you a link to reset your password.
+      instructions: Enter your account email address to receive a password reset link.
       submit: Send Reset Link
       title: Reset Your Password
     create:
