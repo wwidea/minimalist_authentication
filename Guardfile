@@ -25,7 +25,7 @@ end
 class Guard::Shell
   def run_all
     run_rails_test
-    system("bundle exec rubocop")
+    system("bin/rubocop")
   end
 
   def run_on_modifications(paths = [])
@@ -43,6 +43,6 @@ class Guard::Shell
 
   def run_rails_test(paths = [])
     puts("Running tests #{paths}") if paths&.any?
-    system("bin/rails test #{paths.join(' ')}")
+    system("bin/test test #{paths.join(' ')}")
   end
 end
