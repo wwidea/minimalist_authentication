@@ -10,6 +10,7 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.2
   Exclude:
+    - bin/*
     - test/dummy/config/environments/*
     - test/dummy/db/schema.rb
     - test/dummy/tmp/**/*
