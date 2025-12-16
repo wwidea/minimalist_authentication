@@ -43,6 +43,6 @@ class Guard::Shell
 
   def run_rails_test(paths = [])
     puts("Running tests #{paths}") if paths&.any?
-    system("bin/rails test #{paths.join(' ')}")
+    system("bin/test test #{paths.join(' ')}")
   end
 end
