@@ -9,11 +9,14 @@ plugins:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.2
+  SuggestExtensions: false
   Exclude:
     - bin/*
+    - Guardfile
     - test/dummy/config/environments/*
     - test/dummy/db/schema.rb
     - test/dummy/tmp/**/*
+    - vendor/bundle/**/*
 
 
 # Layout
