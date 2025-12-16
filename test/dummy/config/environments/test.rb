@@ -52,9 +52,6 @@ Rails.application.configure do
   # Brightways Learning Settings #
   ################################
 
-  # disable writing log files
-  unless ENV["RAILS_ENABLE_LOGGER"]
-    config.logger     = ActiveSupport::Logger.new(nil)
-    config.log_level  = :fatal
-  end
+  # Disable writing log files
+  config.logger = ActiveSupport::Logger.new(IO::NULL)
 end

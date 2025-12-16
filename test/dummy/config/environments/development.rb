@@ -68,9 +68,9 @@ Rails.application.configure do
   # Brightways Learning Settings #
   ################################
 
-  # disable writing log files
-  config.logger = ActiveSupport::Logger.new(nil) unless ENV["RAILS_ENABLE_LOGGER"]
+  # Disable writing log files
+  config.logger = ActiveSupport::Logger.new($stdout)
 
-  # use fixtures from plugin
+  # Use fixtures from plugin
   ENV["FIXTURES_PATH"] = "../fixtures"
 end
