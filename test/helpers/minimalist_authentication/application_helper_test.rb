@@ -21,7 +21,7 @@ module MinimalistAuthentication
     end
 
     test "ma_new_password_field" do
-      assert_includes ma_new_password_field(form), "Password"
+      assert_includes ma_new_password_field(form), "New password"
     end
 
     test "ma_password_field" do

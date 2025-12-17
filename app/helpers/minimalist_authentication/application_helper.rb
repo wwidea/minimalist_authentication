@@ -40,7 +40,7 @@ module MinimalistAuthentication
         options.reverse_merge(
           autocomplete: "new-password",
           minlength:    MinimalistAuthentication.user_model.password_minimum,
-          placeholder:  true,
+          placeholder:  "New password",
           required:     true
         )
       )
