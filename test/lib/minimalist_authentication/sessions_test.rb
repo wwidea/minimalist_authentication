@@ -46,12 +46,10 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create session and skip email verification" do
-    MinimalistAuthentication.configuration.verify_email = false
+    MinimalistAuthentication.configuration.expects(:verify_email).returns(false)
     login_as :legacy_user
 
     assert_redirected_to root_path
-
-    MinimalistAuthentication.configuration.verify_email = true
   end
 
   test "should fail to create session when password is incorrect" do
