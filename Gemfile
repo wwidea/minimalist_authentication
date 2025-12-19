@@ -16,3 +16,6 @@ gem "rubocop-performance",  require: false
 gem "rubocop-rails",        require: false
 gem "sprockets-rails"
 gem "sqlite3"
+
+# Rails 8.1.1 is not compatible with minitest 6
+gem "minitest", "~> 5.27"
