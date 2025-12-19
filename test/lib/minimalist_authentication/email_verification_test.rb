@@ -35,6 +35,27 @@ class EmailVerificationTest < ActiveSupport::TestCase
     assert_nil User.find_by_verified_email(email: users(:legacy_user).email)
   end
 
+  # needs_email_verification?
+  test "needs_email_verification? with email" do
+    assert_predicate User.new(email: "test@testing.com"), :needs_email_verification?
+  end
+
+  test "needs_email_verification? without email" do
+    assert_not_predicate User.new, :needs_email_verification?
+  end
+
+  test "needs_email_verification? with email_verified_at" do
+    assert_not_predicate(
+      User.new(email: "test@testing.com", email_verified_at: Time.current),
+      :needs_email_verification?
+    )
+  end
+
+  test "needs_email_verification? with verify_email disabled" do
+    MinimalistAuthentication.configuration.expects(:verify_email).returns(false)
+    assert_not_predicate User.new(email: "test@testing.com"), :needs_email_verification?
+  end
+
   # verified_update
   test "verified_update with new password" do
     assert users(:new_user).verified_update(password: NEW_PASSWORD)
