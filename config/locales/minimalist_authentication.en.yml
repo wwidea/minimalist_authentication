@@ -9,7 +9,7 @@ en:
   emails:
     edit:
       instructions: Please update your email address
-      message: Providing your email will allow you to receive confidential messages.
+      message: Providing your email will allow you to receive confidential messages and reset your password.
       submit: Update
       title: Email Update
     update:
