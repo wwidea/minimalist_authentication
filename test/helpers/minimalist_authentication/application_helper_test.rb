@@ -14,6 +14,15 @@ module MinimalistAuthentication
       assert_includes ma_email_field(form), t(".email.placeholder")
     end
 
+    test "ma_email_verification_button with class" do
+      @virtual_path = "email_verifications.new"
+
+      ma_email_verification_button(class: "custom-class").tap do |button|
+        assert_includes button, t(".button")
+        assert_includes button, "custom-class"
+      end
+    end
+
     test "ma_forgot_password_link" do
       @virtual_path = "sessions.new"
 

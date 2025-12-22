@@ -30,6 +30,10 @@ module MinimalistAuthentication
       )
     end
 
+    def ma_email_verification_button(**)
+      button_to(t(".button"), email_verification_path, **)
+    end
+
     def ma_forgot_password_link
       link_to(t(".forgot_password"), new_password_reset_path)
     end
