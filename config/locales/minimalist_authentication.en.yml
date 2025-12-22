@@ -8,8 +8,8 @@ en:
       message: Verifying your email will allow you to receive confidential messages.
       title: Email Verification
     show:
-      success: Your email address has been verified
       failure: Email address verification failed
+      success: Your email address has been verified
       title: Email Verification
   emails:
     edit:
