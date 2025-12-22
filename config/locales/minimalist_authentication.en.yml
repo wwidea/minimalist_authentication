@@ -4,8 +4,9 @@ en:
       notice: Verification email sent to %{email}, follow the instructions to complete verification. Thank you!
     new:
       button: Send Verification Email
+      instructions: Please verify your email address
       message: Verifying your email will allow you to receive confidential messages.
-      title: Please verify your email address
+      title: Email Verification
   emails:
     edit:
       instructions: Please update your email address
