@@ -1,9 +1,9 @@
-<h1>Email Verification</h1>
+<h1><%= t(".title") %></h1>
 
 <% if current_user.email_verified? %>
-  <h2>Your email address has been verified</h2>
+  <h2><%= t(".success") %></h2>
 <% else %>
-  <h2>Email address verification failed</h2>
+  <h2><%= t(".failure") %></h2>
 <% end %>
 <h2><%= current_user.email %></h2>
 
