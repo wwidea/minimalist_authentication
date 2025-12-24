@@ -23,5 +23,9 @@ module ActiveSupport
     include MinimalistAuthentication::TestHelper
 
     delegate :identify, to: ActiveRecord::FixtureSet
+
+    def prepend_prefix(name)
+      lookup_context.prefixes.prepend(name)
+    end
   end
 end

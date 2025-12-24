@@ -76,5 +76,9 @@ module MinimalistAuthentication
         )
       )
     end
+
+    def ma_verification_message(user = current_user)
+      render(user.email_verified? ? "verified" : "unverified")
+    end
   end
 end

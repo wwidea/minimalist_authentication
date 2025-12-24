@@ -41,6 +41,18 @@ module MinimalistAuthentication
       assert_includes ma_username_field(form), "Username"
     end
 
+    test "ma_verification_message for verified user" do
+      prepend_prefix "email_verifications"
+
+      assert_includes ma_verification_message(users(:active_user)), t("email_verifications.verified.message")
+    end
+
+    test "ma_verification_message for unverified user" do
+      prepend_prefix "email_verifications"
+
+      assert_includes ma_verification_message(users(:new_user)), t("email_verifications.unverified.message")
+    end
+
     private
 
     def form

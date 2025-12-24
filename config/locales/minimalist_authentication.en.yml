@@ -11,6 +11,10 @@ en:
       failure: Email address verification failed
       success: Your email address has been verified
       title: Email Verification
+    unverified:
+      message: Email address verification failed
+    verified:
+      message: Your email address has been verified
   emails:
     edit:
       instructions: Please update your email address
