@@ -14,6 +14,15 @@ module MinimalistAuthentication
       assert_includes ma_email_field(form), t(".email.placeholder")
     end
 
+    test "ma_email_verification_button with class" do
+      @virtual_path = "email_verifications.new"
+
+      ma_email_verification_button(class: "custom-class").tap do |button|
+        assert_includes button, t(".button")
+        assert_includes button, "custom-class"
+      end
+    end
+
     test "ma_forgot_password_link" do
       @virtual_path = "sessions.new"
 
@@ -30,6 +39,18 @@ module MinimalistAuthentication
 
     test "ma_username_field" do
       assert_includes ma_username_field(form), "Username"
+    end
+
+    test "ma_verification_message for verified user" do
+      prepend_prefix "email_verifications"
+
+      assert_includes ma_verification_message(users(:active_user)), t("email_verifications.verified.message")
+    end
+
+    test "ma_verification_message for unverified user" do
+      prepend_prefix "email_verifications"
+
+      assert_includes ma_verification_message(users(:new_user)), t("email_verifications.unverified.message")
     end
 
     private
