@@ -37,7 +37,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def user
-    MinimalistAuthentication.user_model.active.find_by(email:)
+    MinimalistAuthentication.user_model.find_enabled_by(email:)
   end
 
   def email_valid?

@@ -5,12 +5,23 @@ require "test_helper"
 class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
     get new_password_reset_path
-
     assert_response :success
   end
 
-  test "create password reset email for known user" do
-    assert_emails(1) { post password_reset_path(user: { email: users(:active_user).email }) }
+  test "create password reset email for enabled user" do
+    assert_emails(1) { post password_reset_path(user: { email: email(:active_user) }) }
+    assert_redirected_to new_session_path
+  end
+
+  test "create password reset email for inactive user" do
+    assert_no_emails { post password_reset_path(user: { email: email(:inactive_user) }) }
+    assert_redirected_to new_session_path
+  end
+
+  test "create password reset email for unenabled user" do
+    User.any_instance.expects(:enabled).returns(nil)
+
+    assert_no_emails { post password_reset_path(user: { email: email(:active_user) }) }
     assert_redirected_to new_session_path
   end
 
@@ -27,5 +38,11 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
   test "create password reset email when users is missing" do
     assert_no_emails { post password_reset_path(foo: "bar") }
     assert_response :unprocessable_content
+  end
+
+  private
+
+  def email(fixture)
+    users(fixture).email
   end
 end

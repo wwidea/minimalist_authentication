@@ -49,10 +49,15 @@ module MinimalistAuthentication
     module ClassMethods
       delegate :account_setup_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
 
-      # Finds a user by their id and returns the user if they are enabled.
-      # Returns nil if the user is not found or not enabled.
+      # Finds an enabled user by id.
       def find_enabled(id)
-        find_by(id:)&.enabled if id.present?
+        find_enabled_by(id:) if id.present?
+      end
+
+      # Finds a user matching the specified conditions and returns the user if they are enabled.
+      # Returns nil if a user is not found or not enabled.
+      def find_enabled_by(**)
+        find_by(**)&.enabled
       end
 
       def inactive
