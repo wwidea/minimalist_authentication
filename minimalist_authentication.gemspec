@@ -2,8 +2,6 @@
 
 require_relative "lib/minimalist_authentication/version"
 
-RAILS_VERSION_REQUIREMENT = ">= 7.1.0"
-
 Gem::Specification.new do |spec|
   spec.name          = "minimalist_authentication"
   spec.version       = MinimalistAuthentication::VERSION
@@ -20,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   spec.required_ruby_version = ">= 3.2.0"
-  spec.add_dependency "actionmailer", RAILS_VERSION_REQUIREMENT
-  spec.add_dependency "activerecord", RAILS_VERSION_REQUIREMENT
+  spec.add_dependency "actionmailer", ">= 7.1.0"
+  spec.add_dependency "activerecord", ">= 7.1.0"
   spec.add_dependency "bcrypt", "~> 3.1", ">= 3.1.3"
-  spec.add_dependency "railties", RAILS_VERSION_REQUIREMENT
+  spec.add_dependency "railties", ">= 7.1.0"
 end
