@@ -18,4 +18,4 @@ gem "sprockets-rails"
 gem "sqlite3"
 
 # Rails 8.1.1 is not compatible with minitest 6
-gem "minitest", "~> 5.27"
+gem "minitest", "~> 6.0"
