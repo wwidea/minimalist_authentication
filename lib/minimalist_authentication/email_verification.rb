@@ -18,7 +18,7 @@ module MinimalistAuthentication
       delegate :email_verification_duration, :password_reset_duration, to: "MinimalistAuthentication.configuration"
 
       def email_verified
-        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        MinimalistAuthentication.deprecator.warn(<<~MSG.squish)
           Calling #email_verified is deprecated.
           Call #with_verified_email instead.
         MSG

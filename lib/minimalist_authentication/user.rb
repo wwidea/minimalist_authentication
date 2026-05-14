@@ -61,7 +61,7 @@ module MinimalistAuthentication
       end
 
       def inactive
-        MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+        MinimalistAuthentication.deprecator.warn(<<~MSG.squish)
           Calling #inactive is deprecated. Use #active(false) instead.
         MSG
         active(false)
@@ -89,7 +89,7 @@ module MinimalistAuthentication
 
     # Returns true if password matches the hashed_password, otherwise returns false.
     def authenticated?(password)
-      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+      MinimalistAuthentication.deprecator.warn(<<~MSG.squish)
         Calling #authenticated? is deprecated. Use #authenticate instead.
       MSG
       authenticate(password)
@@ -97,7 +97,7 @@ module MinimalistAuthentication
 
     # Deprecated method to check if the user is a guest. Returns false because the guest user has been removed.
     def guest?
-      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+      MinimalistAuthentication.deprecator.warn(<<~MSG.squish)
         Calling #guest? is deprecated. Use #MinimalistAuthentication::Controller#logged_in? to
         check for the presence of a current_user instead.
       MSG

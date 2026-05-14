@@ -20,7 +20,7 @@ module MinimalistAuthentication
     end
 
     def self.authenticated_user(params)
-      MinimalistAuthentication.deprecator.warn(<<-MSG.squish)
+      MinimalistAuthentication.deprecator.warn(<<~MSG.squish)
         Calling MinimalistAuthentication::Authenticator.authenticated_user is deprecated.
         Use MinimalistAuthentication::Authenticator.authenticate instead.
       MSG
